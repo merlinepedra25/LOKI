@@ -52,6 +52,41 @@ type instance struct {
 	streamsRemovedTotal prometheus.Counter
 }
 
+func (i *Ingester) getOrCreateInstance(instanceID string) (instance *instance, readonly bool) {
+	inst, ok, readonly := i.getInstanceByID(instanceID)
+	if ok || readonly {
+		return inst, readonly
+	}
+
+	i.instancesMtx.Lock()
+	defer i.instancesMtx.Unlock()
+	inst, ok = i.instances[instanceID]
+	if !ok {
+		inst = newInstance(instanceID)
+		i.instances[instanceID] = inst
+	}
+	return inst, i.readonly
+}
+
+func (i *Ingester) getInstanceByID(id string) (instance *instance, found bool, readonly bool) {
+	i.instancesMtx.RLock()
+	defer i.instancesMtx.RUnlock()
+
+	inst, ok := i.instances[id]
+	return inst, ok, i.readonly
+}
+
+func (i *Ingester) getInstances() []*instance {
+	i.instancesMtx.RLock()
+	defer i.instancesMtx.RUnlock()
+
+	instances := make([]*instance, 0, len(i.instances))
+	for _, instance := range i.instances {
+		instances = append(instances, instance)
+	}
+	return instances
+}
+
 func newInstance(instanceID string) *instance {
 	return &instance{
 		streams:    map[model.Fingerprint]*stream{},

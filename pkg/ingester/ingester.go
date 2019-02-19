@@ -7,6 +7,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/weaveworks/common/httpgrpc"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/weaveworks/common/user"
@@ -17,6 +19,9 @@ import (
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/grafana/loki/pkg/logproto"
 )
+
+// ErrReadOnly is returned when this ingester is shutting down.
+var ErrReadOnly = httpgrpc.Errorf(http.StatusBadRequest, "ingester is shutting down")
 
 var flushQueueLength = promauto.NewGauge(prometheus.GaugeOpts{
 	Name: "cortex_ingester_flush_queue_length",
@@ -51,6 +56,7 @@ type Ingester struct {
 
 	instancesMtx sync.RWMutex
 	instances    map[string]*instance
+	readonly     bool
 
 	lifecycler *ring.Lifecycler
 	store      ChunkStore
@@ -122,16 +128,6 @@ func (i *Ingester) Shutdown() {
 	i.lifecycler.Shutdown()
 }
 
-// StopIncomingRequests implements ring.Lifecycler.
-func (i *Ingester) StopIncomingRequests() {
-
-}
-
-// TransferOut implements ring.Lifecycler.
-func (i *Ingester) TransferOut(context.Context) error {
-	return nil
-}
-
 // Push implements logproto.Pusher.
 func (i *Ingester) Push(ctx context.Context, req *logproto.PushRequest) (*logproto.PushResponse, error) {
 	instanceID, err := user.ExtractOrgID(ctx)
@@ -139,25 +135,13 @@ func (i *Ingester) Push(ctx context.Context, req *logproto.PushRequest) (*logpro
 		return nil, err
 	}
 
-	instance := i.getOrCreateInstance(instanceID)
+	instance, readonly := i.getOrCreateInstance(instanceID)
+	if readonly {
+		return nil, ErrReadOnly
+	}
+
 	err = instance.Push(ctx, req)
 	return &logproto.PushResponse{}, err
-}
-
-func (i *Ingester) getOrCreateInstance(instanceID string) *instance {
-	inst, ok := i.getInstanceByID(instanceID)
-	if ok {
-		return inst
-	}
-
-	i.instancesMtx.Lock()
-	defer i.instancesMtx.Unlock()
-	inst, ok = i.instances[instanceID]
-	if !ok {
-		inst = newInstance(instanceID)
-		i.instances[instanceID] = inst
-	}
-	return inst
 }
 
 // Query the ingests for log streams matching a set of matchers.
@@ -167,7 +151,10 @@ func (i *Ingester) Query(req *logproto.QueryRequest, queryServer logproto.Querie
 		return err
 	}
 
-	instance := i.getOrCreateInstance(instanceID)
+	instance, ok, _ := i.getInstanceByID(instanceID)
+	if !ok {
+		return nil
+	}
 	return instance.Query(req, queryServer)
 }
 
@@ -178,7 +165,10 @@ func (i *Ingester) Label(ctx context.Context, req *logproto.LabelRequest) (*logp
 		return nil, err
 	}
 
-	instance := i.getOrCreateInstance(instanceID)
+	instance, ok, _ := i.getInstanceByID(instanceID)
+	if !ok {
+		return &logproto.LabelResponse{}, nil
+	}
 	return instance.Label(ctx, req)
 }
 
@@ -201,23 +191,4 @@ func (i *Ingester) ReadinessHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-}
-
-func (i *Ingester) getInstanceByID(id string) (*instance, bool) {
-	i.instancesMtx.RLock()
-	defer i.instancesMtx.RUnlock()
-
-	inst, ok := i.instances[id]
-	return inst, ok
-}
-
-func (i *Ingester) getInstances() []*instance {
-	i.instancesMtx.RLock()
-	defer i.instancesMtx.RUnlock()
-
-	instances := make([]*instance, 0, len(i.instances))
-	for _, instance := range i.instances {
-		instances = append(instances, instance)
-	}
-	return instances
 }
