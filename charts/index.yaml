@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   loki:
   - appVersion: 0.0.1
-    created: 2019-04-08T16:57:45.751830728Z
+    created: 2019-04-09T07:17:34.409143941Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 53ce911a85705331bcbea12bd4731014711e7de0d6516bd076e6513f37a7eb56
+    digest: d176fbc384c90282b47b7e91413ed25528b521f6828e632ed5744f58780a9d04
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -18,4 +18,4 @@ entries:
     urls:
     - loki-0.5.0.tgz
     version: 0.5.0
-generated: 2019-04-08T16:57:45.751176836Z
+generated: 2019-04-09T07:17:34.408408422Z
