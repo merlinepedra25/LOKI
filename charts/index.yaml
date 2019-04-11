@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   loki:
   - appVersion: 0.0.1
-    created: 2019-04-10T16:00:46.696937875Z
+    created: 2019-04-11T16:03:28.986829533Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 81397e9ef4578f0e7aa86726f45f1d1da876d695617f229c4200ab2024a5d8e3
+    digest: 7cd5b8055289437d9aa5d01f72dcc9a6ab532dfc5f11af222fb5b21e3d8cd443
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -19,7 +19,7 @@ entries:
     - loki-0.6.0.tgz
     version: 0.6.0
   - appVersion: 0.0.1
-    created: 2019-04-10T16:00:46.696621838Z
+    created: 2019-04-11T16:03:28.986501716Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 888563cc143746ae8216f5e96c11a3209f666b97d5dd9b7878b1f6b37dbb6db0
     engine: gotpl
@@ -37,9 +37,9 @@ entries:
     version: 0.5.0
   loki-stack:
   - appVersion: 0.0.1
-    created: 2019-04-10T16:00:46.698823527Z
+    created: 2019-04-11T16:03:28.988289172Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 0b12f77e210484136ba67eaeedef72922b9bff5a9ab3888a3d224ef79c80d46e
+    digest: 8946fb38e6e4b6cb3fa91d49d878be981c1db08e8acb7b6638cfd88ac873747d
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -54,7 +54,7 @@ entries:
     - loki-stack-0.6.1.tgz
     version: 0.6.1
   - appVersion: 0.0.1
-    created: 2019-04-10T16:00:46.697590709Z
+    created: 2019-04-11T16:03:28.987579684Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 737c83e5833d36931afeec39b4f61b329c92cd8f1d43d5451bd1b7be4cff0826
     engine: gotpl
@@ -72,9 +72,9 @@ entries:
     version: 0.6.0
   promtail:
   - appVersion: 0.0.1
-    created: 2019-04-10T16:00:46.699507686Z
+    created: 2019-04-11T16:03:28.988983621Z
     description: Responsible for gathering logs and sending them to Loki
-    digest: 1e5e21e743d31853eb0a14541568ddc666e6ae595b6c65716b5a11b3b33c7fde
+    digest: 639b884367892721200310029a54f6f63f1a7c08493174f0925604a37b03a182
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -89,7 +89,7 @@ entries:
     - promtail-0.6.1.tgz
     version: 0.6.1
   - appVersion: 0.0.1
-    created: 2019-04-10T16:00:46.699183532Z
+    created: 2019-04-11T16:03:28.988626759Z
     description: Responsible for gathering logs and sending them to Loki
     digest: d8c072989461b9a6f416f5f37c408d616c1264f3109dc2f3301d310981b30894
     engine: gotpl
@@ -105,4 +105,4 @@ entries:
     urls:
     - promtail-0.6.0.tgz
     version: 0.6.0
-generated: 2019-04-10T16:00:46.695990149Z
+generated: 2019-04-11T16:03:28.985858384Z
