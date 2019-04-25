@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   loki:
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.622394339Z
+    created: 2019-04-25T15:17:10.966179646Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 89a910640035b217ca497cdcbaa72e053575f9d84b6ea1e0bd56009c190e9593
+    digest: cb0c0bf0c1b04c0bedd60d40787888b8aeef32b9ac3eac24de6297f63dc28083
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -19,7 +19,7 @@ entries:
     - loki-0.7.0.tgz
     version: 0.7.0
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.622015685Z
+    created: 2019-04-25T15:17:10.965822723Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 485999e0808701bb5e890a75b056b97365e24e6953b88f8cac58d32497beea10
     engine: gotpl
@@ -36,7 +36,7 @@ entries:
     - loki-0.6.0.tgz
     version: 0.6.0
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.62157859Z
+    created: 2019-04-25T15:17:10.965337752Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 888563cc143746ae8216f5e96c11a3209f666b97d5dd9b7878b1f6b37dbb6db0
     engine: gotpl
@@ -54,9 +54,9 @@ entries:
     version: 0.5.0
   loki-stack:
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.625828517Z
+    created: 2019-04-25T15:17:10.969697954Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 12973ddf60e1c7e12d2f22efae7d168aed61b27b47d027faac756080d41c0c93
+    digest: f88beb8b8a7d0434a21f014a31fab0a96122a9603707705749dd8308e0541f2c
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -71,7 +71,7 @@ entries:
     - loki-stack-0.7.0.tgz
     version: 0.7.0
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.624943128Z
+    created: 2019-04-25T15:17:10.968948974Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: eb1114546434c0338ef7cc4d83e7feb9922b05735d16b2df981edb8ecfcd492d
     engine: gotpl
@@ -88,7 +88,7 @@ entries:
     - loki-stack-0.6.2.tgz
     version: 0.6.2
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.624130642Z
+    created: 2019-04-25T15:17:10.967771648Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 8946fb38e6e4b6cb3fa91d49d878be981c1db08e8acb7b6638cfd88ac873747d
     engine: gotpl
@@ -105,7 +105,7 @@ entries:
     - loki-stack-0.6.1.tgz
     version: 0.6.1
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.623200159Z
+    created: 2019-04-25T15:17:10.966918538Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 737c83e5833d36931afeec39b4f61b329c92cd8f1d43d5451bd1b7be4cff0826
     engine: gotpl
@@ -123,9 +123,9 @@ entries:
     version: 0.6.0
   promtail:
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.628082095Z
+    created: 2019-04-25T15:17:10.970765494Z
     description: Responsible for gathering logs and sending them to Loki
-    digest: acbb1a2e7212aa749f856a0d0cd94fba41c516a1015670c79f970fb9d4cd0a8d
+    digest: 54c9bac29b0e093ee1b1ef44c63aa187291049229428b52de4da043b662a554e
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -140,7 +140,7 @@ entries:
     - promtail-0.6.2.tgz
     version: 0.6.2
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.627381005Z
+    created: 2019-04-25T15:17:10.970418883Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 639b884367892721200310029a54f6f63f1a7c08493174f0925604a37b03a182
     engine: gotpl
@@ -157,7 +157,7 @@ entries:
     - promtail-0.6.1.tgz
     version: 0.6.1
   - appVersion: 0.0.1
-    created: 2019-04-25T06:14:10.626281858Z
+    created: 2019-04-25T15:17:10.970060055Z
     description: Responsible for gathering logs and sending them to Loki
     digest: d8c072989461b9a6f416f5f37c408d616c1264f3109dc2f3301d310981b30894
     engine: gotpl
@@ -173,4 +173,4 @@ entries:
     urls:
     - promtail-0.6.0.tgz
     version: 0.6.0
-generated: 2019-04-25T06:14:10.620842928Z
+generated: 2019-04-25T15:17:10.964697763Z
