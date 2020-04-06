@@ -2,7 +2,7 @@
 Hash: SHA512
 
 apiVersion: v1
-appVersion: v1.4.0
+appVersion: v1.4.1
 description: Responsible for gathering logs and sending them to Loki
 engine: gotpl
 home: https://grafana.com/loki
@@ -18,14 +18,14 @@ version: 0.20.1
 
 ...
 files:
-  promtail-0.20.1.tgz: sha256:e1ae590936d513c44eb7ea9bd91865ff12cda49d984ff091ef666a89295fcc89
+  promtail-0.20.1.tgz: sha256:96389fba288d34c64f1fd9485e5426cae3cf87dbee8d791ae7f02ab77760ce67
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJei5WgCRBwVKlVnTz7CwAAOaQIAJfX9o76TAk3ii+vzJsoE8BH
-JpRFA/DG/e0Ws5aJoYXS5W72TwPdHnlUbjZCJWYj4JGNdtD7X8NdyVchK7iQvFSE
-/jomkJOYBODXaxUxyuBm8bFrdBq2sb5g0rbhus6eEfKZzsTuScJrqC5yb9gdx/Lk
-Grz/Xd5YR5Yx2iUQCkCJp7TuRRJU1TQPJNOlTj01lAbhXtBJIDD+p/+3DzTzlgh1
-1XTP+mQ6m9m5cW95+YNk9XRK8394BfOZ6unjnDVZzCmPgjx89ypOyG/g7mR5MCrY
-RM5eGF19BL2SAHgcPBAjojfn13nONdDY/cPEOPihXQ7hFbXAOsZydyPrkTqZOnE=
-=/M+c
+wsBcBAEBCgAQBQJei5nLCRBwVKlVnTz7CwAA0jMIAGdnH/7TsIfTFDROQPZxU/hy
+f9F2bKs1zM0qq4NSMqE1ssBQ2KJXT4UVRvvuebyUxNApgJss1JzREJ0tkZJrPUbx
+PTjj6oNvcSsjC1yQ/nGs+IROkj1QYXcVLPUe0iXdubVgR8rMajvzPTCIAYPgWD/C
+E7DK3PA7Euz1o/nxn5EJBTxFk27oCEst8Te2Hsqs/ppME6xBkGLzXrfKhSp5Mx5u
+CDRjjXPaq6qChydjTk5aR3O8a6fNUVdTWVheCHNu/SLJBf7jMpOvGYsynQTZ5gHg
+5x7ZkHIbVMv+1JZw9E4mxF5ublOhGERFiYQgRU5dgmYNP4+O7hDbaSnH+Gc1FEA=
+=Uy6J
 -----END PGP SIGNATURE-----
