@@ -18,14 +18,14 @@ version: 0.28.1
 
 ...
 files:
-  loki-0.28.1.tgz: sha256:5767fc2dded516aeaaef45f875a8cf7a53a5c97a65043eef6b41ce291af11c77
+  loki-0.28.1.tgz: sha256:8ad6000b909af51f4bb600a5101b859a5a126b6d2d13bb7df1f99f3af79eaab8
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJeoeA9CRBwVKlVnTz7CwAATS4IAKhGgAaVitzbbzah7AsRkjGo
-+2MTYKLBdvfDdXLRQ2b8psQv08mbi1kbiJPoIe+MmMX46P6cYeCM1kwEmZbQ0ytW
-e15+DDUAI3bhnhrtkLeq/+0n+AImsE3AUHtZauQM4nYi+erAWBVikjabRwdH9G0H
-XdipemAyChIE7oyCamJtubpDtViiS/52wauqj5D9huInn6UraN0SEVBwu+cPWvl2
-qIMt0SKvsZJ6o8Xj2WG7DiXaJ9TydnvgGvBvA6A1KctSsHUQHloZCRh+fnRDp+As
-TBqwTrfAkvBBlAyzgriYfU4mrqaXlbgejDIzppRbX/wa6+jGA71XhGVkGsCwoEs=
-=3Cor
+wsBcBAEBCgAQBQJeogDJCRBwVKlVnTz7CwAAgQwIAJHzDgU+Txvvl5DQD53pxB+c
+x3ZR3vU5vkFLpU08YPNXWH8ZfrTW4XZo3Yw82W/++6gPIk3atwH6GB70k1ESNX0f
+pmJwcDnDCUwLrTxdUurhwdWp9xpd91pdUhm+oi3Y07g2QnCrM/HBVbC6j1ZjvSfh
+AbCob7y/4YGDqqGkyM2rWKLOllLBS3DRcg9/u7zCoqDPk1/APXvIKxfBxNFh1+PP
+ynsHaWdebgyDG5OcBxM9+rNdXrPI6TB25+hd56wrCYKH5n4RW0JnsI8/urvinIuK
+HKH0X/LX/vRa4SWccFZhQQjzcUnDHUn3gpuDL4H/wnwNnPhlqV84gtCH9K3tpeg=
+=fMj3
 -----END PGP SIGNATURE-----
