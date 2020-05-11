@@ -19,14 +19,14 @@ version: 0.1.2
 
 ...
 files:
-  fluent-bit-0.1.2.tgz: sha256:d243ebbe56c83feba698598684ba2c21dc758459e4996fbace22be991f2e5b41
+  fluent-bit-0.1.2.tgz: sha256:619ff7d30f027de6f54432913bc0ef372ff8a78e620b5e5f2b039a28dfef9d93
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJeuXhZCRBwVKlVnTz7CwAAJhoIABzrn1ataumb9P8SpSJ0YLzZ
-dyJee1LPcrClwutcJmVfjBXtRKdZqOOTnWNqZQQeU3CK+uNnE9cvV0g2elBO+cuY
-Jz8vjbPy2SBr+rhez7yHz3zsoFf9EAyX8RIoUQCvUbOd7KOpkE2UBCfaNtjGqEee
-A2h6GtmEIrYYG+XhFFzqll5aeF3kraJaXnQH/pIJnfnbRGrhBWYjP+PvQcAZOZXK
-bmoOcX39xsP24m2jFjqzk35b1j5rw8RRu/MANqbcgdldwS9feuXpSxB/WYMxHNVZ
-LkYFa7E1w8ImQIOYCwz6T+5bx0avha4E2ffpGmycWzhULjXI3UNgviEKyjTT/oc=
-=gb0/
+wsBcBAEBCgAQBQJeubwgCRBwVKlVnTz7CwAA+NsIABtUtGVBq334z3wWPfMjkgyY
+GEXsKK1P8KAB5bvvoFA+FgJd+8ZY8BUt8JsT46prs/G7mbgp2u1ACvxmXh9o3NGT
+asMa223uTIe1SKBK5hZsDGoZmTBF83Efnyd7KClTYNzMcjuq5Jp6ak6iab8Wyp3u
+xcpaSphRRTVyiWPyM9EJytwkFsSz1WZ3qAiWHAu+MN6wsVzSvhsSWbPZV+/vGZks
+2+Lnd0xrppOBeyOlKCYydQgBl0f5Za8bdEbw1H6bnqXphCv8Ud8+AwGzV6cQ5Ori
+OX3DasRM3rNpFSvzf5AY7ag/QkZAiNVQx65m5j2yLfPFu3EsXuRgvO6yLdTREGU=
+=d9wH
 -----END PGP SIGNATURE-----
