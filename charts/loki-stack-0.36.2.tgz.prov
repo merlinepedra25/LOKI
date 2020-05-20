@@ -18,14 +18,14 @@ version: 0.36.2
 
 ...
 files:
-  loki-stack-0.36.2.tgz: sha256:57b65ccbcbbd146999767ba8d6bb82ce0ef5da735cd6b5bbb82ca06f2e7dff79
+  loki-stack-0.36.2.tgz: sha256:4d86989bd1c4006bbec1ccaa847904dbbcf2bf90ab4c57dacf281cc00ecbb187
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJexVC6CRBwVKlVnTz7CwAAG7gIAIRcYfS4tQoe/6ngskT6xHYj
-FJYuJ4weV/dZf5jfViVueaj6atq8pXgGeVrDc4J7aJzbO4NaUCVZWjdOkhw//ysn
-9omZfd2RgaoK12jmrU44cB2UQhC6U5AEvtj7pgSpezz5TxyypqlurucYgabcZPoF
-3Qesq6K1XT7sBaVlcqM30uR7vFjscPfqcfbpdToer46qHaSbXxP7org4mY5xV/ZM
-Zedo3/X92Go5GduY//MFkHZfYExyzdfdV9HKSLqkmo2gbO5QBU5CBsyN4pkp9hjb
-ZarttJ1c8RYo+cl/pCdnyuswrWJGKrYyqDQYw0m6KOjmrb4VQLmiMqf1XzTDXg4=
-=6jir
+wsBcBAEBCgAQBQJexVNgCRBwVKlVnTz7CwAAEx8IAELerDPxeheZdGz//oNulGeU
+TRNKk3j46yVCqhQ/PZksfrTibVi0gBaERqFg9X0Gjo4jMuvwyVQ6UwFLtVj0q2cV
+rAf7kh1Q2uwugjIR2HxtgAdQvK1X5weoc+EHJYj0sYiUIEXehhM0J0F1NL0RKRlD
+SGCtMwrGQlq2X/EMdaMClDuKeiTcL/Yq5H279QcQW2ZN94dYs2PTe6FFgmrID1+F
+AZaITS8ziG7j0svNEWikp605GvO0rO/rkUbYpyZ7Egp8nWXcj1kuztpJujq9TkZX
+RLo0L7sNXwz/6yLaSRtvA7UgC3CQjDb4+DE6ISGm1oD3etNYQiqpcjpZgPx/oeo=
+=EbG4
 -----END PGP SIGNATURE-----
