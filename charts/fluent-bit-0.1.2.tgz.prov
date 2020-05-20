@@ -2,7 +2,7 @@
 Hash: SHA512
 
 apiVersion: v1
-appVersion: v1.4.1
+appVersion: v1.5.0
 description: Uses fluent-bit Loki go plugin for gathering logs and sending them to
   Loki
 engine: gotpl
@@ -19,14 +19,14 @@ version: 0.1.2
 
 ...
 files:
-  fluent-bit-0.1.2.tgz: sha256:b023369fe7f889dc569ee2b630473a1b4740d34ec3696c8cd020dfe59a852aff
+  fluent-bit-0.1.2.tgz: sha256:330a32735116ee85036507e33f9cdae3e3737463b87b8f361df65eeaa34477ae
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJexVNYCRBwVKlVnTz7CwAACGcIAI66epNArmTJJEKsSHNfS/7F
-sclD1qoCNn8+/tTgFblM+xJZV0o3PQa8gRm5TyDmXnVPvKbekyoNBJdIxSB8GQHV
-XkNvLStKTezGYQvDZQhgjubElqsBRuTL8sgMULMS0AbYD9fVusg8gRGMIVL8WhxM
-fFoj6fSaE2E+KJ0VeMi4mjQjoy5qoZ/XUof23Vh0LdxTOVroQ0g8zwKPTdAYSaWW
-8a9Ibb7k5PlJlPqwTjUiPXDuI15CILHZA1xes9ZjsY1siSnhQlG/Eyh0B4NCXrkW
-wu+K0dBKYNI3pUDf2MpC+W+8c/XWnDMk9fzA0ZkDaNo/HoC+nAQd26GezqQY1pU=
-=FDby
+wsBcBAEBCgAQBQJexWF5CRBwVKlVnTz7CwAAlNkIAHGorS4k4cT3OlJFR6QdcrOS
+CLbj3LTBg1YPj3NAKn069SPLNfSlyoWgGsl4h1xfBBIh7g+QxCvuvb/UbkHZTTn6
+XYy/XSnAWH+AVgCxmj1WgmVBFVB74PZNIf/QeCfmMOePXe3KbC+lfWKT0zyODy6F
+g3oBTlmpcScKzkWTNfniF/hVzBwkrG4dE3sg+1DXvU53HL6s5ZstWKo/5qT+e81I
+gKMEEIULFJPAGAuAuA+0scrVTh1tSb8cJpvhFP4ClbP518CwXoHfDPzV5NxWkezC
+7yq91Ao0eZBt7GQweazJQ5AVQxpYFlf+dIh74aq51wVpVz1lf0VPQyt2TXKjT6g=
+=RoO9
 -----END PGP SIGNATURE-----
