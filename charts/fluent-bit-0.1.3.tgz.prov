@@ -19,14 +19,14 @@ version: 0.1.3
 
 ...
 files:
-  fluent-bit-0.1.3.tgz: sha256:bac5d12a1673ece8a5a5bb68c29ca922c6b7d7efc5c84dfa789bb03c6d1af159
+  fluent-bit-0.1.3.tgz: sha256:5db36955c77bd8a93b4a76c0135af6187e3b74db17a4a05d8e688f65c1164531
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJezY/xCRBwVKlVnTz7CwAAnd0IAHsC+RGUqkUenyunwNMOL/SE
-suZRxVTMwfBcTXs3I2E2K4USyCm3/jYtexSaZDgnn9fmwzlH8w/5ddWMBNPqX+w0
-+HBNv9xgDCo+9gcrt6sJBXOiwmgu4VQXK+ElWC2sfPFjKuslYfIIrDX7uytgnb7q
-Zs8D6V/FqAdMJ+5QqjFxjWp+h4bGSeSyr0kdpsATDJV/ZKq0xguTTI/wQo0qnsd+
-PJzh0pAmRmcafUxkO1qDj0rRPx2hrsXiwEEcnNuhL+vsFQxo0TmZ/cUk4CKBh2Pn
-CkpipSPc5RRCtHxb+Zjpyu6E5OJr78AqozYpbPGVRlcFLEChdIgjPLFXYXYzS+g=
-=RO5J
+wsBcBAEBCgAQBQJezkvgCRBwVKlVnTz7CwAAUX0IAEqYaAfr8s5j87AMEPI1nfw/
+xO+H8QBohsJdH7qR+rwZiVS6hVk/pSsIF/wH9afuiIsomqoFqDNadXIIBgvxf1EL
+ZHLTJwFD+iMEeVrtEgmpZTYdbPtlXsb4eXSG433IVQWOyMP4tLiUarQfDPr6U/TG
+x0qtqEaa7TjdHYCky9KiKRjie0LGVps81qpoEyEI3LiN1L2SCt/HLXkL5HD8gXVJ
+Qk7pceTxO+2FcRdl7gfKO6Ij0vNjR3C+1iLHGb8rEeOcqB6K1mtW15q9pdlRZ/1a
+R8szlvNfo9PqWO5ISWya9XJuAZq6TyfuS3LQd2bmLmgO/GPqy9d/rbtvNspf/qc=
+=yN3r
 -----END PGP SIGNATURE-----
