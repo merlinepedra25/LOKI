@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"github.com/weaveworks/common/user"
 	"net"
 	"net/http"
 	"strconv"
@@ -62,8 +63,9 @@ func statsHTTPMiddleware(recorder metricRecorder) middleware.Interface {
 				if data.statistics == nil {
 					data.statistics = &stats.Result{}
 				}
+				_, ctx, _ := user.ExtractOrgIDFromHTTPRequest(r)
 				recorder.Record(
-					r.Context(),
+					ctx,
 					data.params,
 					strconv.Itoa(interceptor.statusCode),
 					*data.statistics,
