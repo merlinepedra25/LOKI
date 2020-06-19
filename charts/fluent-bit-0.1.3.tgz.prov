@@ -19,14 +19,14 @@ version: 0.1.3
 
 ...
 files:
-  fluent-bit-0.1.3.tgz: sha256:c85faedd968bf378c96133b6d95c1325934a9cc17d66e891d424bbc436667c75
+  fluent-bit-0.1.3.tgz: sha256:72e9b5eec0371444c995daa78ffb0d3a9b681c00d0f5be217c6795d018dacd41
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJe7TIKCRBwVKlVnTz7CwAAjo8IAHe+Qu9G7LMifLEqXYxsuHhy
-r3+8ao/NbgcgCfts6siavoAlqz0KC7rAcGZNsYTdineuPTJ13t1ZAv77iDTsBQDy
-JoFbLIIfSCChMlLcZUObI2gGh/rAi9eZaxXo8+djFdy230jJFVhyBvWIW0wbhl9p
-DqtNAzOXIo15RAYY7pve0HqHWtBp8hAtRzyTrDuopuTCo1JSj+mCPxlHyPbGusX1
-PEEdURCfkqhVmfwEbq1eQ6UpJjB8Dp/QpGm+gefaxd9QkPbaAv8DuPlW8Te2qFtG
-ltbfb/mvw6LZfLWzAlSdthTgOXDUZz6owNNL3HYQLQmv9aE2K6jw4iYDuGZ6bpA=
-=p+9f
+wsBcBAEBCgAQBQJe7TJUCRBwVKlVnTz7CwAAbjoIALaPWMjrk2Q/imQyeozJoEYp
+ECxCQPlo11m2B6Tc4iDR4DiwwuCIk+t/uwS+iKllILbY6Bu4AVHlrVTa/4FFYzNj
+lVfNC4NIkwGyHyOqfJavj/wwS4VscucYOjjeOIIctov7Ha3Qjwp6XY9SzqarCHFB
+WXW3tE5Wtbi3wiKyPxa0eNdUi+3+r38MrTQz8Q9oneV+CK6L2LtPajAXutqiKHAn
+7JG4D2eAYDPU0ANmGfbj8lK0o78icyEr1v7frZTL2dCD0WneKIedmRgYca+3MtCL
+IRezUEhr3iSil7g+RlyZZ5x+w4aGjmYe5kU9pSDKZ3q2d2jdjpNAkBoHgtDPUOc=
+=/mtP
 -----END PGP SIGNATURE-----
