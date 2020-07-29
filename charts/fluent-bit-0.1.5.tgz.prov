@@ -19,14 +19,14 @@ version: 0.1.5
 
 ...
 files:
-  fluent-bit-0.1.5.tgz: sha256:9ad045e8545ebabefb2c6f8892233be1cb7f68c1ce6d2630be1a13627f83b0b1
+  fluent-bit-0.1.5.tgz: sha256:c07a12344fa209aa2eb3e1b763b48d1668c368b1bb3ee2e31528bfc5ea9bbec3
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfIXyICRBwVKlVnTz7CwAAcCYIAB0dBfYZk1Wxtyh1VEhHU/Ss
-R9A9KdW7NeMMufna4FycDGbzsKqXujlLzrgtoOOXmnci8a0eKU5iSzJGzDvahH5I
-kn4MEKElIu9HgF0wvCnpRNElhwRPwao15fSXXQy57i98k+R9/p4o5xCH8gYby8Ks
-//sQTqec0N8nBpWA4VHwGXL2xq8OoHrv+L/n7kC8XcIGJA+zWxPOuzp3SmaYYASd
-Ym7h/GVNK/WxKzBYocXiHpKM08+vuD75Rw2OEzMI8S2wFoWkpiGkIfX9oUwBUYC9
-cogUeoPSoeiTJg1a73a4ygnlaLlnJQuK3r+7QG6KicxyhsmcFOs9Pw/RZfj6+wo=
-=7S8x
+wsBcBAEBCgAQBQJfIYWZCRBwVKlVnTz7CwAADggIAGCaZgqMTfHcAAeKKaeHSU5S
+tpdbDeyuSHfYuTWe/IzRk4caSC2i2VLoim5kKeEnp6uFGs0q2BwvzhwiGdkA9zy7
+Hn7BhvtPVDZMhILbfAPvgU0qPY8BgALDW+7ye02CIzb7uqufrcEyzxucw+t01FtX
+8iOtKWPoqE4PSDghFkuT9hSrxTLfacSxBdDWv3PbQF4uvx0xIo5KRLXpfexWSFBJ
+Co+4G1Jq2yC+0IeUijBwyh0CKQKd3cki4fg9IiSl7zhZpQMbqjBR3jqZnKjLnPtE
+edimK/GxN5BS4TptuYoOGGB+VajXjjLeJeZSqSfi5d+JwfY/osIUEe7pUjiddXk=
+=MoS5
 -----END PGP SIGNATURE-----
