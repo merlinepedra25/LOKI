@@ -18,14 +18,14 @@ version: 0.24.0
 
 ...
 files:
-  promtail-0.24.0.tgz: sha256:0108c0feea037ea9c717624beba957fa582df78fbb9b780ffc70dc416e325d1d
+  promtail-0.24.0.tgz: sha256:5935f5f0a5f9915dbfd46e7676ca8a52ad4d136a53cc86f0ee7d87d32258db42
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfPnl7CRBwVKlVnTz7CwAAAA4IAJEF7rmCqoqmYz/KnmA+wq1j
-sGEkMRmue2sjuFZ2fn1X0qAqwsanaSRjIYpH0FsrrnFiiOveTBb+omxod+wj+LTH
-pzPQzybMHQXWGa6EIFVoTRA2KFgFy3LSa/RrSd6uEMiF6eVzKR+uJthYE73O1FGU
-HkaroAzTB5yaUbMqpHghcVoL4Lwzm29nDxxs2P4nMrB+Ln9hrIIR9bcuuIlVREyp
-dfT19u2LWSVeAlJKrhzBq/gh5CsNFlMKNb8tRmOEmfjhbzaiJuV//WE49zlbjl/e
-EryWTRepurRm3Bo/HL9o8aGD7eONHRynDrrBoFjKUUwcKtWpCyj6UDnD18ZvO0E=
-=KhLt
+wsBcBAEBCgAQBQJfPudYCRBwVKlVnTz7CwAAEoMIAHNoRMU08WRbWh5rrx47v0DT
+dIjZ3x/QwQo+McKeXrWjeHaQfgzE8laoxicrp/tHzsrJ89U/RWuVti9t9/4Iwnum
+zmMEsmqgnMjSUWH2KaE+KZG2M0UdwSf9pZIwSd0ljOmkWRanNSHnh3ehOVSSmokP
+n5encKOikUyFYoGIubLmGDw5G8rD3bmr4no0pYLkOQrcnAFr3xCmMIBECC+h4Ubc
+kBbN5Oci08stZ/8kKgCdiDLw7u2t9Et2NmI3YSzqONPqrKz84jX5uCFkK08TZBgA
+lgunBTj44Ht9vCccvs8a2C1MuaZi97YNQ8F/dUUG7cepYpERwmXD306zld8dYyQ=
+=0KTs
 -----END PGP SIGNATURE-----
