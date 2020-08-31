@@ -119,13 +119,14 @@ func newBatchChunkIterator(
 	res := &batchChunkIterator{
 		batchSize: batchSize,
 
-		start:       start,
-		end:         end,
-		direction:   direction,
-		ctx:         ctx,
-		cancel:      cancel,
-		iterFactory: iterFactory,
-		chunks:      lazyChunks{direction: direction, chunks: chunks},
+		start:           start,
+		end:             end,
+		direction:       direction,
+		ctx:             ctx,
+		cancel:          cancel,
+		iterFactory:     iterFactory,
+		lastOverlapping: make([]*LazyChunk, 0),
+		chunks:          lazyChunks{direction: direction, chunks: chunks},
 		next: make(chan *struct {
 			iter genericIterator
 			err  error
@@ -299,7 +300,7 @@ func (it *batchChunkIterator) nextBatch() (genericIterator, error) {
 	}
 
 	if it.chunks.Len() > 0 {
-		it.lastOverlapping = it.lastOverlapping[:0]
+		it.lastOverlapping = make([]*LazyChunk, 0, it.chunks.Len())
 		for _, c := range batch {
 			if c.IsOverlapping(nextChunk, it.direction) {
 				it.lastOverlapping = append(it.lastOverlapping, c)
@@ -391,7 +392,7 @@ func (it *logBatchIterator) Entry() logproto.Entry {
 // newChunksIterator creates an iterator over a set of lazychunks.
 func (it *logBatchIterator) newChunksIterator(chunks []*LazyChunk, from, through time.Time, nextChunk *LazyChunk) (genericIterator, error) {
 	chksBySeries, err := fetchChunkBySeries(it.ctx, it.metrics, chunks, it.matchers)
-	if err != nil {
+	if err != nil && len(chksBySeries) == 0 {
 		return nil, err
 	}
 
@@ -578,7 +579,7 @@ func fetchChunkBySeries(ctx context.Context, metrics *ChunkMetrics, chunks []*La
 
 	// Finally we load all chunks not already loaded
 	if err := fetchLazyChunks(ctx, allChunks); err != nil {
-		return nil, err
+		return chksBySeries, err
 	}
 	metrics.chunks.WithLabelValues(statusMatched).Add(float64(len(allChunks)))
 	metrics.series.WithLabelValues(statusMatched).Add(float64(len(chksBySeries)))

@@ -189,7 +189,7 @@ func (q *Query) DoLocalQuery(out output.LogOutput, statistics bool, orgID string
 	if err != nil {
 		return err
 	}
-
+	storage.RegisterCustomIndexClients(&conf.StorageConfig, prometheus.DefaultRegisterer)
 	querier, err := storage.NewStore(conf.StorageConfig, conf.ChunkStoreConfig, conf.SchemaConfig, limits, prometheus.DefaultRegisterer)
 	if err != nil {
 		return err
