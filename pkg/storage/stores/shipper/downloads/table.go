@@ -407,6 +407,7 @@ func (t *Table) folderPathForTable(ensureExists bool) (string, error) {
 	if ensureExists {
 		err := chunk_util.EnsureDirectory(folderPath)
 		if err != nil {
+			level.Error(util.Logger).Log("msg", "failed to create dir", "path", folderPath, "err", err)
 			return "", err
 		}
 	}
@@ -446,15 +447,18 @@ func (t *Table) doParallelDownload(ctx context.Context, objects []chunk.StorageO
 					break
 				}
 
+				level.Info(util.Logger).Log("msg", "picked up object for downloading", "object-key", object.Key)
 				var dbName string
 				dbName, err = getDBNameFromObjectKey(object.Key)
 				if err != nil {
+					level.Error(util.Logger).Log("msg", "failed to get db name from objectKey", "object-key", object.Key, "err", err)
 					break
 				}
 
 				filePath := path.Join(folderPathForTable, dbName)
 				err = t.getFileFromStorage(ctx, object.Key, filePath)
 				if err != nil {
+					level.Error(util.Logger).Log("msg", "failed to get file from storage", "object-key", object.Key, "filepath", filePath, "err", err)
 					break
 				}
 			}
@@ -469,7 +473,9 @@ func (t *Table) doParallelDownload(ctx context.Context, objects []chunk.StorageO
 		for _, object := range objects {
 			select {
 			case queue <- object:
+				level.Info(util.Logger).Log("msg", "sent object for downloading to channel", "object-key", object.Key)
 			case <-ctx.Done():
+				level.Info(util.Logger).Log("msg", "failed to send object for downloading to channel", "object-key", object.Key)
 				break
 			}
 
@@ -482,6 +488,7 @@ func (t *Table) doParallelDownload(ctx context.Context, objects []chunk.StorageO
 	for i := 0; i < n; i++ {
 		err := <-incomingErrors
 		if err != nil && firstErr == nil {
+			level.Error(util.Logger).Log("msg", "cancelling download operation due to error", "err", err)
 			// cancel the download operation in case of error.
 			cancel()
 			firstErr = err
