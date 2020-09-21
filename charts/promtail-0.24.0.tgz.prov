@@ -18,14 +18,14 @@ version: 0.24.0
 
 ...
 files:
-  promtail-0.24.0.tgz: sha256:b558c744736c88e8b5b37534be2b188a0d519fc2affeec0a93c08b8dc8501138
+  promtail-0.24.0.tgz: sha256:a8ae2a330f3b6b9945dda32ac8465d2ee0810a5f9f767390859421fa4125e9fb
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfaLzYCRBwVKlVnTz7CwAAYXsIAJodu1oz2h4gRDgiJ1v+1zav
-DJCSPSaZQe3sdnGRbOvUJiTwlwEmnvHxXg/ug/SBgC/LDDkHXqO+J5qoVWmrQVry
-m+d6VD8r+GKk7cLqQcWmrv3Pkj1DDASVqHbSvO2lQ8qq/0YRbsJD/AeRuBiucJvF
-MfqjhtINJcu9o1q9WPqj+aSKVLYIgApenoRw1md5bR4LxZcyEUeh6QqFZb4SXLtg
-AszFvm84UDMfWc7rPkf24zGAmSK9H96A/YaFgzZAcUmM6NHIKnxTFgL8mlJ3guzn
-pfYGqnZzLE1coNDXGz8zauj3VfO+YngcecxVbq/qmIOi1cI2aPg+6VPV85G0i8U=
-=rzU5
+wsBcBAEBCgAQBQJfaQlgCRBwVKlVnTz7CwAA/REIAFnIxuCcEjK0+heOFhU/lxH5
+LAwCr9CfXtXCx8zLfKisIcK9W9CVG0bsa1guJkJxehgnhCvXs0y0FHJ56CkDLIB4
+eF1DkZfVzhbArf+jkho/Ad96oV3WtetshA4+Qss1p02pqyCmeVQooFdiJ2rz8o0O
+tmqONXba4WcAaSnVxttVc59QCoqwdvfDIsASQgLXXEmSJ2eThEyLyvrWN7RLPdxn
+q0biidqguNMjOpdnTXzDrah7hF/6Opeb+DgDf9Qr6of4DvzsLdWxTfSjuIjgL/Gs
+kB423VzCEeUEAjG7w7v2DNuKYIqBTqs0pxB+kLVzc0Uiqau6n/1WdNBoAf1RYDc=
+=iWL5
 -----END PGP SIGNATURE-----
