@@ -18,14 +18,14 @@ version: 0.31.1
 
 ...
 files:
-  loki-0.31.1.tgz: sha256:cb5a10c80ed3c5f11590dde7212940e0283d2b4659ec341e5e2631d34df2a91e
+  loki-0.31.1.tgz: sha256:a588edce816d0278a173d416cfba0aacb98d6d7cf8888fe1f2d708a06be500bd
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJflvIBCRBwVKlVnTz7CwAA1B0IAGN/XsEHY8jFmv5CWL+QD6Fy
-UySvRa/lkDsXyfA3+jOmJxeiTycDpIbSwDnrLf3MgwFh5ng6kbN/yc6vAygcNWol
-OyiCKuBcQ+/Fdzg83nOnGZbg/X76NGu98/uEEZmUivHfOq7enztmVZHbIhnrv1kq
-W21EJQmfouGRTAc2jcn1CuS9FPfmy/poQAgGeEDfdHbmIinv7JR0e64ODLCHtH4w
-hLV2Q4FxMKaVBB5wodyd2Q+Uj6aRPkPbcGb+/WIOXxJcUhPQwwpFQsfqEjzeGTqg
-PV6JU1mlgUQDmHxFQw/OEupCUDFjkXbuwD8F8sbDDmBC2CulmhB0IwqXlkHiDeY=
-=D4iE
+wsBcBAEBCgAQBQJflvI8CRBwVKlVnTz7CwAAlj0IAEHtpeUegJneuDpHg+yDI1PJ
+4v72RHpiejoturpd4vEXzC2Zg+AlyCIBueh+C+qjWxXieZsUnEi7Ys8Oubk9GuVP
+K9EuR2z1lwNXPVthlfdDD58IznOQUqBJPofEphHE63lmvi/gPt9piHa4qSi30+/F
+0THGyZctgHfJnHUGToG5y5CqzGDIVXeKB9DGfS+o5QtH+kuuzSfARWdbsN/oLNK4
+uGbWi7mtR7ltvuduZaQ+fvI1iYY+96CltyPNqF0rKw1Kcq8hejE2gSwEUevnVhMk
+JwWLELCO6N41iposlF0H4vzIWGQHp95UIwcaab09FRBMqsbqiq+U0QGTGnrEymY=
+=fWq+
 -----END PGP SIGNATURE-----
