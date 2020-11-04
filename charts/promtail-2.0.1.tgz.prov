@@ -1,0 +1,31 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v1
+appVersion: v2.0.0
+description: Responsible for gathering logs and sending them to Loki
+engine: gotpl
+home: https://grafana.com/loki
+icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+kubeVersion: ^1.10.0-0
+maintainers:
+- - email: lokiproject@googlegroups.com
+  name: Loki Maintainers
+name: promtail
+sources:
+- - https://github.com/grafana/loki
+version: 2.0.1
+
+...
+files:
+  promtail-2.0.1.tgz: sha256:8c6ef557115bf5582f57475c1223323354d4abe6f2c17f425b9e0a4fa37f641f
+-----BEGIN PGP SIGNATURE-----
+
+wsBcBAEBCgAQBQJforFTCRBwVKlVnTz7CwAA9DkIAF5Jo4CJFC1x4tIfGjyoW9jT
+DdbomrEWO+chZKsAv0qeFl/ov0V/nSjdg31VhVDldanKj07QzEOnkDrj0nMptbAU
+Kb1FuLjhaOL7nZl4QPcO+UPFNMPS0DA9U0hdcoxB+PvnnlsKpAGhTDQRpY9/fKYs
+259/APaUogVUbiFZQzg6JSYg/gNl/B8ui8+PERjTWu0t8R/28uc9FZ+nc6S7DFfA
+7NXdS2Y8GbFlKTM7rzKKHWDXL/pMkvwC983Po6j1KJJupGQ0ycFglktacWpeMlHj
+g7pAFJa3zu3AIz3IrcsCzeI26eStI9Uw13ruvqFDYVCUu8EKVShJz9zwVAoce5w=
+=Dna4
+-----END PGP SIGNATURE-----
