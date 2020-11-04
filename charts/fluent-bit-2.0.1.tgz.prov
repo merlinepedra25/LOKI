@@ -19,14 +19,14 @@ version: 2.0.1
 
 ...
 files:
-  fluent-bit-2.0.1.tgz: sha256:ddf307aa5d6eeaf1fb2ffc70a3bdb12b52e429f89d45b1d5ef9cb9c4a7fc9f04
+  fluent-bit-2.0.1.tgz: sha256:5f29bb4e1bab6c747202a0f265886143630be7215a616be0f7914b722a0e0393
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJforFTCRBwVKlVnTz7CwAAOvwIAK7YnEBq8xsbGdQ/zRwqP5Y0
-J+CYm4rHM9pyK16wfyzE+oj01+YcfidAv2h35D8KHeiw5eLsHdjRiomFB7o4NCUc
-sd++xEdnDYtg/EfGljfyCBGAnv9ONvEFzynEV8dU3IBkMxf3str3KP6/7SvnNpia
-PXwrCbV/yPIPR4KDHPEDozJbIM0Lb+Aschz07LR96vfkwt4EDmcrtOh44iP8rcGW
-gnfLweRnVXplNzEKwlQuj4PhLpAL+h5RfgWXsQYOy86i1k1ZNYQ0kdWIqzKt4XGw
-hXejC8MZ/xuB62CJkpOyrljwUIHnXP8bNgHmAw+6yaVtphfoWx4u8hcJboHaFc4=
-=D5/5
+wsBcBAEBCgAQBQJfordUCRBwVKlVnTz7CwAAy0wIAIynCk4Ej+4odUeuL0kxdBNW
+kGrd229h/VQbRHhkl61/bvKpe/NfCHcjZL/ZLQ+P7GkcRNYj74v3qjYmeAK5iPzR
+/M8EWdjxCHu99Y5iT+YauqciifKkKa7nPoAlQj/Soq1V9xl0K378hOpDKgSQFJhE
+xu4CBaguaPI30Kp2LP6VlhJtLcx+qpfcoLuDL0ii/LTzRTH5Ds0PnerXZULkXoze
+ZIRR9OSuBFyvyN+J2ojvUEiRl1C00Ad+0cKxXm6nkHMs4/pqy2XNuzri4dV7KvHO
+3gdCn2StlxebB8VNUh9+No+WgkY9i26JR3u0LwKgDIhPmx+qDOotF6SvGsCclaE=
+=w2kW
 -----END PGP SIGNATURE-----
