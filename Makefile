@@ -396,8 +396,8 @@ docker-driver: docker-driver-clean
 	(docker export $$ID | tar -x -C cmd/docker-driver/rootfs) && \
 	docker rm -vf $$ID
 	docker rmi rootfsimage -f
-	docker plugin create grafana/loki-docker-driver:$(PLUGIN_TAG)$(PLUGIN_ARCH) cmd/docker-driver
-	docker plugin create grafana/loki-docker-driver:latest$(PLUGIN_ARCH) cmd/docker-driver
+	docker plugin create kavirajk/loki-docker-driver:$(PLUGIN_TAG)$(PLUGIN_ARCH) cmd/docker-driver
+	docker plugin create kavirajk/loki-docker-driver:latest$(PLUGIN_ARCH) cmd/docker-driver
 
 cmd/docker-driver/docker-driver: $(APP_GO_FILES)
 	CGO_ENABLED=0 go build $(GO_FLAGS) -o $@ ./$(@D)

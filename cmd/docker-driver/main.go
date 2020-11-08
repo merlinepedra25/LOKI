@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/docker/go-plugins-helpers/sdk"
@@ -28,6 +30,15 @@ func main() {
 		fmt.Fprintln(os.Stdout, "invalid log level: ", levelVal)
 		os.Exit(1)
 	}
+
+	sig := make(chan os.Signal)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		s := <-sig
+		level.Info(util.Logger).Log("event", "signal received", "sig", s)
+		os.Exit(1)
+	}()
+
 	logger := newLogger(logLevel)
 	level.Info(util.Logger).Log("msg", "Starting docker-plugin", "version", version.Info())
 	h := sdk.NewHandler(`{"Implements": ["LoggingDriver"]}`)
@@ -40,7 +51,7 @@ func main() {
 
 func newLogger(lvl logging.Level) log.Logger {
 	// plugin logs must be stdout to appear.
-	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout))
+	logger := log.NewJSONLogger(log.NewSyncWriter(os.Stdout))
 	logger = level.NewFilter(logger, lvl.Gokit)
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 	logger = log.With(logger, "caller", log.Caller(3))

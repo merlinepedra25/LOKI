@@ -246,7 +246,9 @@ func (c *client) sendBatch(tenantID string, batch *batch) {
 	bufBytes := float64(len(buf))
 	encodedBytes.WithLabelValues(c.cfg.URL.Host).Add(bufBytes)
 
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
 	backoff := util.NewBackoff(ctx, c.cfg.BackoffConfig)
 	var status int
 	for backoff.Ongoing() {
