@@ -3,10 +3,10 @@ entries:
   fluent-bit:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:45.944087902Z
+    created: 2020-11-09T07:40:23.118474015Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
-    digest: 18c1ff2dc834e7277f921f30b05ce87f52d3b22ffc3d56a28d06a7eb9540a2d2
+    digest: cff40cfb46049e50340993e747579ce16ba0942e86ef95a3a8f125ac1df79171
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -22,7 +22,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:45.943555662Z
+    created: 2020-11-09T07:40:23.117673585Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 513992598a1806878c3c8a277ba257c269b9cb0e0b33075a507e66d4f9ff3853
@@ -41,7 +41,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:45.943039415Z
+    created: 2020-11-09T07:40:23.116888686Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: bfada1f33c3e870f3b5aba1b1f9457b5682f4d8743f1075b0045fe231e90898f
@@ -60,7 +60,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:45.942522746Z
+    created: 2020-11-09T07:40:23.116138036Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: dc2046366e4d7112644f787eb8857e5c031f62828609895131d52135864d2347
@@ -79,7 +79,7 @@ entries:
     version: 0.3.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:45.942078126Z
+    created: 2020-11-09T07:40:23.115403074Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: debe699b95d13b9f63621e6d4562322be8dbfb4a61892dee41603627b5c7d8d3
@@ -98,7 +98,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.941606697Z
+    created: 2020-11-09T07:40:23.114680196Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 2085ba47c72cf4beeff618b96f7813edd0e6bd336bd90b6e0b6bf9aab1470d48
@@ -117,7 +117,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.941165837Z
+    created: 2020-11-09T07:40:23.113955886Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: dbf137c70c2d2947db1d4d51e2d0f3a5eff593acc26dba4614d5000feb8ed601
@@ -136,7 +136,7 @@ entries:
     version: 0.1.5
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.940709088Z
+    created: 2020-11-09T07:40:23.113241626Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 00b8b7c5f896e36163ea5c410e4d43c86aa98adaa0bef21a13c074fd1f1c1232
@@ -155,7 +155,7 @@ entries:
     version: 0.1.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.940272036Z
+    created: 2020-11-09T07:40:23.112533929Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: ce01a89b8545cddf1b80de6f39bed01c8f41ffc4e7330a1ed6f98cb10d3facd3
@@ -174,7 +174,7 @@ entries:
     version: 0.1.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.939845689Z
+    created: 2020-11-09T07:40:23.111813351Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 3c578c8e552ba8dd985f9435a0f3d3a2849181f66ae54c3dc0905bf602c53d69
@@ -193,7 +193,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:45.939421753Z
+    created: 2020-11-09T07:40:23.111065737Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 69bf065e27c194afbb8c228ee509a82f92dc9221fb8929ce3c418505c3ab7e8a
@@ -212,7 +212,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:45.93898081Z
+    created: 2020-11-09T07:40:23.110362174Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 3f82d2d5fd99653efbc16428bc7c8ba8f8f3ce23d47cf6a64f0c8501d6d6bb27
@@ -231,7 +231,7 @@ entries:
     version: 0.1.0
   - apiVersion: v1
     appVersion: v0.0.1
-    created: 2020-11-06T07:38:45.938533214Z
+    created: 2020-11-09T07:40:23.109500579Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: ed980766c1f08f92c70d803634ded53dc47e7bfbd5db1a6b564e864c5b99f1ed
@@ -250,7 +250,7 @@ entries:
     version: 0.0.5
   - apiVersion: v1
     appVersion: v0.0.1
-    created: 2020-11-06T07:38:45.937363415Z
+    created: 2020-11-09T07:40:23.108360697Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 1c7989e0c47edf83f12404f346ad165a7186d450059045343339a448d9613fc2
@@ -269,7 +269,7 @@ entries:
     version: 0.0.4
   - apiVersion: v1
     appVersion: v0.0.1
-    created: 2020-11-06T07:38:45.936887052Z
+    created: 2020-11-09T07:40:23.107876537Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 0c094103864c5ea2e6ccf96c3558df4775b3558f193f1507958656a820084737
@@ -288,7 +288,7 @@ entries:
     version: 0.0.3
   - apiVersion: v1
     appVersion: v0.0.1
-    created: 2020-11-06T07:38:45.93642208Z
+    created: 2020-11-09T07:40:23.107446256Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: f5489df54d92816141a02fa8f331fd962d9f63ed32558a5d96372df4c48f61c6
@@ -306,7 +306,7 @@ entries:
     - fluent-bit-0.0.2.tgz
     version: 0.0.2
   - appVersion: v0.0.1
-    created: 2020-11-06T07:38:45.936018792Z
+    created: 2020-11-09T07:40:23.106948581Z
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: d38f1dfb6d66fd9d9ea8342257747d29c472dc66fa332d01f291210fe57a5bbf
@@ -326,9 +326,9 @@ entries:
   loki:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:45.967998919Z
+    created: 2020-11-09T07:40:23.166369806Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 3c7148131345ec0bbdd2a3f321e48608a9eecdd267595088a6c42abd3c3fb737
+    digest: 4991a062acb33f977b413aa4f9fed9b4be4e6e56ee56e9f1935a26b07f426ed9
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -344,7 +344,7 @@ entries:
     version: 2.0.2
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:45.967577676Z
+    created: 2020-11-09T07:40:23.165191681Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 19d7f76c7c7e8395947af51bafeb19d4fa004b64e0b320c5e725a1bf08d0c5de
     engine: gotpl
@@ -362,7 +362,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:45.967148534Z
+    created: 2020-11-09T07:40:23.163973113Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: aa6170325acabfd6f75d5813cdf3e3fb2b362b5e255e5ac5cb5d41d0dbf6248b
     engine: gotpl
@@ -380,7 +380,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:45.9608292Z
+    created: 2020-11-09T07:40:23.151488529Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: a588edce816d0278a173d416cfba0aacb98d6d7cf8888fe1f2d708a06be500bd
     engine: gotpl
@@ -398,7 +398,7 @@ entries:
     version: 0.31.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:45.960396949Z
+    created: 2020-11-09T07:40:23.150501232Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 43d89a097be7ed1756e348c563edc993ebc08134720589f712d4a9fa7afa3e3e
     engine: gotpl
@@ -416,7 +416,7 @@ entries:
     version: 0.31.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.959979492Z
+    created: 2020-11-09T07:40:23.149511429Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 2c99eabdd810b79fca1395ec5d264acf3a6b2f383549aa4c9a4baa6b88041d7f
     engine: gotpl
@@ -434,7 +434,7 @@ entries:
     version: 0.30.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.959545966Z
+    created: 2020-11-09T07:40:23.148451139Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 59d41a25c45ead6b26900b943d7d742f4699b845e32f77d509c79e75ca29a60f
     engine: gotpl
@@ -452,7 +452,7 @@ entries:
     version: 0.30.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.959100425Z
+    created: 2020-11-09T07:40:23.147473297Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 336c2413bb9958a10d814e96c124aacfb22833a30f523136880382cd05750eaa
     engine: gotpl
@@ -470,7 +470,7 @@ entries:
     version: 0.30.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.958634993Z
+    created: 2020-11-09T07:40:23.146520304Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: cc02b32af0a15af6551e3a3a52fe14a5041c1ce9a5525183e4ba629aae090f07
     engine: gotpl
@@ -488,7 +488,7 @@ entries:
     version: 0.29.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:45.958226878Z
+    created: 2020-11-09T07:40:23.145672054Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 714ee1f1bb1a23616804b0e727160af20d59909de4d2fdc3a9e63167ea78d12a
     engine: gotpl
@@ -506,7 +506,7 @@ entries:
     version: 0.29.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:45.957812521Z
+    created: 2020-11-09T07:40:23.144747493Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: c365e7a3c3dfed42e19aa6b7d03290d1a47650ba5dc9c9d55a3bd90387dd2b4a
     engine: gotpl
@@ -524,7 +524,7 @@ entries:
     version: 0.28.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:45.957416418Z
+    created: 2020-11-09T07:40:23.143820422Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d7d843971904ba19d1eaa25416406b49fd708c3d13ecfc1ae35900c1014b3b56
     engine: gotpl
@@ -542,7 +542,7 @@ entries:
     version: 0.28.0
   - apiVersion: v1
     appVersion: v1.4.2
-    created: 2020-11-06T07:38:45.957011044Z
+    created: 2020-11-09T07:40:23.139941433Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: b2c06d2bb4fa7c6c6854ecbc30eac9f202bcd265f4e40765c57e131371a9774d
     engine: gotpl
@@ -560,7 +560,7 @@ entries:
     version: 0.27.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:45.956547523Z
+    created: 2020-11-09T07:40:23.137874222Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: fc5f60d8628bf4508f1345a18afd8cb76e4b77fbbf66820c4cad7f56ed863a87
     engine: gotpl
@@ -578,7 +578,7 @@ entries:
     version: 0.26.1
   - apiVersion: v1
     appVersion: v1.4.0
-    created: 2020-11-06T07:38:45.955269651Z
+    created: 2020-11-09T07:40:23.137137574Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 4f4f0b27ef01e5ecae3795ce3c20b3bad28f1246de867ed57a6934e12f77cfd1
     engine: gotpl
@@ -596,7 +596,7 @@ entries:
     version: 0.26.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:45.954862115Z
+    created: 2020-11-09T07:40:23.136418227Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: b75dcebee5beb4fe7e5cff46909e1aab640c4c20c97b41e457ccc50455335b7c
     engine: gotpl
@@ -614,7 +614,7 @@ entries:
     version: 0.25.3
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:45.954450389Z
+    created: 2020-11-09T07:40:23.135710571Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d69307b1c68fe6eb62e08cd7bd4ece5ac9f370e95c889cf417cdc3cda80de6bd
     engine: gotpl
@@ -632,7 +632,7 @@ entries:
     version: 0.25.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:45.954061164Z
+    created: 2020-11-09T07:40:23.134966323Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: dd2dff55d8d3f340a50f958a81b599040a052eb6bdcc82128d13158e7d3c98d2
     engine: gotpl
@@ -650,7 +650,7 @@ entries:
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:45.953621048Z
+    created: 2020-11-09T07:40:23.134254842Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 7adf6652a3295dd4928c1026fdc251a7dbcfacbcbf9c09d6f168ab670a6fd737
     engine: gotpl
@@ -668,7 +668,7 @@ entries:
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:45.953198725Z
+    created: 2020-11-09T07:40:23.133550788Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 582e409efba17aa9728903275bf6da7a78a4200e41524f25133ab1342fc4b181
     engine: gotpl
@@ -686,7 +686,7 @@ entries:
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:45.952823098Z
+    created: 2020-11-09T07:40:23.132883268Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: ef43f6cce4ef6ffafbf4cd67a216583d07257cdfbe24711b12431be91a0aeb10
     engine: gotpl
@@ -704,7 +704,7 @@ entries:
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:45.952439521Z
+    created: 2020-11-09T07:40:23.132178915Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: efadee3149bdd7460deb8993f3f6a92a0bb8487518db24d0a4dac210ea527ddf
     engine: gotpl
@@ -722,7 +722,7 @@ entries:
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:45.952016135Z
+    created: 2020-11-09T07:40:23.13151241Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: ac2c152c1b9d2c9b7f928ec657d48bd16b1be9a684a734ae7d0f9fd43d23e742
     engine: gotpl
@@ -740,7 +740,7 @@ entries:
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.1.0
-    created: 2020-11-06T07:38:45.951621697Z
+    created: 2020-11-09T07:40:23.130811533Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 715156352d6f7c5def6f43b87cd7620d1d880ce4c68bdd007f2f77d3035f3853
     engine: gotpl
@@ -758,7 +758,7 @@ entries:
     version: 0.20.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: 2020-11-06T07:38:45.951229993Z
+    created: 2020-11-09T07:40:23.130140457Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9c7119c53e589f0de958ca1233bb4ef84784576904ccb59a945c1d1f4f88972a
     engine: gotpl
@@ -776,7 +776,7 @@ entries:
     version: 0.19.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: 2020-11-06T07:38:45.950824432Z
+    created: 2020-11-09T07:40:23.129497446Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e0b214696cb8ca268b0d43b75ecb01f3d435ead62eb5940eb9352e24ccec039a
     engine: gotpl
@@ -794,7 +794,7 @@ entries:
     version: 0.18.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:45.950447872Z
+    created: 2020-11-09T07:40:23.128832808Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 0f2bc3fec9d28ed432a6061054677b47a9f9e89ea2efc7b889d7900addfee855
     engine: gotpl
@@ -812,7 +812,7 @@ entries:
     version: 0.17.2
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:45.95005711Z
+    created: 2020-11-09T07:40:23.128113308Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: af89a6f9acb458ecb467ddd4a6a80833dd3ff24fde50f737d1aea7beafaabb48
     engine: gotpl
@@ -830,7 +830,7 @@ entries:
     version: 0.17.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:45.949630368Z
+    created: 2020-11-09T07:40:23.127430448Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: cfc41f6853f637eab5cf0e67a4dd06fa3d22dade912cecd32d94e313313cd34b
     engine: gotpl
@@ -848,7 +848,7 @@ entries:
     version: 0.17.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.949259562Z
+    created: 2020-11-09T07:40:23.126670486Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: fd388538fb806848b03642eff2da460f0448a3dcf1fe01b94411ddc248f3eef5
     engine: gotpl
@@ -865,7 +865,7 @@ entries:
     - loki-0.16.1.tgz
     version: 0.16.1
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.948867859Z
+    created: 2020-11-09T07:40:23.125989679Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: fd56e1788368e97fff96a14ce26a7b169d682ac1650583630d1dbc32aba8ab40
     engine: gotpl
@@ -882,7 +882,7 @@ entries:
     - loki-0.16.0.tgz
     version: 0.16.0
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.948488432Z
+    created: 2020-11-09T07:40:23.125338732Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 01a156bcddab8314d8372cb87c2e2a505ca3d2ab1bd23816f7505ec52b202eef
     engine: gotpl
@@ -899,7 +899,7 @@ entries:
     - loki-0.15.0.tgz
     version: 0.15.0
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.948091236Z
+    created: 2020-11-09T07:40:23.124656695Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 790ca32058c22b46e6d2d1edc51504a09142ac4542cf95285c41258830aca1cb
     engine: gotpl
@@ -916,7 +916,7 @@ entries:
     - loki-0.14.3.tgz
     version: 0.14.3
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.947694914Z
+    created: 2020-11-09T07:40:23.123004642Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 55c635da882aa47bd698f01b5aae63919b179077b7ef625351a8dcdb6ea1789f
     engine: gotpl
@@ -933,7 +933,7 @@ entries:
     - loki-0.14.2.tgz
     version: 0.14.2
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.946504222Z
+    created: 2020-11-09T07:40:23.122363678Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 3c012a357e89c4f92226363fcadc47c6b58bdfc88642cbf50986151d01c5eeda
     engine: gotpl
@@ -950,7 +950,7 @@ entries:
     - loki-0.14.1.tgz
     version: 0.14.1
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.946091242Z
+    created: 2020-11-09T07:40:23.121703885Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 4f6cd92592300d66f971c77bbbd720effc277cf4bc8a516071495c534af8fc67
     engine: gotpl
@@ -967,7 +967,7 @@ entries:
     - loki-0.14.0.tgz
     version: 0.14.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.945683026Z
+    created: 2020-11-09T07:40:23.12107761Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 862f323d594b99e2b44087aa4cfe38534aa233b8eb4a7ecea78ac9a424a9b6b8
     engine: gotpl
@@ -984,7 +984,7 @@ entries:
     - loki-0.13.0.tgz
     version: 0.13.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.945276737Z
+    created: 2020-11-09T07:40:23.120419095Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 75e91e15b8a5f320723a3edc6c975b1640a4937217302ecc739c88f45011f1e2
     engine: gotpl
@@ -1001,7 +1001,7 @@ entries:
     - loki-0.12.0.tgz
     version: 0.12.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.944874672Z
+    created: 2020-11-09T07:40:23.119780132Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: fa450059b175c8ab218e3226f13444ba3f4e5216fab86ae50239b0d533e33020
     engine: gotpl
@@ -1018,7 +1018,7 @@ entries:
     - loki-0.11.0.tgz
     version: 0.11.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.944480021Z
+    created: 2020-11-09T07:40:23.119116721Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 083bc0828ef6cd02601fd24ee3e4e70413ddef39eab29859ec2e52f3a8f11405
     engine: gotpl
@@ -1035,7 +1035,7 @@ entries:
     - loki-0.10.0.tgz
     version: 0.10.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.966701787Z
+    created: 2020-11-09T07:40:23.162720912Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: ab57523ec80bfadb2c95cb55b88272ae74111d8a93a00ab22c034aa0d3afb6bf
     engine: gotpl
@@ -1052,7 +1052,7 @@ entries:
     - loki-0.9.2.tgz
     version: 0.9.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.96636221Z
+    created: 2020-11-09T07:40:23.161276315Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 37e60a0d115ed20183f376eabb07e7b52280a7b7a676d6883a5afb9faf2dcb09
     engine: gotpl
@@ -1069,7 +1069,7 @@ entries:
     - loki-0.9.1.tgz
     version: 0.9.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.966014024Z
+    created: 2020-11-09T07:40:23.16038701Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 096ad9077373e1f2be65e4a99a2e917a048c16eb32e9d7607c04a9629a3bdaf9
     engine: gotpl
@@ -1086,7 +1086,7 @@ entries:
     - loki-0.9.0.tgz
     version: 0.9.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.965481756Z
+    created: 2020-11-09T07:40:23.159754374Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 47405b00f7c0fa7317b42a3a4d54187449c32713823c7e69103aa535acedc7ad
     engine: gotpl
@@ -1103,7 +1103,7 @@ entries:
     - loki-0.8.5.tgz
     version: 0.8.5
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.964460206Z
+    created: 2020-11-09T07:40:23.15914707Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: c2db1b9385b3eedab947350e7f05a0d1ff55926b8e9eee9eea08e92f823fe8f9
     engine: gotpl
@@ -1120,7 +1120,7 @@ entries:
     - loki-0.8.4.tgz
     version: 0.8.4
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.964114218Z
+    created: 2020-11-09T07:40:23.158550869Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 324ce9ebb8c3148d440bd8216760e558ed4b63309e759f7ae65493ef897d6df1
     engine: gotpl
@@ -1137,7 +1137,7 @@ entries:
     - loki-0.8.3.tgz
     version: 0.8.3
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.963782227Z
+    created: 2020-11-09T07:40:23.157931806Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1a9c09b6e49fc7ab0deddf0ee2210f4c91c3cc40ae66d090d0ca4d5998a2c2cc
     engine: gotpl
@@ -1154,7 +1154,7 @@ entries:
     - loki-0.8.2.tgz
     version: 0.8.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.963446205Z
+    created: 2020-11-09T07:40:23.157162831Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e716194272835e3c069d5232a70924390568fa589a1a05fab03e9cfbee8730b3
     engine: gotpl
@@ -1171,7 +1171,7 @@ entries:
     - loki-0.8.1.tgz
     version: 0.8.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.963111486Z
+    created: 2020-11-09T07:40:23.156417177Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1b4a6c327668e312d6b61626c3bd48eaa5139e60804d06afebc6a351cba97ff3
     engine: gotpl
@@ -1188,7 +1188,7 @@ entries:
     - loki-0.8.0.tgz
     version: 0.8.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.962769349Z
+    created: 2020-11-09T07:40:23.155636899Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 007b886263b9f7c004960c5477558d7d0f7567e8b4805191281e81b3e0a87343
     engine: gotpl
@@ -1205,7 +1205,7 @@ entries:
     - loki-0.7.2.tgz
     version: 0.7.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.962425259Z
+    created: 2020-11-09T07:40:23.154863286Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: ec3eb0a7b46900195444e3dda3af8853e1cc5af88736ecb5484e517918468be0
     engine: gotpl
@@ -1222,7 +1222,7 @@ entries:
     - loki-0.7.1.tgz
     version: 0.7.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.962033773Z
+    created: 2020-11-09T07:40:23.154071661Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 7aaf0194556a224debd2ecb7572fa432c54ce1beff357d99dd6e55f772fe561f
     engine: gotpl
@@ -1239,7 +1239,7 @@ entries:
     - loki-0.7.0.tgz
     version: 0.7.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.961685642Z
+    created: 2020-11-09T07:40:23.153336349Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 485999e0808701bb5e890a75b056b97365e24e6953b88f8cac58d32497beea10
     engine: gotpl
@@ -1256,7 +1256,7 @@ entries:
     - loki-0.6.0.tgz
     version: 0.6.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.961329384Z
+    created: 2020-11-09T07:40:23.15254254Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 888563cc143746ae8216f5e96c11a3209f666b97d5dd9b7878b1f6b37dbb6db0
     engine: gotpl
@@ -1275,9 +1275,9 @@ entries:
   loki-stack:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:46.239737908Z
+    created: 2020-11-09T07:40:23.632628486Z
     description: 'Loki: like Prometheus, but for logs.'
-    digest: c3a01478c93d66b0f30ad550bad0f2abe36b6fc80a91b6e7301d2f92d85ac029
+    digest: 51c3a5fb5b956e468c6f7e1a403f0264839e26f8230b26770f889fd7f6e31baf
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -1293,7 +1293,7 @@ entries:
     version: 2.0.2
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:46.233430776Z
+    created: 2020-11-09T07:40:23.621897142Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: bb58757941e2ad20072fb676dd9dc5a0e8a29b57cf4e828510f3959e84698d45
     engine: gotpl
@@ -1311,7 +1311,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:46.227713581Z
+    created: 2020-11-09T07:40:23.613420494Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9cac8a8633460862f21f9223e65d9b0f608e6d3c9a4c0972eac8f7237c99bafe
     engine: gotpl
@@ -1329,7 +1329,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.207381424Z
+    created: 2020-11-09T07:40:23.586275936Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: f0efcfec07df6213f2eda29b0ed49f93a6f32837c4b3b34a55e76a030a81e01a
     engine: gotpl
@@ -1347,7 +1347,7 @@ entries:
     version: 0.41.2
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.201554223Z
+    created: 2020-11-09T07:40:23.578853786Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 27203e5c2cb42f4b06c9dac911ee13a501899f6e0dc2d9dfb1775c89035ab425
     engine: gotpl
@@ -1365,7 +1365,7 @@ entries:
     version: 0.41.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.197230565Z
+    created: 2020-11-09T07:40:23.572475661Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 912e128fbf83f2292344020297b803ea3dcc9e7dadd68e03761b08eb1a3ad84a
     engine: gotpl
@@ -1383,7 +1383,7 @@ entries:
     version: 0.41.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.192281433Z
+    created: 2020-11-09T07:40:23.558021374Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e5918a84d0248244cb691dadf0551104d0cab6aa91504790fee6ac45372e994d
     engine: gotpl
@@ -1401,7 +1401,7 @@ entries:
     version: 0.40.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.187891703Z
+    created: 2020-11-09T07:40:23.550628211Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 43319a7522cf4e4880ade93229c944dd2b944407a9a136fa0d4649a44956f4a0
     engine: gotpl
@@ -1419,7 +1419,7 @@ entries:
     version: 0.40.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.183603183Z
+    created: 2020-11-09T07:40:23.533972492Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e558ae9b1f56bd47c914a9017c1c4fafc01be12581afdea4aa4f46956a5fe9c6
     engine: gotpl
@@ -1437,7 +1437,7 @@ entries:
     version: 0.39.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.17854687Z
+    created: 2020-11-09T07:40:23.522542797Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9eb2ac8c055f339b752efa3732870d2dae00a42bfa3b1107c2881e0c66cc05d3
     engine: gotpl
@@ -1455,7 +1455,7 @@ entries:
     version: 0.38.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.173816228Z
+    created: 2020-11-09T07:40:23.515366468Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: c7a07648cf52f6289dea0288f04eba3bea4e43a2865973931d0579ac02315f6e
     engine: gotpl
@@ -1473,7 +1473,7 @@ entries:
     version: 0.38.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.168699205Z
+    created: 2020-11-09T07:40:23.509825366Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 86c5c3d6fb6196728c30ab63ac572578149ba79edaa1a8394c8f88ff9252fe76
     engine: gotpl
@@ -1491,7 +1491,7 @@ entries:
     version: 0.38.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.164345121Z
+    created: 2020-11-09T07:40:23.504913078Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 819c66e207050ec7f25a24356fb887874d792d3a02c6b2eb4b9ca740d529a4d8
     engine: gotpl
@@ -1509,7 +1509,7 @@ entries:
     version: 0.38.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.160656724Z
+    created: 2020-11-09T07:40:23.50007814Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9695df3a0467eee4fcbbc5e35ead59e6f84babf4cf243dbbef2bfbeb559be026
     engine: gotpl
@@ -1527,7 +1527,7 @@ entries:
     version: 0.38.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.156393174Z
+    created: 2020-11-09T07:40:23.496694072Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 3aafae9d3a793e3c23d0379ac4cef53781e6bbdf5ac31eea5dc53359dd29036b
     engine: gotpl
@@ -1545,7 +1545,7 @@ entries:
     version: 0.37.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.153159347Z
+    created: 2020-11-09T07:40:23.493284676Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d557d0f65fd00a9e3fe52c69c149d11dab9baa67c9b87a60076defb556844a37
     engine: gotpl
@@ -1563,7 +1563,7 @@ entries:
     version: 0.37.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.149896044Z
+    created: 2020-11-09T07:40:23.489078066Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 11a71fb042d87b0b1cd542c94e3615066261ed8077f85019ed8ce3c3808b94ab
     engine: gotpl
@@ -1581,7 +1581,7 @@ entries:
     version: 0.37.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.145675094Z
+    created: 2020-11-09T07:40:23.485742452Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d172b56c8f34d273a472beed99a11c268722a05438ada66cbe6fc4fb0720b45c
     engine: gotpl
@@ -1599,7 +1599,7 @@ entries:
     version: 0.37.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.142423502Z
+    created: 2020-11-09T07:40:23.481743935Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 099b1d65915cace6cd843e3a49aa3974b466a204f4530773b9a158f42831a29b
     engine: gotpl
@@ -1617,7 +1617,7 @@ entries:
     version: 0.37.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.139198373Z
+    created: 2020-11-09T07:40:23.468904824Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 4d86989bd1c4006bbec1ccaa847904dbbcf2bf90ab4c57dacf281cc00ecbb187
     engine: gotpl
@@ -1635,7 +1635,7 @@ entries:
     version: 0.36.2
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.134824617Z
+    created: 2020-11-09T07:40:23.463088905Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 748f101d31d744ad9ae3243cf5b618270b26c537b5a3280478c46339d93bb0d8
     engine: gotpl
@@ -1653,7 +1653,7 @@ entries:
     version: 0.36.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.131534631Z
+    created: 2020-11-09T07:40:23.45739775Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 27716dafd66d288d3335298754328313a6cbf36495ca4ea6791dc3090999bdfd
     engine: gotpl
@@ -1671,7 +1671,7 @@ entries:
     version: 0.36.0
   - apiVersion: v1
     appVersion: v1.4.2
-    created: 2020-11-06T07:38:46.128242441Z
+    created: 2020-11-09T07:40:23.450278713Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d1c13ab4918e0c01531fe1e72a4dd46a6db0fc96f445b4755e0a06de8f68b4a0
     engine: gotpl
@@ -1689,7 +1689,7 @@ entries:
     version: 0.35.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.124085021Z
+    created: 2020-11-09T07:40:23.44475675Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: b945fa054ffc3bd08770ca622b21f158b40d9538b8ff0e8540a7a683d5c4b2ac
     engine: gotpl
@@ -1707,7 +1707,7 @@ entries:
     version: 0.34.2
   - apiVersion: v1
     appVersion: v1.4.0
-    created: 2020-11-06T07:38:46.12079473Z
+    created: 2020-11-09T07:40:23.439063564Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: ae40cf8e6934eabace01353568e41f709fa100d40ba54ee2acf3ae9911d80cb8
     engine: gotpl
@@ -1725,7 +1725,7 @@ entries:
     version: 0.34.1
   - apiVersion: v1
     appVersion: v1.4.0
-    created: 2020-11-06T07:38:46.117454318Z
+    created: 2020-11-09T07:40:23.431806663Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 61f4f2a0f3f10b8912c0708b0090c81fa75e916c1ce2007264e1ff8b4ea06f6c
     engine: gotpl
@@ -1743,7 +1743,7 @@ entries:
     version: 0.34.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.113474527Z
+    created: 2020-11-09T07:40:23.426972626Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 6e62f3a1c1320c9f7f2f45e3194efbe689729a75d8fc2787fcf829cd1002dd24
     engine: gotpl
@@ -1761,7 +1761,7 @@ entries:
     version: 0.33.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.110244341Z
+    created: 2020-11-09T07:40:23.422803067Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: c075e9476b2c60fbf1b3d1dbdb367f132e55488fa074c18a34c3268f1d15bc65
     engine: gotpl
@@ -1779,7 +1779,7 @@ entries:
     version: 0.33.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.106995528Z
+    created: 2020-11-09T07:40:23.418273676Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 3d0e08671db013a6afb7be423a21985f12a732572c48fdf7fa9f7e8f8659eba6
     engine: gotpl
@@ -1797,7 +1797,7 @@ entries:
     version: 0.32.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.102925633Z
+    created: 2020-11-09T07:40:23.413930265Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 50aa004e3693fa1f70eb9f968c27d6a36e7a53c202a722c0755db39a35e31e04
     engine: gotpl
@@ -1815,7 +1815,7 @@ entries:
     version: 0.32.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.099630481Z
+    created: 2020-11-09T07:40:23.409148645Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e97e9b6ab1dc3dfcfdca04a405911a1ff1c181578d11d163c2e09cf572cf78e8
     engine: gotpl
@@ -1833,7 +1833,7 @@ entries:
     version: 0.32.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.096392523Z
+    created: 2020-11-09T07:40:23.404762257Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 3faef0c13bf345da84187952f192da1f111ccce155598039c5a97fff1bd2497d
     engine: gotpl
@@ -1851,7 +1851,7 @@ entries:
     version: 0.31.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.092173047Z
+    created: 2020-11-09T07:40:23.400734368Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: f462a8901fac8a7ce08d093b589f436ffd2d6e63bf8a9b8e6b7420dfe3ccb9d7
     engine: gotpl
@@ -1869,7 +1869,7 @@ entries:
     version: 0.31.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.088964572Z
+    created: 2020-11-09T07:40:23.397299742Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 86ced9e49393bfccfa19fa587d9fd1bbe4c021259f6d44c99692df5316257a14
     engine: gotpl
@@ -1887,7 +1887,7 @@ entries:
     version: 0.31.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.085713091Z
+    created: 2020-11-09T07:40:23.39188733Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: a0bdfd9543463235ebee98421c47c6392b1998cdaadbbb97ddbe13c665715bad
     engine: gotpl
@@ -1905,7 +1905,7 @@ entries:
     version: 0.30.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.081418512Z
+    created: 2020-11-09T07:40:23.386822937Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: a26e963df2a2389aef0ed085660bf37db45c03a09d4b5b1f778d206f463385ee
     engine: gotpl
@@ -1923,7 +1923,7 @@ entries:
     version: 0.29.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.078152049Z
+    created: 2020-11-09T07:40:23.381641487Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 155999c6d34444f827c38528d594435472ccd3196a430ecfc8516fa942c49685
     engine: gotpl
@@ -1941,7 +1941,7 @@ entries:
     version: 0.28.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.074076134Z
+    created: 2020-11-09T07:40:23.374282281Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 802a43d59248a7b9fbefc7362f7d7220e381178bcb13bc655a56bdf0af3f607b
     engine: gotpl
@@ -1959,7 +1959,7 @@ entries:
     version: 0.27.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.069815031Z
+    created: 2020-11-09T07:40:23.35659488Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 67a9695eead4293c7e97f0cf80eb0a5d9cbd37c21113d54cd6ed05422a9d8bdf
     engine: gotpl
@@ -1977,7 +1977,7 @@ entries:
     version: 0.27.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.066533133Z
+    created: 2020-11-09T07:40:23.329822064Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: dfb06e27173c3dce92a3ff18fb776b6589493019ca28bf078c893fdcad91671d
     engine: gotpl
@@ -1995,7 +1995,7 @@ entries:
     version: 0.26.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.063396551Z
+    created: 2020-11-09T07:40:23.322955528Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 575c70b6cf7c52c9ba9931d21a2f14e2c3c7cc99cb76979094e040ada4ef3451
     engine: gotpl
@@ -2013,7 +2013,7 @@ entries:
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.059440698Z
+    created: 2020-11-09T07:40:23.319592623Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 5540bdf9b40498d813c1382abf38ffb8af04e315013a949eae42c670f6202a9b
     engine: gotpl
@@ -2031,7 +2031,7 @@ entries:
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.056215988Z
+    created: 2020-11-09T07:40:23.316204595Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e134367b8b38636a2974f550733fba46991857889907522823b400707b51be9d
     engine: gotpl
@@ -2049,7 +2049,7 @@ entries:
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.052462284Z
+    created: 2020-11-09T07:40:23.310999075Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 16afa1713d58b94596d0f23dc1db9d6d8e8b8c1446153562da9d7d21ee56e579
     engine: gotpl
@@ -2067,7 +2067,7 @@ entries:
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.1.0
-    created: 2020-11-06T07:38:46.049311Z
+    created: 2020-11-09T07:40:23.3070823Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 769203cd6381fd5381e91283e4ed73929cef0cec67b2ab5f29cc63d870649be8
     engine: gotpl
@@ -2085,7 +2085,7 @@ entries:
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: 2020-11-06T07:38:46.046159384Z
+    created: 2020-11-09T07:40:23.301479392Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 6c91581d6cbf42a0563a9568d73b559ddfa83bda5c1225df39a72826e5082024
     engine: gotpl
@@ -2103,7 +2103,7 @@ entries:
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: 2020-11-06T07:38:46.042467172Z
+    created: 2020-11-09T07:40:23.297795209Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 8918a792f06eaa3be43ff16529d32e04474cca74dab2808ac52b7dce1dda1334
     engine: gotpl
@@ -2121,7 +2121,7 @@ entries:
     version: 0.20.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:46.039357875Z
+    created: 2020-11-09T07:40:23.294028148Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 70dbea666bb589ad24e960f2d4d03b9032808056f9b0cacb86400fd0222d68cb
     engine: gotpl
@@ -2139,7 +2139,7 @@ entries:
     version: 0.19.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:46.036185103Z
+    created: 2020-11-09T07:40:23.290042473Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1935995b699c660ca77f341ea2553296c05421bac2782bf2c6a16bddfd2f4f98
     engine: gotpl
@@ -2157,7 +2157,7 @@ entries:
     version: 0.19.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:46.032360792Z
+    created: 2020-11-09T07:40:23.286311561Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 801741336e527b3418321d0758fd91434775c8f2924cad50735f410e66f0844a
     engine: gotpl
@@ -2175,7 +2175,7 @@ entries:
     version: 0.18.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:46.029384621Z
+    created: 2020-11-09T07:40:23.283065947Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d86de57541d6a710d171ff64da56d8209bd932855f619b1c2e7e4c7fb30dd7a5
     engine: gotpl
@@ -2193,7 +2193,7 @@ entries:
     version: 0.18.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.02644947Z
+    created: 2020-11-09T07:40:23.274225226Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: dd60990db37f9c77a98c9c365335c439ae48e97a07b9419c0a866c53ee4e35e4
     engine: gotpl
@@ -2210,7 +2210,7 @@ entries:
     - loki-stack-0.17.4.tgz
     version: 0.17.4
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.023018117Z
+    created: 2020-11-09T07:40:23.269165413Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e857ec4cb876b92d64a934c54b2a0b6423e63aa64c2e4fe6066b80f2ac0592f8
     engine: gotpl
@@ -2227,7 +2227,7 @@ entries:
     - loki-stack-0.17.3.tgz
     version: 0.17.3
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.020000842Z
+    created: 2020-11-09T07:40:23.242075834Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d5a62f874ebfdd41129a15940bf4f31f01a73d050a42fc42b000df34e4ac83f4
     engine: gotpl
@@ -2244,7 +2244,7 @@ entries:
     - loki-stack-0.17.2.tgz
     version: 0.17.2
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.01706154Z
+    created: 2020-11-09T07:40:23.23700937Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 7aefea03cdaa31b125409959ef5ec5860074f0eaa748ece8157302311a47eede
     engine: gotpl
@@ -2261,7 +2261,7 @@ entries:
     - loki-stack-0.17.1.tgz
     version: 0.17.1
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.014160472Z
+    created: 2020-11-09T07:40:23.226110122Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 19a8e4d67fa69ad076307171fae79a16bcccc705b7926b386b7543cb96f7146d
     engine: gotpl
@@ -2278,7 +2278,7 @@ entries:
     - loki-stack-0.17.0.tgz
     version: 0.17.0
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.010546848Z
+    created: 2020-11-09T07:40:23.221696936Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d85bb56dd190e22937520fac35bbe546eb99ae797ef6f1fe876db0e20029907d
     engine: gotpl
@@ -2295,7 +2295,7 @@ entries:
     - loki-stack-0.16.5.tgz
     version: 0.16.5
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.007617299Z
+    created: 2020-11-09T07:40:23.217390581Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9067f245362ac924e2e235fa2fbc451864942af213c915b65492d35934d8aa4e
     engine: gotpl
@@ -2312,7 +2312,7 @@ entries:
     - loki-stack-0.16.4.tgz
     version: 0.16.4
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.004996902Z
+    created: 2020-11-09T07:40:23.213215935Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 545eadac88d1872c2dbe8639a338a4545ad3bee2957299684626125cf9275d68
     engine: gotpl
@@ -2329,7 +2329,7 @@ entries:
     - loki-stack-0.16.3.tgz
     version: 0.16.3
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.001727534Z
+    created: 2020-11-09T07:40:23.20996691Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 3125a3d2ac4dcd756f2285073741652d824d67ff9075203a376fb925e89a920f
     engine: gotpl
@@ -2346,7 +2346,7 @@ entries:
     - loki-stack-0.16.2.tgz
     version: 0.16.2
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.999104859Z
+    created: 2020-11-09T07:40:23.206948019Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 010ef726bfe7afc583f7a909d1df78b8ffc680eb900db4ad2846db3596ac10e8
     engine: gotpl
@@ -2363,7 +2363,7 @@ entries:
     - loki-stack-0.16.1.tgz
     version: 0.16.1
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:45.996480311Z
+    created: 2020-11-09T07:40:23.203248617Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 39dd1229ea22c96974ec1eb344347a1d01cf531e70bcc13c70cbec665a8295cb
     engine: gotpl
@@ -2380,7 +2380,7 @@ entries:
     - loki-stack-0.16.0.tgz
     version: 0.16.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.993046154Z
+    created: 2020-11-09T07:40:23.199071771Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: f17d102d4b8f3db5a6463c7f9d66a07ffea0b94ed91518a4ad8157ec516d4c93
     engine: gotpl
@@ -2397,7 +2397,7 @@ entries:
     - loki-stack-0.15.0.tgz
     version: 0.15.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.990399639Z
+    created: 2020-11-09T07:40:23.19592631Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 04bd7fe3d0985c0f188b93aab987b71e07b108f919c8d322039c8b4207a3d856
     engine: gotpl
@@ -2414,7 +2414,7 @@ entries:
     - loki-stack-0.14.0.tgz
     version: 0.14.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.987743612Z
+    created: 2020-11-09T07:40:23.193020408Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 5dccf3d7cf34ae6e48a263a25456fd1ed0c9886351867387d68e7fb22d34ba7d
     engine: gotpl
@@ -2431,7 +2431,7 @@ entries:
     - loki-stack-0.13.1.tgz
     version: 0.13.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.985100387Z
+    created: 2020-11-09T07:40:23.189604091Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: d1fef8947117c843e13486911e2a6f78ff2d14be7277b9f241a99efd2b5eb645
     engine: gotpl
@@ -2448,7 +2448,7 @@ entries:
     - loki-stack-0.13.0.tgz
     version: 0.13.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.981523894Z
+    created: 2020-11-09T07:40:23.186902592Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: e14a08d6c404900a9d6debbe27b153acee96653853f3603b9c7d278dc4f51d24
     engine: gotpl
@@ -2465,7 +2465,7 @@ entries:
     - loki-stack-0.12.0.tgz
     version: 0.12.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.978968392Z
+    created: 2020-11-09T07:40:23.184220242Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 56e76e14bad9b120c8ab179436eeba505d86b7df1e978d2529eb5e00041b4289
     engine: gotpl
@@ -2482,7 +2482,7 @@ entries:
     - loki-stack-0.11.1.tgz
     version: 0.11.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.976354655Z
+    created: 2020-11-09T07:40:23.17955191Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 8bc675d111d33a39b95cb40940a4065308cb55711bedd88028c29c419d1715e1
     engine: gotpl
@@ -2499,7 +2499,7 @@ entries:
     - loki-stack-0.11.0.tgz
     version: 0.11.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.973142398Z
+    created: 2020-11-09T07:40:23.175377426Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 06602b353e6543ed1292eda4031ee5809fc3c65e7cfb2e04fe726360fd3ab953
     engine: gotpl
@@ -2516,7 +2516,7 @@ entries:
     - loki-stack-0.10.1.tgz
     version: 0.10.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:45.970593653Z
+    created: 2020-11-09T07:40:23.170882085Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: c51e78bae2aa41cc789cbae11dc96e95d2211143e83e71fda37c7d2b58450a73
     engine: gotpl
@@ -2533,7 +2533,7 @@ entries:
     - loki-stack-0.10.0.tgz
     version: 0.10.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.221557145Z
+    created: 2020-11-09T07:40:23.605439441Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 57391df764929a66c229a47c2a1b979b721908df4e30fec098dbf8b74fd32e58
     engine: gotpl
@@ -2550,7 +2550,7 @@ entries:
     - loki-stack-0.9.5.tgz
     version: 0.9.5
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.218987519Z
+    created: 2020-11-09T07:40:23.601379999Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 5421a8b30e5b553fdee98e7ec0c14d36a07c7ec9f163c3d0c0e2b46ddeb26645
     engine: gotpl
@@ -2567,7 +2567,7 @@ entries:
     - loki-stack-0.9.4.tgz
     version: 0.9.4
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.216362042Z
+    created: 2020-11-09T07:40:23.597238544Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: f65ef4b0d447183027b93393e5af2b9c487e1021179c33bf267cb91323dc2ce9
     engine: gotpl
@@ -2584,7 +2584,7 @@ entries:
     - loki-stack-0.9.3.tgz
     version: 0.9.3
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.215631249Z
+    created: 2020-11-09T07:40:23.596440844Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9cee5fd38d60cd3bbc5642db26923cd5bde4d20a93eb1cf5146dff7dcfb05880
     engine: gotpl
@@ -2601,7 +2601,7 @@ entries:
     - loki-stack-0.9.2.tgz
     version: 0.9.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.214208007Z
+    created: 2020-11-09T07:40:23.595621507Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 8fc04b7ec127f31a654df1f9d8aee67aa4fcb91c1723e413d5e645eb08ecd788
     engine: gotpl
@@ -2618,7 +2618,7 @@ entries:
     - loki-stack-0.9.1.tgz
     version: 0.9.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.213510013Z
+    created: 2020-11-09T07:40:23.594791102Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: f9c9a361174b4eaa97a38ffd60694649060fac698584ba07530c8714eb7c15a2
     engine: gotpl
@@ -2635,7 +2635,7 @@ entries:
     - loki-stack-0.9.0.tgz
     version: 0.9.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.212828091Z
+    created: 2020-11-09T07:40:23.594015474Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1dfec1dd8fe35147eb14af8cdd0a17d23be1b132ab733aa9944660f33994c7db
     engine: gotpl
@@ -2652,7 +2652,7 @@ entries:
     - loki-stack-0.8.1.tgz
     version: 0.8.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.212165316Z
+    created: 2020-11-09T07:40:23.593245452Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 0a98ad11b5eb6568fc60706ae27decb7ad67382c62b0d0ab9cee7f16ac41f682
     engine: gotpl
@@ -2669,7 +2669,7 @@ entries:
     - loki-stack-0.8.0.tgz
     version: 0.8.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.211471179Z
+    created: 2020-11-09T07:40:23.592438374Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 592eee838821d94146a76e8b22aafa5a05a7d4e9664463cc3599164c1f7fd261
     engine: gotpl
@@ -2686,7 +2686,7 @@ entries:
     - loki-stack-0.7.2.tgz
     version: 0.7.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.210813749Z
+    created: 2020-11-09T07:40:23.591630503Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 279f7975c021f8ff073be73bb523a2243b0e8f88ec2138960557cd45f4418e1e
     engine: gotpl
@@ -2703,7 +2703,7 @@ entries:
     - loki-stack-0.7.1.tgz
     version: 0.7.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.210135851Z
+    created: 2020-11-09T07:40:23.590800226Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1b36c6c74eb760535cd7f8ae8896f6b9ee73fc6f7ae1bf54513636807af3171e
     engine: gotpl
@@ -2720,7 +2720,7 @@ entries:
     - loki-stack-0.7.0.tgz
     version: 0.7.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.209425758Z
+    created: 2020-11-09T07:40:23.590045694Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: eb1114546434c0338ef7cc4d83e7feb9922b05735d16b2df981edb8ecfcd492d
     engine: gotpl
@@ -2737,7 +2737,7 @@ entries:
     - loki-stack-0.6.2.tgz
     version: 0.6.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.208757264Z
+    created: 2020-11-09T07:40:23.589249654Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 8946fb38e6e4b6cb3fa91d49d878be981c1db08e8acb7b6638cfd88ac873747d
     engine: gotpl
@@ -2754,7 +2754,7 @@ entries:
     - loki-stack-0.6.1.tgz
     version: 0.6.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.208068946Z
+    created: 2020-11-09T07:40:23.588397255Z
     description: 'Loki: like Prometheus, but for logs.'
     digest: 737c83e5833d36931afeec39b4f61b329c92cd8f1d43d5451bd1b7be4cff0826
     engine: gotpl
@@ -2773,9 +2773,9 @@ entries:
   promtail:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:46.260760418Z
+    created: 2020-11-09T07:40:23.67338126Z
     description: Responsible for gathering logs and sending them to Loki
-    digest: 90ca0fea730870c0a0741c808a2aa5d84c31780fd937a839ed29af2a06fd65c1
+    digest: e033a60647908ac8ef00e44f76a2436bdbdc44b70899561342b7cf7f1b2ab78e
     engine: gotpl
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -2791,7 +2791,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: 2020-11-06T07:38:46.260319255Z
+    created: 2020-11-09T07:40:23.672606273Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 78c45034bfe79872843b2e49884b7bcc37a24da4912eef95b1c875c8cb33812e
     engine: gotpl
@@ -2809,7 +2809,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.255287078Z
+    created: 2020-11-09T07:40:23.659993593Z
     description: Responsible for gathering logs and sending them to Loki
     digest: f66dde2dc79176aff99406f2995bd7f9483052504773964d7259e779a7e4a7c4
     engine: gotpl
@@ -2827,7 +2827,7 @@ entries:
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.254857332Z
+    created: 2020-11-09T07:40:23.659270536Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 0ebcfdcb3ff6a8e8531819c4c56b60016cb60746ea3889bf3a7ee7d9827740d7
     engine: gotpl
@@ -2845,7 +2845,7 @@ entries:
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: 2020-11-06T07:38:46.254420328Z
+    created: 2020-11-09T07:40:23.658466641Z
     description: Responsible for gathering logs and sending them to Loki
     digest: ebb8b4a2415cde674778d770a85f33046c9b365455124521ac3571965347ffe0
     engine: gotpl
@@ -2863,7 +2863,7 @@ entries:
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.253989009Z
+    created: 2020-11-09T07:40:23.657725485Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 0bd3309b1003ebaaef6ff06ce41dbd35588098f8f8b02fae4595c7a79e8d3ebd
     engine: gotpl
@@ -2881,7 +2881,7 @@ entries:
     version: 0.23.5
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.253540932Z
+    created: 2020-11-09T07:40:23.656988631Z
     description: Responsible for gathering logs and sending them to Loki
     digest: bd434858f048bb20d1e10af130cdefeedc89a06579c559b3705d1ba649ca7589
     engine: gotpl
@@ -2899,7 +2899,7 @@ entries:
     version: 0.23.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.253107938Z
+    created: 2020-11-09T07:40:23.656213015Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 775ebea3dfbc960d8b6150e074331523013d5c7b9c0dbbce48e2813e898c671b
     engine: gotpl
@@ -2917,7 +2917,7 @@ entries:
     version: 0.23.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.252671797Z
+    created: 2020-11-09T07:40:23.655487146Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 726e04347976cef4f9819feda08a6bbebec1d24268cb3640b9b9ae2d5e96ee3e
     engine: gotpl
@@ -2935,7 +2935,7 @@ entries:
     version: 0.23.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.252231122Z
+    created: 2020-11-09T07:40:23.654676825Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 6f0cc4b0a53e389a2130e9740ab11d52b960b5fa47535bfb9bf7a3d3f38eb8ae
     engine: gotpl
@@ -2953,7 +2953,7 @@ entries:
     version: 0.23.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: 2020-11-06T07:38:46.251799306Z
+    created: 2020-11-09T07:40:23.653946825Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 27ebbbdade8d1793773bdb8692322b73867a2e2bd914e43014a1188631291df8
     engine: gotpl
@@ -2971,7 +2971,7 @@ entries:
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.251396106Z
+    created: 2020-11-09T07:40:23.65323915Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 07341bf03cd67bfb1e600daa9ec8c881e8382de3589a9762756a6a00088a67fe
     engine: gotpl
@@ -2989,7 +2989,7 @@ entries:
     version: 0.22.2
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.251006448Z
+    created: 2020-11-09T07:40:23.652345912Z
     description: Responsible for gathering logs and sending them to Loki
     digest: ae9f63fb90495db5ba6ae111964b66c08148a1d54a1db96b86182f23ac1c17ee
     engine: gotpl
@@ -3007,7 +3007,7 @@ entries:
     version: 0.22.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.250603865Z
+    created: 2020-11-09T07:40:23.651622908Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 06cace6cbd93fd8e702dfb9bdbedb17e7424cd9c509ed5868e60b1e7cc45b893
     engine: gotpl
@@ -3025,7 +3025,7 @@ entries:
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.4.2
-    created: 2020-11-06T07:38:46.250200338Z
+    created: 2020-11-09T07:40:23.650848848Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 1a3b6192a0bc898b84e186941a8dca25afffe7c70302eb659377b8655a4107c2
     engine: gotpl
@@ -3043,7 +3043,7 @@ entries:
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: 2020-11-06T07:38:46.249769834Z
+    created: 2020-11-09T07:40:23.650138475Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 997a265c0028b5896c847954dff7fd4ecb39f2dcebe8ded358158327e1f2b824
     engine: gotpl
@@ -3061,7 +3061,7 @@ entries:
     version: 0.20.1
   - apiVersion: v1
     appVersion: v1.4.0
-    created: 2020-11-06T07:38:46.249376674Z
+    created: 2020-11-09T07:40:23.649390763Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 7ed5291b825209dfef4c81553b22e0ede0226db08ca053b6f2298948fc2d08dd
     engine: gotpl
@@ -3079,7 +3079,7 @@ entries:
     version: 0.20.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.248974251Z
+    created: 2020-11-09T07:40:23.645420301Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 8c5c932d4f3ef4569edc62130657b8443e068f45228439eb6cd994e92aae407e
     engine: gotpl
@@ -3097,7 +3097,7 @@ entries:
     version: 0.19.3
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.248549441Z
+    created: 2020-11-09T07:40:23.644727773Z
     description: Responsible for gathering logs and sending them to Loki
     digest: c46bd70340493ca8147714c309a12e7f2a31910991381aad081d67300b6def85
     engine: gotpl
@@ -3115,7 +3115,7 @@ entries:
     version: 0.19.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.247596804Z
+    created: 2020-11-09T07:40:23.644062517Z
     description: Responsible for gathering logs and sending them to Loki
     digest: ed274b81d54a0f23d5465b11ba318a38c5ac4117c8b6628191cdc48f5f128eee
     engine: gotpl
@@ -3133,7 +3133,7 @@ entries:
     version: 0.19.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.246957164Z
+    created: 2020-11-09T07:40:23.643376103Z
     description: Responsible for gathering logs and sending them to Loki
     digest: e01e070622a2b0af31b81676c54b65ce0936bf6b5a2ac00ed7c3ef4cfe8ae5d9
     engine: gotpl
@@ -3151,7 +3151,7 @@ entries:
     version: 0.19.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.246503312Z
+    created: 2020-11-09T07:40:23.642621787Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 8bdf76322bf423a4236e3af4e54b6f873df8b27477c36fcd8acc0e9459361a37
     engine: gotpl
@@ -3169,7 +3169,7 @@ entries:
     version: 0.18.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.246070986Z
+    created: 2020-11-09T07:40:23.641967727Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 987b4f05318d0e59d078e55d3a41451536642da6a9d6906f2a6b6d29163477a1
     engine: gotpl
@@ -3187,7 +3187,7 @@ entries:
     version: 0.18.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: 2020-11-06T07:38:46.24560665Z
+    created: 2020-11-09T07:40:23.641363621Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 00f72584e3cc02f052562f6cd4d2a9be1baae4c8ff0ccf9f0dfd72337794171a
     engine: gotpl
@@ -3205,7 +3205,7 @@ entries:
     version: 0.17.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.245153999Z
+    created: 2020-11-09T07:40:23.640825239Z
     description: Responsible for gathering logs and sending them to Loki
     digest: a40f2204cf104c8e54339dcc2875bcee528425cddaa994947f20f3c921a4ec39
     engine: gotpl
@@ -3223,7 +3223,7 @@ entries:
     version: 0.16.2
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.24475613Z
+    created: 2020-11-09T07:40:23.640211608Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 4b57e97a155ff0b44e5a74f6af15b1cff78fd4e8bc4e53f237267f3368b5e1e6
     engine: gotpl
@@ -3241,7 +3241,7 @@ entries:
     version: 0.16.1
   - apiVersion: v1
     appVersion: v1.2.0
-    created: 2020-11-06T07:38:46.244294404Z
+    created: 2020-11-09T07:40:23.639602818Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 5cb07949a3fc5278a58d6e08b4c3997558b640d0061c1935bf32d6f63532274d
     engine: gotpl
@@ -3259,7 +3259,7 @@ entries:
     version: 0.16.0
   - apiVersion: v1
     appVersion: v1.1.0
-    created: 2020-11-06T07:38:46.243844715Z
+    created: 2020-11-09T07:40:23.638931881Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 8d46417c67c2fc3e54e13881551eed8b91d5286babdbca2624c29e78be6a27d1
     engine: gotpl
@@ -3277,7 +3277,7 @@ entries:
     version: 0.15.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: 2020-11-06T07:38:46.243392063Z
+    created: 2020-11-09T07:40:23.638310306Z
     description: Responsible for gathering logs and sending them to Loki
     digest: ec9625111aab5b0ba99566cebe20aaa01e24f132d5f27be470f773eab2f0d307
     engine: gotpl
@@ -3295,7 +3295,7 @@ entries:
     version: 0.14.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:46.242980152Z
+    created: 2020-11-09T07:40:23.637667527Z
     description: Responsible for gathering logs and sending them to Loki
     digest: b11c3bb0aff56f4afcaf6e38af303d58b8172ca6f88323089f3f3433f9796ca6
     engine: gotpl
@@ -3313,7 +3313,7 @@ entries:
     version: 0.13.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: 2020-11-06T07:38:46.242496731Z
+    created: 2020-11-09T07:40:23.637050157Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 0218af4d48a3c57895e3f915b8713316b157f5cd7738f068762f0e971702c8d1
     engine: gotpl
@@ -3331,7 +3331,7 @@ entries:
     version: 0.13.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.242047271Z
+    created: 2020-11-09T07:40:23.636426819Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 374299ef87cefbe0f7a760f338d1ec8c8252b3d9d98cf218a24b273e1299f478
     engine: gotpl
@@ -3348,7 +3348,7 @@ entries:
     - promtail-0.12.3.tgz
     version: 0.12.3
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.241575404Z
+    created: 2020-11-09T07:40:23.635807897Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 696afb96f7dec1d8914f19f692f21981bfb750b2986647143916017555241aba
     engine: gotpl
@@ -3365,7 +3365,7 @@ entries:
     - promtail-0.12.2.tgz
     version: 0.12.2
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.241181685Z
+    created: 2020-11-09T07:40:23.635121608Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 903b814c932766ef44eec3d7e2aea405b5d8e19923f48a5567ee44628c287a3c
     engine: gotpl
@@ -3382,7 +3382,7 @@ entries:
     - promtail-0.12.1.tgz
     version: 0.12.1
   - appVersion: v0.3.0
-    created: 2020-11-06T07:38:46.240820949Z
+    created: 2020-11-09T07:40:23.634508916Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 216c524fd134f125dc4fb95134ffc2efedb8bbf33e4ed81245ac79499b79239a
     engine: gotpl
@@ -3399,7 +3399,7 @@ entries:
     - promtail-0.12.0.tgz
     version: 0.12.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.240466146Z
+    created: 2020-11-09T07:40:23.633889525Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 05a019211a6988cc8699828671348138cd9f6d44d3ac57948b3a3111fe9f5c6b
     engine: gotpl
@@ -3416,7 +3416,7 @@ entries:
     - promtail-0.11.0.tgz
     version: 0.11.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.240097634Z
+    created: 2020-11-09T07:40:23.633272031Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 56384941f9540591945871be99a749af52a8995eaba577a92d3d5dfdcc376ed2
     engine: gotpl
@@ -3433,7 +3433,7 @@ entries:
     - promtail-0.10.0.tgz
     version: 0.10.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.259850817Z
+    created: 2020-11-09T07:40:23.671834456Z
     description: Responsible for gathering logs and sending them to Loki
     digest: f67126fa79532166c19b6e0ed088d3c7fd5ce1630dfbae1574765b166067fef8
     engine: gotpl
@@ -3450,7 +3450,7 @@ entries:
     - promtail-0.9.0.tgz
     version: 0.9.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.259508438Z
+    created: 2020-11-09T07:40:23.671225359Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 1aa00399667183b4dde14e080c149eb194a535cf77c1c8721314a7c5fd76406d
     engine: gotpl
@@ -3467,7 +3467,7 @@ entries:
     - promtail-0.8.1.tgz
     version: 0.8.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.259165598Z
+    created: 2020-11-09T07:40:23.670625386Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 0db5fa4bce678066c06673fc2e6cca66648d1ec667d8d163822fc925efed993e
     engine: gotpl
@@ -3484,7 +3484,7 @@ entries:
     - promtail-0.8.0.tgz
     version: 0.8.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.258803118Z
+    created: 2020-11-09T07:40:23.67002854Z
     description: Responsible for gathering logs and sending them to Loki
     digest: dbe8049f7b32dfa4f65f1613eec2876a64849753f586585750cd221b7ef5fde1
     engine: gotpl
@@ -3501,7 +3501,7 @@ entries:
     - promtail-0.7.3.tgz
     version: 0.7.3
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.25845816Z
+    created: 2020-11-09T07:40:23.669448404Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 593f579c023c1df962196914e8204df6516dc7482c49b53a8d2c75e27977141d
     engine: gotpl
@@ -3518,7 +3518,7 @@ entries:
     - promtail-0.7.2.tgz
     version: 0.7.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.258107157Z
+    created: 2020-11-09T07:40:23.668820116Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 728037bd94c46bc21309aa259c8531aa53f216400e8f42c40aa0755890065be2
     engine: gotpl
@@ -3535,7 +3535,7 @@ entries:
     - promtail-0.7.1.tgz
     version: 0.7.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.257744483Z
+    created: 2020-11-09T07:40:23.668207106Z
     description: Responsible for gathering logs and sending them to Loki
     digest: af2dca916bb95b909646de6710a82c5ad6714b410ee97ce0b4ccb0455320d507
     engine: gotpl
@@ -3552,7 +3552,7 @@ entries:
     - promtail-0.7.0.tgz
     version: 0.7.0
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.25739406Z
+    created: 2020-11-09T07:40:23.667551661Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 61ec9fb6727069ddfe37657db06a22163de31c5deb27aeb5333e7c5fdf34aa2d
     engine: gotpl
@@ -3569,7 +3569,7 @@ entries:
     - promtail-0.6.3.tgz
     version: 0.6.3
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.257058204Z
+    created: 2020-11-09T07:40:23.661672919Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 8461f3df3e011b95ef3d060a974a821441a0a503fc472c5ac425a340d0682ea5
     engine: gotpl
@@ -3586,7 +3586,7 @@ entries:
     - promtail-0.6.2.tgz
     version: 0.6.2
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.256550435Z
+    created: 2020-11-09T07:40:23.661124663Z
     description: Responsible for gathering logs and sending them to Loki
     digest: 639b884367892721200310029a54f6f63f1a7c08493174f0925604a37b03a182
     engine: gotpl
@@ -3603,7 +3603,7 @@ entries:
     - promtail-0.6.1.tgz
     version: 0.6.1
   - appVersion: 0.0.1
-    created: 2020-11-06T07:38:46.255739898Z
+    created: 2020-11-09T07:40:23.660551648Z
     description: Responsible for gathering logs and sending them to Loki
     digest: d8c072989461b9a6f416f5f37c408d616c1264f3109dc2f3301d310981b30894
     engine: gotpl
@@ -3619,4 +3619,4 @@ entries:
     urls:
     - promtail-0.6.0.tgz
     version: 0.6.0
-generated: 2020-11-06T07:38:45.935418562Z
+generated: 2020-11-09T07:40:23.106287272Z
