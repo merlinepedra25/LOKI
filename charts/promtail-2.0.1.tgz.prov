@@ -18,14 +18,14 @@ version: 2.0.1
 
 ...
 files:
-  promtail-2.0.1.tgz: sha256:ba9b98e7a69008f83357e43f306b7c5d9068e15dea639fcfc782b7acdd6a1d04
+  promtail-2.0.1.tgz: sha256:6e17bb8f4ee03f2ff23d973acb360c3f71c7d5a8a1d97146f61250abf8a6fd2d
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfqpRMCRBwVKlVnTz7CwAASFoIAAeG/qZSfgK65YDb68hdk7sU
-ETy9CWiYzSXIEkkGxibZnk9c+/6avA3uThiYvXjI36mOqy+sYZngzlkqiXmyKdAz
-djrJnIaKqeLUkeb6R7/jfPdV1WhzhuKvnys1qeXP1bpOLN9sULN55Yj4Xhta8a7b
-KPccTqnTRzUJ274NMJ3aRkpmIhJ3vKAwfrnbo6h6rzaFh0FFfiU7EbSVdZehDzMv
-H1DFx27V6kx6dAaee7RbpTyoUgHB2oQodwFQXBOrs3lKGDBtkFzF5teNfJBfZD8x
-RNgqfmNGh9byVlyxcme6FpAmMqXhLeCvkarRbitXLu9Igu2X00H2NanypF+7D64=
-=alJa
+wsBcBAEBCgAQBQJfqpenCRBwVKlVnTz7CwAAPgMIADA2ApopScTPnNz7MQwQmJ/t
+hZov48zPgEip4XO2238omnIlzBPf4QYuNQv5YqH5uvf0Ldip9rux8tI4sYqQsuM8
+TKko0gNQiJqAJXy1Xa2rBE1hmAcmh8I+R0Yi8z4EAzIQuWYZ/YU3TcEGbTadOjrO
+ytRytVmXusE6NrqNHgc2X76hfgB1xhS/D3VZcgZwsyti3f7aBIsmPy8GdnJkANx3
+oX9fCvcRCTVUV3LbhY1tFk8hUBK83n8Vl3MkktSAK38maSLhBokp4c5usUR+RhW6
+DwwhHfGmAskE+jPFSTASePmMlxzyjnGwApY1VHru4rrr1wZ/xlyTLbZ5e/VZiMQ=
+=6vAY
 -----END PGP SIGNATURE-----
