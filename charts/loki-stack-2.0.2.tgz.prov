@@ -18,14 +18,14 @@ version: 2.0.2
 
 ...
 files:
-  loki-stack-2.0.2.tgz: sha256:10ba5866a184cf676369ed8d50047eef9e351cc91d369a0b635259250d61ce8a
+  loki-stack-2.0.2.tgz: sha256:7a8bac9cef7d63d9bca4fed3774b365900459a3e711d16769c7b6da862655d21
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfroGsCRBwVKlVnTz7CwAA8ioIAG6Q9Oa8a4/JpAN8wN8gd7vB
-dpChXz3C5ZelgtuAkEBhah4ejDKLzc6OCYR0vPUYr8qgLhu1lK20FkxT/iy62Zts
-/nsLztLOEAxxrgoiEW1bMhN4T50zlR9NnCNcxp/wmrAHoqJuhYtsoNac+da+wo4p
-fEzIqCdhGTywkaW0vaX1yBPBxCjb0Vu8GxcCGTqoWoJsm4xnjrhr8zRLKeAqSiDw
-BXirg2NTMbaAvLvgt9upbqWMdRvJyhi6rc1p+8SNIhYRqqKPwGNQd2T9AwYmQX5t
-c3P4erwSqzQ5uVAr8f1gukLg/DkmQ4us1MSp7qh1FyB7kwvPthjayw7HOlVKN+o=
-=roLU
+wsBcBAEBCgAQBQJfrp7ECRBwVKlVnTz7CwAAzxAIAFaXC2n4bgpLjyK7nyhcOLUt
+AKxv+S/vHgDLAzsDKAyoE8dp9ODNEiIBqSx6JND55f2t1kJra31NkFCzMasB5lwy
+MiajnsSGOq/H+PDn+FQkt818zlMrcRVEOfpVX7xpFxfx5SfqzMlynDqcqxPJjKcU
++EkgBbl4EQjrN0TEZ0SO/JDgL0auXT7jESY5yiq0BOJpcqrMMwdqcqErcfaOR/Wu
+ZDD0zMzO6W62WanLiJfa0NqvnGYMhnSwo8U/7epsPkNU8udUcQURWBgqNsys1Qf7
+u7xj4PaFBO8O++gwfs6BU4anIg7k7Uo/wNELUDTQJU1er9mDx9SHuWTH6hQ4PQ4=
+=srJn
 -----END PGP SIGNATURE-----
