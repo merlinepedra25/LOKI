@@ -18,14 +18,14 @@ version: 2.0.2
 
 ...
 files:
-  loki-stack-2.0.2.tgz: sha256:23d56d042fceeef00c636b9c80f5319d95c66cecc13b1113ab80ca30177b11ec
+  loki-stack-2.0.2.tgz: sha256:10ba5866a184cf676369ed8d50047eef9e351cc91d369a0b635259250d61ce8a
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfrnAnCRBwVKlVnTz7CwAARTcIAEaaF+ZAXL7Kwq7uzx5w6R6a
-2p0i6OaIXVW8hDYmr7aqfBuM1U+PGImD0+XnGMY/PNjWEBb7W4H9eet9zqRoXvUP
-hDjhvpOpVanBIuXPoOEdaWdnNz9d8M1jEJkPufqHRo8sW8xT1vaThFMueDc0cSXY
-f3OdgqRhvbieTZRvRdmFIDQrY9MLNFKbui8sxAH/OdIAOTiD/AHcAq/ljPxSvydL
-6czpnZ57shEkO4m+QdyE7vlrR6NRliRWPVIo3vWte9y9Dx6HNWICYMj9LL3nREZx
-p4WqGk0atWHLWTPQkVinjiXwHvlLzrQwJdb9JlQklkQ9Re5wtG36d0495e30yk4=
-=3lOp
+wsBcBAEBCgAQBQJfroGsCRBwVKlVnTz7CwAA8ioIAG6Q9Oa8a4/JpAN8wN8gd7vB
+dpChXz3C5ZelgtuAkEBhah4ejDKLzc6OCYR0vPUYr8qgLhu1lK20FkxT/iy62Zts
+/nsLztLOEAxxrgoiEW1bMhN4T50zlR9NnCNcxp/wmrAHoqJuhYtsoNac+da+wo4p
+fEzIqCdhGTywkaW0vaX1yBPBxCjb0Vu8GxcCGTqoWoJsm4xnjrhr8zRLKeAqSiDw
+BXirg2NTMbaAvLvgt9upbqWMdRvJyhi6rc1p+8SNIhYRqqKPwGNQd2T9AwYmQX5t
+c3P4erwSqzQ5uVAr8f1gukLg/DkmQ4us1MSp7qh1FyB7kwvPthjayw7HOlVKN+o=
+=roLU
 -----END PGP SIGNATURE-----
