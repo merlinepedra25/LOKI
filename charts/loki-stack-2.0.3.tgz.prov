@@ -18,14 +18,14 @@ version: 2.0.3
 
 ...
 files:
-  loki-stack-2.0.3.tgz: sha256:9dbbdcc7e396197c839f7aac6180e3fd9a4371e5c86cd386d3ee6fdf2b0395c3
+  loki-stack-2.0.3.tgz: sha256:4160070633ffd7b2e00af75ce91206fca71b8f1c9f4191f8b3444ebea3bf65bb
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJft94mCRBwVKlVnTz7CwAA80YIACm8F+m+x6EleUh2Y3+iHyGu
-RYTpHFZAnC0qiAFI8C2i17hAfiX26m6w9H9iAjyCQ5mDgdnKtDnitx4Rp5uma9Cx
-S3C8KbmT+Xjp/8iCPOqbtJczK0KEvg4E2J7xkc++Xa8wXCWEGJLZmzpJ1fyAbzaN
-pply88Q+mgdfkukUwiWxuoVdYwMXxMarNI1dk5NNlUI5tWXXOEyyUyYsKJ0tcrkK
-2i42zUsaiV8triQ0Qz1bUxHZ/+GyW24rxjjqbLYz8jYZj1tSQe74egoySi69fFjn
-rjm1iVNddzpeiojN/8HaIh7L8ZpQN4mb07jbYrGpC8+nvLBD987Qbl1CjXXUvVM=
-=9wA3
+wsBcBAEBCgAQBQJft+G9CRBwVKlVnTz7CwAALoUIAKigixyolin24o+3givjblkS
+AedkLovd9Rvilm5/rJTVlRQGpA8fvJNjNLTLZaEoz5+qgc0/ZgIkPy6XWnIgKj/O
+rb5P3F7GaubyfG6LxbzMN83Y9MojQDjk2AdRcoD3GNdk45pP3Saqg0NBA7AO08sC
+r/Ub9PS/myKWxFbo1CgN06N6E++P0euCgMlls4LnWj3K4lN8IIbYxjG1J3kPJbYQ
+5xyQnBM7wNvSoNOsj6B2Da7eokuxllF0XvkyupDVepqjW/CuwCmDtBw6U1b0WGBN
+crdrEAdHEZddmiC+sUnQE3bUcmslEwtrThbOtUKYadJryiyp12XMpGnps5qUVZ0=
+=inCE
 -----END PGP SIGNATURE-----
