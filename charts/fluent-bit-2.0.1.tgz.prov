@@ -5,7 +5,6 @@ apiVersion: v1
 appVersion: v2.0.0
 description: Uses fluent-bit Loki go plugin for gathering logs and sending them to
   Loki
-engine: gotpl
 home: https://grafana.com/loki
 icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
 kubeVersion: ^1.10.0-0
@@ -19,14 +18,14 @@ version: 2.0.1
 
 ...
 files:
-  fluent-bit-2.0.1.tgz: sha256:51b4bd09d4651c03b0e75bb87f2205b3f7b50cbd1ef2d8c77d17009c2447ba30
+  fluent-bit-2.0.1.tgz: sha256:0e685e5c21d2a0ff08e2e6330b4b975371cc36bba3bea324817ec4a922e1f32f
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfu2SACRBwVKlVnTz7CwAAF6MIAKZY304HdUYxNYnHkV2G4m/i
-ucQXUD+ZONjv3rVOKjPwx1aHyvgiujd5VoE9a/WkPE0onRKU3TgLYSuBwM7QUKN5
-K1jq3WVAxICM461KWu+YkgCam3xPBcg8mXeK91tisdzPvr2Z4GQWK7id2f5cj17o
-AON8WZsVlGPSvqbOIq8FA2SJAZx0NnHISumJzqUfhWKBTsjRQ06yer0LPKuUTDhh
-VW7H4I7afTrTLh1D49a4DntmSi5KNvJVERAKddG/je9Zhfs26+giysNrf37oyQq5
-zZHmmYHFgI3HL3ddxZRIPmFxRLCuzG7rM6dUu6DrbZD+xsYZjgCII0TTm92BNEM=
-=sZ5E
+wsBcBAEBCgAQBQJfvUsgCRBwVKlVnTz7CwAAJk4IAGIsiwOFwmWZz8+HQLBwsYLe
+PxbDIFMorKHU5lt2gey2dF6t0tVYl4kdKXLCSGfGaWs5dKrjCSe5oZ/z3QaipToy
+UfRUiyGAkf5jjahr3mZvbxDdtNMlwFrpeqC/7qQiygbzXRjZAPyKV6ZdxPe2NNP/
+wvmOFMYle2x4BRAxTCoEnjDzs6gh37la3nhNwUrb1n0R0OPjbTGSV1iZzbFAWdVN
+XxpQRrKBHTc9l7H07ZT4aL2aqmBD8W3qehQwKGqXJNm0/3j0CcyX5VkiEkanC+8H
+xfanPIUi70pUcjfqgzUwRk73QeMr+vKwcnczlhuaX7TxPUC8nlfgpgV3oWJQLFg=
+=eR8z
 -----END PGP SIGNATURE-----
