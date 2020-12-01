@@ -46,14 +46,14 @@ version: 2.1.1
 
 ...
 files:
-  loki-stack-2.1.1.tgz: sha256:d9ba55468bc11bb0d13eb5a765dc3b9ab097dd5b530d699c5e35d7f7158fbcf7
+  loki-stack-2.1.1.tgz: sha256:8728ac0a38e475206995ae5e964425a494f715ba97f31a8f5a0a28c9dd8e2e87
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfxhpOCRBwVKlVnTz7CwAA20oIAKYhz53RdpijRia5O6zPqPio
-s2EgbjSo50El7IngKvlXxNUjWhbn6j++YLrq6kExUQCOr4vDQVNcqkRUhdRGEV+j
-vVpZRD2wTpFyQS38n9ti5H7vhjH0zYgR6sWLrLmaA74PDvkl84QOlxMNuKbZ18Es
-KsSCOu9bh9XV5j6P9XYwdEzXVSvf8nY+LAqF2Dc0sAxUprW8LqO6vO1kpkv9CXpw
-1F3x9xe1EbmxexNC9oAkhiUMd+I/FK/ev0NgFLv08EBZpu0ykcfs3pzd3/bl+uIb
-Ppbt6MSP7n3npqu2iPE2B7UqA/UcRdhOuJb8BsKUQVb60MkykC2N7nC9lBNfnmY=
-=RucF
+wsBcBAEBCgAQBQJfxoymCRBwVKlVnTz7CwAAA/oIAHQo1wvNPEy3DQDZ66jUoOck
+B7tRCmsoa4s1Yl/aaF/Wx7kYycZFXrVkQ5MDBDGACvhqNsfDcsGzpp9+6Cf75fE7
+EmqOlmi6jhaHg6pymSUrpzjSGTbxhBgsmtJ9qyp7LX7r+OI6KtWkHdzYjIk9p6z8
+yq9GW7GxxvQ54r0CNb8vCve+aP+qW+FdZM3mZ01OfPeSi4YlbX7FhQEBh26zespn
+TF+Umiy6I1b7QaX+jsKPl2rcFUpYCpuNyN+ez6qVGw6CNYORwF3NY9o+zO/u4ljR
+hFlcbMBaWxQWoqpm43n7edrIo9PbN+iWOF/anScuM/JRUEKoqRov2Ne8hdRd29E=
+=BPni
 -----END PGP SIGNATURE-----
