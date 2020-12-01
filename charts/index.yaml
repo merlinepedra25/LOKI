@@ -3,10 +3,10 @@ entries:
   fluent-bit:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:50.853491927Z"
+    created: "2020-12-01T10:24:41.72212724Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
-    digest: 3e8216903c912d8c828989b83229bbe9e388a4b2a308ad96c0b51caabc877c63
+    digest: 971fd7eb0e257756bf332d7d73240c6def19f0f5c0260e6db664087929d2de37
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
     kubeVersion: ^1.10.0-0
@@ -21,7 +21,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:50.852751833Z"
+    created: "2020-12-01T10:24:41.72125531Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 513992598a1806878c3c8a277ba257c269b9cb0e0b33075a507e66d4f9ff3853
@@ -39,7 +39,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:50.852000425Z"
+    created: "2020-12-01T10:24:41.72031635Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: bfada1f33c3e870f3b5aba1b1f9457b5682f4d8743f1075b0045fe231e90898f
@@ -57,7 +57,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:50.851235826Z"
+    created: "2020-12-01T10:24:41.719466592Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: dc2046366e4d7112644f787eb8857e5c031f62828609895131d52135864d2347
@@ -75,7 +75,7 @@ entries:
     version: 0.3.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:50.84978258Z"
+    created: "2020-12-01T10:24:41.718640804Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: debe699b95d13b9f63621e6d4562322be8dbfb4a61892dee41603627b5c7d8d3
@@ -93,7 +93,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.848962736Z"
+    created: "2020-12-01T10:24:41.717804529Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 2085ba47c72cf4beeff618b96f7813edd0e6bd336bd90b6e0b6bf9aab1470d48
@@ -111,7 +111,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.848108325Z"
+    created: "2020-12-01T10:24:41.716912933Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: dbf137c70c2d2947db1d4d51e2d0f3a5eff593acc26dba4614d5000feb8ed601
@@ -129,7 +129,7 @@ entries:
     version: 0.1.5
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.847295956Z"
+    created: "2020-12-01T10:24:41.715293216Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 00b8b7c5f896e36163ea5c410e4d43c86aa98adaa0bef21a13c074fd1f1c1232
@@ -147,7 +147,7 @@ entries:
     version: 0.1.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.846507161Z"
+    created: "2020-12-01T10:24:41.714147061Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: ce01a89b8545cddf1b80de6f39bed01c8f41ffc4e7330a1ed6f98cb10d3facd3
@@ -165,7 +165,7 @@ entries:
     version: 0.1.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.845717415Z"
+    created: "2020-12-01T10:24:41.713299293Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 3c578c8e552ba8dd985f9435a0f3d3a2849181f66ae54c3dc0905bf602c53d69
@@ -183,7 +183,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:50.844941669Z"
+    created: "2020-12-01T10:24:41.712475165Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 69bf065e27c194afbb8c228ee509a82f92dc9221fb8929ce3c418505c3ab7e8a
@@ -201,7 +201,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:50.844186558Z"
+    created: "2020-12-01T10:24:41.711670867Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 3f82d2d5fd99653efbc16428bc7c8ba8f8f3ce23d47cf6a64f0c8501d6d6bb27
@@ -219,7 +219,7 @@ entries:
     version: 0.1.0
   - apiVersion: v1
     appVersion: v0.0.1
-    created: "2020-12-01T10:22:50.843502435Z"
+    created: "2020-12-01T10:24:41.71087815Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: ed980766c1f08f92c70d803634ded53dc47e7bfbd5db1a6b564e864c5b99f1ed
@@ -237,7 +237,7 @@ entries:
     version: 0.0.5
   - apiVersion: v1
     appVersion: v0.0.1
-    created: "2020-12-01T10:22:50.842788552Z"
+    created: "2020-12-01T10:24:41.710127074Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 1c7989e0c47edf83f12404f346ad165a7186d450059045343339a448d9613fc2
@@ -255,7 +255,7 @@ entries:
     version: 0.0.4
   - apiVersion: v1
     appVersion: v0.0.1
-    created: "2020-12-01T10:22:50.842074442Z"
+    created: "2020-12-01T10:24:41.709414898Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: 0c094103864c5ea2e6ccf96c3558df4775b3558f193f1507958656a820084737
@@ -273,7 +273,7 @@ entries:
     version: 0.0.3
   - apiVersion: v1
     appVersion: v0.0.1
-    created: "2020-12-01T10:22:50.84135813Z"
+    created: "2020-12-01T10:24:41.708726504Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: f5489df54d92816141a02fa8f331fd962d9f63ed32558a5d96372df4c48f61c6
@@ -291,7 +291,7 @@ entries:
     version: 0.0.2
   - apiVersion: v1
     appVersion: v0.0.1
-    created: "2020-12-01T10:22:50.839951867Z"
+    created: "2020-12-01T10:24:41.707973625Z"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
       to Loki
     digest: d38f1dfb6d66fd9d9ea8342257747d29c472dc66fa332d01f291210fe57a5bbf
@@ -310,9 +310,9 @@ entries:
   loki:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:50.901063323Z"
+    created: "2020-12-01T10:24:41.775276873Z"
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 9aff3537e6360632e5b67b241aa5cbea601b4c1f8e8f5128b7ce5d8a542c8552
+    digest: f241061ee434e0810104b58d567a80af2bf7e004aae62ea2a17c29f667f4d117
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
     kubeVersion: ^1.10.0-0
@@ -327,7 +327,7 @@ entries:
     version: 2.1.0
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:50.90008388Z"
+    created: "2020-12-01T10:24:41.774150527Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 2950b122f0e29d77722957b7eb4c855098bf78dd679ce7f809833b4c60b0f672
     home: https://grafana.com/loki
@@ -344,7 +344,7 @@ entries:
     version: 2.0.2
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:50.899176491Z"
+    created: "2020-12-01T10:24:41.772657016Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 19d7f76c7c7e8395947af51bafeb19d4fa004b64e0b320c5e725a1bf08d0c5de
     home: https://grafana.com/loki
@@ -361,7 +361,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:50.897683192Z"
+    created: "2020-12-01T10:24:41.771540126Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: aa6170325acabfd6f75d5813cdf3e3fb2b362b5e255e5ac5cb5d41d0dbf6248b
     home: https://grafana.com/loki
@@ -378,7 +378,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:50.8856682Z"
+    created: "2020-12-01T10:24:41.758081787Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: a588edce816d0278a173d416cfba0aacb98d6d7cf8888fe1f2d708a06be500bd
     home: https://grafana.com/loki
@@ -395,7 +395,7 @@ entries:
     version: 0.31.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:50.884744599Z"
+    created: "2020-12-01T10:24:41.757151966Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 43d89a097be7ed1756e348c563edc993ebc08134720589f712d4a9fa7afa3e3e
     home: https://grafana.com/loki
@@ -412,7 +412,7 @@ entries:
     version: 0.31.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.883858615Z"
+    created: "2020-12-01T10:24:41.756124455Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 2c99eabdd810b79fca1395ec5d264acf3a6b2f383549aa4c9a4baa6b88041d7f
     home: https://grafana.com/loki
@@ -429,7 +429,7 @@ entries:
     version: 0.30.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.882978912Z"
+    created: "2020-12-01T10:24:41.755173429Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 59d41a25c45ead6b26900b943d7d742f4699b845e32f77d509c79e75ca29a60f
     home: https://grafana.com/loki
@@ -446,7 +446,7 @@ entries:
     version: 0.30.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.882086453Z"
+    created: "2020-12-01T10:24:41.754219989Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 336c2413bb9958a10d814e96c124aacfb22833a30f523136880382cd05750eaa
     home: https://grafana.com/loki
@@ -463,7 +463,7 @@ entries:
     version: 0.30.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.881208432Z"
+    created: "2020-12-01T10:24:41.753263106Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: cc02b32af0a15af6551e3a3a52fe14a5041c1ce9a5525183e4ba629aae090f07
     home: https://grafana.com/loki
@@ -480,7 +480,7 @@ entries:
     version: 0.29.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:50.880324165Z"
+    created: "2020-12-01T10:24:41.752283008Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 714ee1f1bb1a23616804b0e727160af20d59909de4d2fdc3a9e63167ea78d12a
     home: https://grafana.com/loki
@@ -497,7 +497,7 @@ entries:
     version: 0.29.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:50.879427946Z"
+    created: "2020-12-01T10:24:41.751367659Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: c365e7a3c3dfed42e19aa6b7d03290d1a47650ba5dc9c9d55a3bd90387dd2b4a
     home: https://grafana.com/loki
@@ -514,7 +514,7 @@ entries:
     version: 0.28.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:50.877946173Z"
+    created: "2020-12-01T10:24:41.750338746Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: d7d843971904ba19d1eaa25416406b49fd708c3d13ecfc1ae35900c1014b3b56
     home: https://grafana.com/loki
@@ -531,7 +531,7 @@ entries:
     version: 0.28.0
   - apiVersion: v1
     appVersion: v1.4.2
-    created: "2020-12-01T10:22:50.877100074Z"
+    created: "2020-12-01T10:24:41.749383517Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: b2c06d2bb4fa7c6c6854ecbc30eac9f202bcd265f4e40765c57e131371a9774d
     home: https://grafana.com/loki
@@ -548,7 +548,7 @@ entries:
     version: 0.27.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:50.876189336Z"
+    created: "2020-12-01T10:24:41.747541982Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: fc5f60d8628bf4508f1345a18afd8cb76e4b77fbbf66820c4cad7f56ed863a87
     home: https://grafana.com/loki
@@ -565,7 +565,7 @@ entries:
     version: 0.26.1
   - apiVersion: v1
     appVersion: v1.4.0
-    created: "2020-12-01T10:22:50.875317217Z"
+    created: "2020-12-01T10:24:41.746652343Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 4f4f0b27ef01e5ecae3795ce3c20b3bad28f1246de867ed57a6934e12f77cfd1
     home: https://grafana.com/loki
@@ -582,7 +582,7 @@ entries:
     version: 0.26.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:50.874457225Z"
+    created: "2020-12-01T10:24:41.745778878Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: b75dcebee5beb4fe7e5cff46909e1aab640c4c20c97b41e457ccc50455335b7c
     home: https://grafana.com/loki
@@ -599,7 +599,7 @@ entries:
     version: 0.25.3
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:50.873612851Z"
+    created: "2020-12-01T10:24:41.74484441Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: d69307b1c68fe6eb62e08cd7bd4ece5ac9f370e95c889cf417cdc3cda80de6bd
     home: https://grafana.com/loki
@@ -616,7 +616,7 @@ entries:
     version: 0.25.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:50.872741004Z"
+    created: "2020-12-01T10:24:41.743826986Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: dd2dff55d8d3f340a50f958a81b599040a052eb6bdcc82128d13158e7d3c98d2
     home: https://grafana.com/loki
@@ -633,7 +633,7 @@ entries:
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:50.871863644Z"
+    created: "2020-12-01T10:24:41.74290307Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 7adf6652a3295dd4928c1026fdc251a7dbcfacbcbf9c09d6f168ab670a6fd737
     home: https://grafana.com/loki
@@ -650,7 +650,7 @@ entries:
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:50.870982588Z"
+    created: "2020-12-01T10:24:41.741990022Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 582e409efba17aa9728903275bf6da7a78a4200e41524f25133ab1342fc4b181
     home: https://grafana.com/loki
@@ -667,7 +667,7 @@ entries:
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:50.870169398Z"
+    created: "2020-12-01T10:24:41.741134916Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: ef43f6cce4ef6ffafbf4cd67a216583d07257cdfbe24711b12431be91a0aeb10
     home: https://grafana.com/loki
@@ -684,7 +684,7 @@ entries:
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:50.868849886Z"
+    created: "2020-12-01T10:24:41.740089573Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: efadee3149bdd7460deb8993f3f6a92a0bb8487518db24d0a4dac210ea527ddf
     home: https://grafana.com/loki
@@ -701,7 +701,7 @@ entries:
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:50.868008006Z"
+    created: "2020-12-01T10:24:41.739249436Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: ac2c152c1b9d2c9b7f928ec657d48bd16b1be9a684a734ae7d0f9fd43d23e742
     home: https://grafana.com/loki
@@ -718,7 +718,7 @@ entries:
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.1.0
-    created: "2020-12-01T10:22:50.867225118Z"
+    created: "2020-12-01T10:24:41.738425548Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 715156352d6f7c5def6f43b87cd7620d1d880ce4c68bdd007f2f77d3035f3853
     home: https://grafana.com/loki
@@ -735,7 +735,7 @@ entries:
     version: 0.20.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: "2020-12-01T10:22:50.866433659Z"
+    created: "2020-12-01T10:24:41.736852041Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 9c7119c53e589f0de958ca1233bb4ef84784576904ccb59a945c1d1f4f88972a
     home: https://grafana.com/loki
@@ -752,7 +752,7 @@ entries:
     version: 0.19.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: "2020-12-01T10:22:50.865647402Z"
+    created: "2020-12-01T10:24:41.735956012Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: e0b214696cb8ca268b0d43b75ecb01f3d435ead62eb5940eb9352e24ccec039a
     home: https://grafana.com/loki
@@ -769,7 +769,7 @@ entries:
     version: 0.18.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:50.864851876Z"
+    created: "2020-12-01T10:24:41.735080778Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 0f2bc3fec9d28ed432a6061054677b47a9f9e89ea2efc7b889d7900addfee855
     home: https://grafana.com/loki
@@ -786,7 +786,7 @@ entries:
     version: 0.17.2
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:50.864041736Z"
+    created: "2020-12-01T10:24:41.734133157Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: af89a6f9acb458ecb467ddd4a6a80833dd3ff24fde50f737d1aea7beafaabb48
     home: https://grafana.com/loki
@@ -803,7 +803,7 @@ entries:
     version: 0.17.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:50.863272259Z"
+    created: "2020-12-01T10:24:41.733153643Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: cfc41f6853f637eab5cf0e67a4dd06fa3d22dade912cecd32d94e313313cd34b
     home: https://grafana.com/loki
@@ -820,7 +820,7 @@ entries:
     version: 0.17.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.862457934Z"
+    created: "2020-12-01T10:24:41.732247044Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: fd388538fb806848b03642eff2da460f0448a3dcf1fe01b94411ddc248f3eef5
     home: https://grafana.com/loki
@@ -837,7 +837,7 @@ entries:
     version: 0.16.1
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.861685421Z"
+    created: "2020-12-01T10:24:41.73131888Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: fd56e1788368e97fff96a14ce26a7b169d682ac1650583630d1dbc32aba8ab40
     home: https://grafana.com/loki
@@ -854,7 +854,7 @@ entries:
     version: 0.16.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.860900277Z"
+    created: "2020-12-01T10:24:41.730513443Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 01a156bcddab8314d8372cb87c2e2a505ca3d2ab1bd23816f7505ec52b202eef
     home: https://grafana.com/loki
@@ -871,7 +871,7 @@ entries:
     version: 0.15.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.85949033Z"
+    created: "2020-12-01T10:24:41.729655383Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 790ca32058c22b46e6d2d1edc51504a09142ac4542cf95285c41258830aca1cb
     home: https://grafana.com/loki
@@ -888,7 +888,7 @@ entries:
     version: 0.14.3
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.85870008Z"
+    created: "2020-12-01T10:24:41.728860077Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 55c635da882aa47bd698f01b5aae63919b179077b7ef625351a8dcdb6ea1789f
     home: https://grafana.com/loki
@@ -905,7 +905,7 @@ entries:
     version: 0.14.2
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.857960476Z"
+    created: "2020-12-01T10:24:41.728048232Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 3c012a357e89c4f92226363fcadc47c6b58bdfc88642cbf50986151d01c5eeda
     home: https://grafana.com/loki
@@ -922,7 +922,7 @@ entries:
     version: 0.14.1
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.857200769Z"
+    created: "2020-12-01T10:24:41.726382196Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 4f6cd92592300d66f971c77bbbd720effc277cf4bc8a516071495c534af8fc67
     home: https://grafana.com/loki
@@ -939,7 +939,7 @@ entries:
     version: 0.14.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.856445495Z"
+    created: "2020-12-01T10:24:41.72559199Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 862f323d594b99e2b44087aa4cfe38534aa233b8eb4a7ecea78ac9a424a9b6b8
     home: https://grafana.com/loki
@@ -956,7 +956,7 @@ entries:
     version: 0.13.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.855678358Z"
+    created: "2020-12-01T10:24:41.72470558Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 75e91e15b8a5f320723a3edc6c975b1640a4937217302ecc739c88f45011f1e2
     home: https://grafana.com/loki
@@ -973,7 +973,7 @@ entries:
     version: 0.12.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.854950199Z"
+    created: "2020-12-01T10:24:41.723791893Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: fa450059b175c8ab218e3226f13444ba3f4e5216fab86ae50239b0d533e33020
     home: https://grafana.com/loki
@@ -990,7 +990,7 @@ entries:
     version: 0.11.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.854194657Z"
+    created: "2020-12-01T10:24:41.723026267Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 083bc0828ef6cd02601fd24ee3e4e70413ddef39eab29859ec2e52f3a8f11405
     home: https://grafana.com/loki
@@ -1007,7 +1007,7 @@ entries:
     version: 0.10.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.896783586Z"
+    created: "2020-12-01T10:24:41.770512256Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: ab57523ec80bfadb2c95cb55b88272ae74111d8a93a00ab22c034aa0d3afb6bf
     home: https://grafana.com/loki
@@ -1024,7 +1024,7 @@ entries:
     version: 0.9.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.896064699Z"
+    created: "2020-12-01T10:24:41.769152093Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 37e60a0d115ed20183f376eabb07e7b52280a7b7a676d6883a5afb9faf2dcb09
     home: https://grafana.com/loki
@@ -1041,7 +1041,7 @@ entries:
     version: 0.9.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.895344334Z"
+    created: "2020-12-01T10:24:41.768309239Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 096ad9077373e1f2be65e4a99a2e917a048c16eb32e9d7607c04a9629a3bdaf9
     home: https://grafana.com/loki
@@ -1058,7 +1058,7 @@ entries:
     version: 0.9.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.894660115Z"
+    created: "2020-12-01T10:24:41.767518939Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 47405b00f7c0fa7317b42a3a4d54187449c32713823c7e69103aa535acedc7ad
     home: https://grafana.com/loki
@@ -1075,7 +1075,7 @@ entries:
     version: 0.8.5
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.893966085Z"
+    created: "2020-12-01T10:24:41.766788823Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: c2db1b9385b3eedab947350e7f05a0d1ff55926b8e9eee9eea08e92f823fe8f9
     home: https://grafana.com/loki
@@ -1092,7 +1092,7 @@ entries:
     version: 0.8.4
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.893229905Z"
+    created: "2020-12-01T10:24:41.766064759Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 324ce9ebb8c3148d440bd8216760e558ed4b63309e759f7ae65493ef897d6df1
     home: https://grafana.com/loki
@@ -1109,7 +1109,7 @@ entries:
     version: 0.8.3
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.892529401Z"
+    created: "2020-12-01T10:24:41.76532597Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1a9c09b6e49fc7ab0deddf0ee2210f4c91c3cc40ae66d090d0ca4d5998a2c2cc
     home: https://grafana.com/loki
@@ -1126,7 +1126,7 @@ entries:
     version: 0.8.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.891857917Z"
+    created: "2020-12-01T10:24:41.764582395Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: e716194272835e3c069d5232a70924390568fa589a1a05fab03e9cfbee8730b3
     home: https://grafana.com/loki
@@ -1143,7 +1143,7 @@ entries:
     version: 0.8.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.891196872Z"
+    created: "2020-12-01T10:24:41.763832118Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 1b4a6c327668e312d6b61626c3bd48eaa5139e60804d06afebc6a351cba97ff3
     home: https://grafana.com/loki
@@ -1160,7 +1160,7 @@ entries:
     version: 0.8.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.890491823Z"
+    created: "2020-12-01T10:24:41.763145041Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 007b886263b9f7c004960c5477558d7d0f7567e8b4805191281e81b3e0a87343
     home: https://grafana.com/loki
@@ -1177,7 +1177,7 @@ entries:
     version: 0.7.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.889831649Z"
+    created: "2020-12-01T10:24:41.762478569Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: ec3eb0a7b46900195444e3dda3af8853e1cc5af88736ecb5484e517918468be0
     home: https://grafana.com/loki
@@ -1194,7 +1194,7 @@ entries:
     version: 0.7.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.889191143Z"
+    created: "2020-12-01T10:24:41.761809018Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 7aaf0194556a224debd2ecb7572fa432c54ce1beff357d99dd6e55f772fe561f
     home: https://grafana.com/loki
@@ -1211,7 +1211,7 @@ entries:
     version: 0.7.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.887914862Z"
+    created: "2020-12-01T10:24:41.761142044Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 485999e0808701bb5e890a75b056b97365e24e6953b88f8cac58d32497beea10
     home: https://grafana.com/loki
@@ -1228,7 +1228,7 @@ entries:
     version: 0.6.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.887289686Z"
+    created: "2020-12-01T10:24:41.76042104Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 888563cc143746ae8216f5e96c11a3209f666b97d5dd9b7878b1f6b37dbb6db0
     home: https://grafana.com/loki
@@ -1246,7 +1246,7 @@ entries:
   loki-stack:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.505638739Z"
+    created: "2020-12-01T10:24:42.538975398Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1277,7 +1277,7 @@ entries:
       repository: https://helm.elastic.co
       version: ~7.8.0
     description: 'Loki: like Prometheus, but for logs.'
-    digest: 72e6b4d25ebc43f85a0ed0c409f33bfb29ac6aa9a1b74c83bf8433e12beac54e
+    digest: 77b9eb36806a2497268711a7102a07a889edcb871bf7ed651a08bea3b9ece647
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
     kubeVersion: ^1.10.0-0
@@ -1292,7 +1292,7 @@ entries:
     version: 2.1.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.493932096Z"
+    created: "2020-12-01T10:24:42.519833343Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1338,7 +1338,7 @@ entries:
     version: 2.1.0
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.482291007Z"
+    created: "2020-12-01T10:24:42.507881297Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1384,7 +1384,7 @@ entries:
     version: 2.0.3
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.470715037Z"
+    created: "2020-12-01T10:24:42.494240518Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1430,7 +1430,7 @@ entries:
     version: 2.0.2
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.459220821Z"
+    created: "2020-12-01T10:24:42.481742212Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1476,7 +1476,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.447685326Z"
+    created: "2020-12-01T10:24:42.465780833Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1522,7 +1522,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.400379028Z"
+    created: "2020-12-01T10:24:42.402665444Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1568,7 +1568,7 @@ entries:
     version: 0.41.2
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.388886893Z"
+    created: "2020-12-01T10:24:42.386575254Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1614,7 +1614,7 @@ entries:
     version: 0.41.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.37924551Z"
+    created: "2020-12-01T10:24:42.370647662Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1660,7 +1660,7 @@ entries:
     version: 0.41.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.370222166Z"
+    created: "2020-12-01T10:24:42.361013684Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1706,7 +1706,7 @@ entries:
     version: 0.40.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.360642694Z"
+    created: "2020-12-01T10:24:42.350803304Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1752,7 +1752,7 @@ entries:
     version: 0.40.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.351157314Z"
+    created: "2020-12-01T10:24:42.340602477Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1798,7 +1798,7 @@ entries:
     version: 0.39.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.341613183Z"
+    created: "2020-12-01T10:24:42.329045418Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1844,7 +1844,7 @@ entries:
     version: 0.38.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.332643368Z"
+    created: "2020-12-01T10:24:42.312151201Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1890,7 +1890,7 @@ entries:
     version: 0.38.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.323057145Z"
+    created: "2020-12-01T10:24:42.302802014Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1936,7 +1936,7 @@ entries:
     version: 0.38.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.313503594Z"
+    created: "2020-12-01T10:24:42.29263187Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -1974,7 +1974,7 @@ entries:
     version: 0.38.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.305728678Z"
+    created: "2020-12-01T10:24:42.284492695Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2012,7 +2012,7 @@ entries:
     version: 0.38.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.297877454Z"
+    created: "2020-12-01T10:24:42.275750346Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2050,7 +2050,7 @@ entries:
     version: 0.37.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.28985871Z"
+    created: "2020-12-01T10:24:42.266484249Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2088,7 +2088,7 @@ entries:
     version: 0.37.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.282325451Z"
+    created: "2020-12-01T10:24:42.258507067Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2126,7 +2126,7 @@ entries:
     version: 0.37.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.275281976Z"
+    created: "2020-12-01T10:24:42.251058544Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2164,7 +2164,7 @@ entries:
     version: 0.37.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.267751117Z"
+    created: "2020-12-01T10:24:42.241352329Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2202,7 +2202,7 @@ entries:
     version: 0.37.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.260819621Z"
+    created: "2020-12-01T10:24:42.22837286Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2240,7 +2240,7 @@ entries:
     version: 0.36.2
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.253212003Z"
+    created: "2020-12-01T10:24:42.216399181Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2278,7 +2278,7 @@ entries:
     version: 0.36.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.245605748Z"
+    created: "2020-12-01T10:24:42.207906133Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2316,7 +2316,7 @@ entries:
     version: 0.36.0
   - apiVersion: v1
     appVersion: v1.4.2
-    created: "2020-12-01T10:22:51.238607718Z"
+    created: "2020-12-01T10:24:42.200393176Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2354,7 +2354,7 @@ entries:
     version: 0.35.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.231022357Z"
+    created: "2020-12-01T10:24:42.189689332Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2392,7 +2392,7 @@ entries:
     version: 0.34.2
   - apiVersion: v1
     appVersion: v1.4.0
-    created: "2020-12-01T10:22:51.224062554Z"
+    created: "2020-12-01T10:24:42.17719735Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2430,7 +2430,7 @@ entries:
     version: 0.34.1
   - apiVersion: v1
     appVersion: v1.4.0
-    created: "2020-12-01T10:22:51.216373053Z"
+    created: "2020-12-01T10:24:42.169315369Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2468,7 +2468,7 @@ entries:
     version: 0.34.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.208722219Z"
+    created: "2020-12-01T10:24:42.1594522Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2506,7 +2506,7 @@ entries:
     version: 0.33.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.201787385Z"
+    created: "2020-12-01T10:24:42.147194125Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2544,7 +2544,7 @@ entries:
     version: 0.33.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.194168526Z"
+    created: "2020-12-01T10:24:42.139717197Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2582,7 +2582,7 @@ entries:
     version: 0.32.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.186471032Z"
+    created: "2020-12-01T10:24:42.130294473Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2620,7 +2620,7 @@ entries:
     version: 0.32.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.179439548Z"
+    created: "2020-12-01T10:24:42.121243673Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2658,7 +2658,7 @@ entries:
     version: 0.32.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.17153716Z"
+    created: "2020-12-01T10:24:42.111155548Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2696,7 +2696,7 @@ entries:
     version: 0.31.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.163385076Z"
+    created: "2020-12-01T10:24:42.10297821Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2734,7 +2734,7 @@ entries:
     version: 0.31.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.156292429Z"
+    created: "2020-12-01T10:24:42.095023117Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2772,7 +2772,7 @@ entries:
     version: 0.31.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.14872978Z"
+    created: "2020-12-01T10:24:42.087783581Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2810,7 +2810,7 @@ entries:
     version: 0.30.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.141747639Z"
+    created: "2020-12-01T10:24:42.079125892Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2848,7 +2848,7 @@ entries:
     version: 0.29.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.133951579Z"
+    created: "2020-12-01T10:24:42.071203339Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2886,7 +2886,7 @@ entries:
     version: 0.28.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.126417015Z"
+    created: "2020-12-01T10:24:42.064029534Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2924,7 +2924,7 @@ entries:
     version: 0.27.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.119448761Z"
+    created: "2020-12-01T10:24:42.056051269Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -2962,7 +2962,7 @@ entries:
     version: 0.27.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.111703494Z"
+    created: "2020-12-01T10:24:42.048044224Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3000,7 +3000,7 @@ entries:
     version: 0.26.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.10465819Z"
+    created: "2020-12-01T10:24:42.03829911Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3038,7 +3038,7 @@ entries:
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.097163495Z"
+    created: "2020-12-01T10:24:42.026110031Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3076,7 +3076,7 @@ entries:
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.089611477Z"
+    created: "2020-12-01T10:24:42.013454674Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3114,7 +3114,7 @@ entries:
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.082722919Z"
+    created: "2020-12-01T10:24:42.000590868Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3152,7 +3152,7 @@ entries:
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.1.0
-    created: "2020-12-01T10:22:51.075219174Z"
+    created: "2020-12-01T10:24:41.988366549Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3190,7 +3190,7 @@ entries:
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: "2020-12-01T10:22:51.068431133Z"
+    created: "2020-12-01T10:24:41.980717964Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3228,7 +3228,7 @@ entries:
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: "2020-12-01T10:22:51.061055359Z"
+    created: "2020-12-01T10:24:41.972581658Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3266,7 +3266,7 @@ entries:
     version: 0.20.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:51.053714517Z"
+    created: "2020-12-01T10:24:41.965477994Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3304,7 +3304,7 @@ entries:
     version: 0.19.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:51.046835367Z"
+    created: "2020-12-01T10:24:41.957704566Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3342,7 +3342,7 @@ entries:
     version: 0.19.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:51.039320639Z"
+    created: "2020-12-01T10:24:41.949894008Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3380,7 +3380,7 @@ entries:
     version: 0.18.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:51.032407021Z"
+    created: "2020-12-01T10:24:41.943043533Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3418,7 +3418,7 @@ entries:
     version: 0.18.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.026070566Z"
+    created: "2020-12-01T10:24:41.933963241Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3456,7 +3456,7 @@ entries:
     version: 0.17.4
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.019095416Z"
+    created: "2020-12-01T10:24:41.92261926Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3494,7 +3494,7 @@ entries:
     version: 0.17.3
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.012760413Z"
+    created: "2020-12-01T10:24:41.910554955Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3532,7 +3532,7 @@ entries:
     version: 0.17.2
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.005748265Z"
+    created: "2020-12-01T10:24:41.898671724Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3570,7 +3570,7 @@ entries:
     version: 0.17.1
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.99875442Z"
+    created: "2020-12-01T10:24:41.891914509Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3608,7 +3608,7 @@ entries:
     version: 0.17.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.992436757Z"
+    created: "2020-12-01T10:24:41.884538287Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3646,7 +3646,7 @@ entries:
     version: 0.16.5
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.985567129Z"
+    created: "2020-12-01T10:24:41.877881046Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3680,7 +3680,7 @@ entries:
     version: 0.16.4
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.979854102Z"
+    created: "2020-12-01T10:24:41.870179724Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3714,7 +3714,7 @@ entries:
     version: 0.16.3
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.973434753Z"
+    created: "2020-12-01T10:24:41.863164042Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3748,7 +3748,7 @@ entries:
     version: 0.16.2
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.967686517Z"
+    created: "2020-12-01T10:24:41.856968945Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3782,7 +3782,7 @@ entries:
     version: 0.16.1
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:50.961269885Z"
+    created: "2020-12-01T10:24:41.850145085Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3816,7 +3816,7 @@ entries:
     version: 0.16.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.955444461Z"
+    created: "2020-12-01T10:24:41.844148489Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3850,7 +3850,7 @@ entries:
     version: 0.15.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.94916139Z"
+    created: "2020-12-01T10:24:41.836219459Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3884,7 +3884,7 @@ entries:
     version: 0.14.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.943465392Z"
+    created: "2020-12-01T10:24:41.825856932Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3918,7 +3918,7 @@ entries:
     version: 0.13.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.936839075Z"
+    created: "2020-12-01T10:24:41.815932129Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3952,7 +3952,7 @@ entries:
     version: 0.13.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.931145977Z"
+    created: "2020-12-01T10:24:41.80957866Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -3986,7 +3986,7 @@ entries:
     version: 0.12.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.924999381Z"
+    created: "2020-12-01T10:24:41.802587818Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4020,7 +4020,7 @@ entries:
     version: 0.11.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.918691819Z"
+    created: "2020-12-01T10:24:41.796577052Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4054,7 +4054,7 @@ entries:
     version: 0.11.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.913062948Z"
+    created: "2020-12-01T10:24:41.789328167Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4088,7 +4088,7 @@ entries:
     version: 0.10.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:50.906715261Z"
+    created: "2020-12-01T10:24:41.782943236Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4122,7 +4122,7 @@ entries:
     version: 0.10.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.436313969Z"
+    created: "2020-12-01T10:24:42.448252691Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4156,7 +4156,7 @@ entries:
     version: 0.9.5
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.430704808Z"
+    created: "2020-12-01T10:24:42.442198928Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4190,7 +4190,7 @@ entries:
     version: 0.9.4
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.424568463Z"
+    created: "2020-12-01T10:24:42.435653097Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4216,7 +4216,7 @@ entries:
     version: 0.9.3
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.423161053Z"
+    created: "2020-12-01T10:24:42.434152538Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4242,7 +4242,7 @@ entries:
     version: 0.9.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.421763498Z"
+    created: "2020-12-01T10:24:42.432579169Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4268,7 +4268,7 @@ entries:
     version: 0.9.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.420293624Z"
+    created: "2020-12-01T10:24:42.431063291Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4294,7 +4294,7 @@ entries:
     version: 0.9.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.418088304Z"
+    created: "2020-12-01T10:24:42.428190536Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4320,7 +4320,7 @@ entries:
     version: 0.8.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.415222714Z"
+    created: "2020-12-01T10:24:42.424112324Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4346,7 +4346,7 @@ entries:
     version: 0.8.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.413033357Z"
+    created: "2020-12-01T10:24:42.420230305Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4372,7 +4372,7 @@ entries:
     version: 0.7.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.411013505Z"
+    created: "2020-12-01T10:24:42.416697055Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4398,7 +4398,7 @@ entries:
     version: 0.7.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.408989104Z"
+    created: "2020-12-01T10:24:42.413074915Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4424,7 +4424,7 @@ entries:
     version: 0.7.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.406980456Z"
+    created: "2020-12-01T10:24:42.409108036Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4450,7 +4450,7 @@ entries:
     version: 0.6.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.404333711Z"
+    created: "2020-12-01T10:24:42.406887047Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4476,7 +4476,7 @@ entries:
     version: 0.6.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.402356899Z"
+    created: "2020-12-01T10:24:42.404798814Z"
     dependencies:
     - condition: loki.enabled
       name: loki
@@ -4503,9 +4503,9 @@ entries:
   promtail:
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.548349737Z"
+    created: "2020-12-01T10:24:42.59344181Z"
     description: Responsible for gathering logs and sending them to Loki
-    digest: 726b74afad1ff8724fd2c03ae5679e0e8324e0f6b050621d98d7f5b33ec25843
+    digest: 0f235e7794fa38e24bdd01e17a05fb7ff66e2c6e23e3bac46dbcb3d3768227ed
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
     kubeVersion: ^1.10.0-0
@@ -4520,7 +4520,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
-    created: "2020-12-01T10:22:51.547254541Z"
+    created: "2020-12-01T10:24:42.591866464Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 78c45034bfe79872843b2e49884b7bcc37a24da4912eef95b1c875c8cb33812e
     home: https://grafana.com/loki
@@ -4537,7 +4537,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.533119732Z"
+    created: "2020-12-01T10:24:42.570473293Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: f66dde2dc79176aff99406f2995bd7f9483052504773964d7259e779a7e4a7c4
     home: https://grafana.com/loki
@@ -4554,7 +4554,7 @@ entries:
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.532207502Z"
+    created: "2020-12-01T10:24:42.569530099Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 0ebcfdcb3ff6a8e8531819c4c56b60016cb60746ea3889bf3a7ee7d9827740d7
     home: https://grafana.com/loki
@@ -4571,7 +4571,7 @@ entries:
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.6.0
-    created: "2020-12-01T10:22:51.531297391Z"
+    created: "2020-12-01T10:24:42.56846985Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: ebb8b4a2415cde674778d770a85f33046c9b365455124521ac3571965347ffe0
     home: https://grafana.com/loki
@@ -4588,7 +4588,7 @@ entries:
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.530453134Z"
+    created: "2020-12-01T10:24:42.567495232Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 0bd3309b1003ebaaef6ff06ce41dbd35588098f8f8b02fae4595c7a79e8d3ebd
     home: https://grafana.com/loki
@@ -4605,7 +4605,7 @@ entries:
     version: 0.23.5
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.529621186Z"
+    created: "2020-12-01T10:24:42.566529474Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: bd434858f048bb20d1e10af130cdefeedc89a06579c559b3705d1ba649ca7589
     home: https://grafana.com/loki
@@ -4622,7 +4622,7 @@ entries:
     version: 0.23.4
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.528770463Z"
+    created: "2020-12-01T10:24:42.565647642Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 775ebea3dfbc960d8b6150e074331523013d5c7b9c0dbbce48e2813e898c671b
     home: https://grafana.com/loki
@@ -4639,7 +4639,7 @@ entries:
     version: 0.23.3
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.527942921Z"
+    created: "2020-12-01T10:24:42.564656138Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 726e04347976cef4f9819feda08a6bbebec1d24268cb3640b9b9ae2d5e96ee3e
     home: https://grafana.com/loki
@@ -4656,7 +4656,7 @@ entries:
     version: 0.23.2
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.527133659Z"
+    created: "2020-12-01T10:24:42.563719356Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 6f0cc4b0a53e389a2130e9740ab11d52b960b5fa47535bfb9bf7a3d3f38eb8ae
     home: https://grafana.com/loki
@@ -4673,7 +4673,7 @@ entries:
     version: 0.23.1
   - apiVersion: v1
     appVersion: v1.5.0
-    created: "2020-12-01T10:22:51.526309054Z"
+    created: "2020-12-01T10:24:42.562829464Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 27ebbbdade8d1793773bdb8692322b73867a2e2bd914e43014a1188631291df8
     home: https://grafana.com/loki
@@ -4690,7 +4690,7 @@ entries:
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.525533169Z"
+    created: "2020-12-01T10:24:42.561911237Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 07341bf03cd67bfb1e600daa9ec8c881e8382de3589a9762756a6a00088a67fe
     home: https://grafana.com/loki
@@ -4707,7 +4707,7 @@ entries:
     version: 0.22.2
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.524342472Z"
+    created: "2020-12-01T10:24:42.560795043Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: ae9f63fb90495db5ba6ae111964b66c08148a1d54a1db96b86182f23ac1c17ee
     home: https://grafana.com/loki
@@ -4724,7 +4724,7 @@ entries:
     version: 0.22.1
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.523396044Z"
+    created: "2020-12-01T10:24:42.559527077Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 06cace6cbd93fd8e702dfb9bdbedb17e7424cd9c509ed5868e60b1e7cc45b893
     home: https://grafana.com/loki
@@ -4741,7 +4741,7 @@ entries:
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.4.2
-    created: "2020-12-01T10:22:51.522636642Z"
+    created: "2020-12-01T10:24:42.558727967Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 1a3b6192a0bc898b84e186941a8dca25afffe7c70302eb659377b8655a4107c2
     home: https://grafana.com/loki
@@ -4758,7 +4758,7 @@ entries:
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.4.1
-    created: "2020-12-01T10:22:51.521878018Z"
+    created: "2020-12-01T10:24:42.557921055Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 997a265c0028b5896c847954dff7fd4ecb39f2dcebe8ded358158327e1f2b824
     home: https://grafana.com/loki
@@ -4775,7 +4775,7 @@ entries:
     version: 0.20.1
   - apiVersion: v1
     appVersion: v1.4.0
-    created: "2020-12-01T10:22:51.521115035Z"
+    created: "2020-12-01T10:24:42.557115331Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 7ed5291b825209dfef4c81553b22e0ede0226db08ca053b6f2298948fc2d08dd
     home: https://grafana.com/loki
@@ -4792,7 +4792,7 @@ entries:
     version: 0.20.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.520318784Z"
+    created: "2020-12-01T10:24:42.556270756Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 8c5c932d4f3ef4569edc62130657b8443e068f45228439eb6cd994e92aae407e
     home: https://grafana.com/loki
@@ -4809,7 +4809,7 @@ entries:
     version: 0.19.3
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.519559284Z"
+    created: "2020-12-01T10:24:42.555441508Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: c46bd70340493ca8147714c309a12e7f2a31910991381aad081d67300b6def85
     home: https://grafana.com/loki
@@ -4826,7 +4826,7 @@ entries:
     version: 0.19.2
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.518781517Z"
+    created: "2020-12-01T10:24:42.554640765Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: ed274b81d54a0f23d5465b11ba318a38c5ac4117c8b6628191cdc48f5f128eee
     home: https://grafana.com/loki
@@ -4843,7 +4843,7 @@ entries:
     version: 0.19.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.518036715Z"
+    created: "2020-12-01T10:24:42.553844548Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: e01e070622a2b0af31b81676c54b65ce0936bf6b5a2ac00ed7c3ef4cfe8ae5d9
     home: https://grafana.com/loki
@@ -4860,7 +4860,7 @@ entries:
     version: 0.19.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.517282783Z"
+    created: "2020-12-01T10:24:42.553023882Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 8bdf76322bf423a4236e3af4e54b6f873df8b27477c36fcd8acc0e9459361a37
     home: https://grafana.com/loki
@@ -4877,7 +4877,7 @@ entries:
     version: 0.18.1
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.516536894Z"
+    created: "2020-12-01T10:24:42.552259622Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 987b4f05318d0e59d078e55d3a41451536642da6a9d6906f2a6b6d29163477a1
     home: https://grafana.com/loki
@@ -4894,7 +4894,7 @@ entries:
     version: 0.18.0
   - apiVersion: v1
     appVersion: v1.3.0
-    created: "2020-12-01T10:22:51.515819522Z"
+    created: "2020-12-01T10:24:42.551501712Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 00f72584e3cc02f052562f6cd4d2a9be1baae4c8ff0ccf9f0dfd72337794171a
     home: https://grafana.com/loki
@@ -4911,7 +4911,7 @@ entries:
     version: 0.17.0
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.514335108Z"
+    created: "2020-12-01T10:24:42.550075582Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: a40f2204cf104c8e54339dcc2875bcee528425cddaa994947f20f3c921a4ec39
     home: https://grafana.com/loki
@@ -4928,7 +4928,7 @@ entries:
     version: 0.16.2
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.513660585Z"
+    created: "2020-12-01T10:24:42.549364587Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 4b57e97a155ff0b44e5a74f6af15b1cff78fd4e8bc4e53f237267f3368b5e1e6
     home: https://grafana.com/loki
@@ -4945,7 +4945,7 @@ entries:
     version: 0.16.1
   - apiVersion: v1
     appVersion: v1.2.0
-    created: "2020-12-01T10:22:51.512974882Z"
+    created: "2020-12-01T10:24:42.54863932Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 5cb07949a3fc5278a58d6e08b4c3997558b640d0061c1935bf32d6f63532274d
     home: https://grafana.com/loki
@@ -4962,7 +4962,7 @@ entries:
     version: 0.16.0
   - apiVersion: v1
     appVersion: v1.1.0
-    created: "2020-12-01T10:22:51.512290306Z"
+    created: "2020-12-01T10:24:42.547938203Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 8d46417c67c2fc3e54e13881551eed8b91d5286babdbca2624c29e78be6a27d1
     home: https://grafana.com/loki
@@ -4979,7 +4979,7 @@ entries:
     version: 0.15.0
   - apiVersion: v1
     appVersion: v1.0.0
-    created: "2020-12-01T10:22:51.511625964Z"
+    created: "2020-12-01T10:24:42.547224301Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: ec9625111aab5b0ba99566cebe20aaa01e24f132d5f27be470f773eab2f0d307
     home: https://grafana.com/loki
@@ -4996,7 +4996,7 @@ entries:
     version: 0.14.0
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:51.510956897Z"
+    created: "2020-12-01T10:24:42.546510021Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: b11c3bb0aff56f4afcaf6e38af303d58b8172ca6f88323089f3f3433f9796ca6
     home: https://grafana.com/loki
@@ -5013,7 +5013,7 @@ entries:
     version: 0.13.1
   - apiVersion: v1
     appVersion: v0.4.0
-    created: "2020-12-01T10:22:51.510259132Z"
+    created: "2020-12-01T10:24:42.545784462Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 0218af4d48a3c57895e3f915b8713316b157f5cd7738f068762f0e971702c8d1
     home: https://grafana.com/loki
@@ -5030,7 +5030,7 @@ entries:
     version: 0.13.0
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.50959498Z"
+    created: "2020-12-01T10:24:42.545061247Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 374299ef87cefbe0f7a760f338d1ec8c8252b3d9d98cf218a24b273e1299f478
     home: https://grafana.com/loki
@@ -5047,7 +5047,7 @@ entries:
     version: 0.12.3
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.508926818Z"
+    created: "2020-12-01T10:24:42.544210377Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 696afb96f7dec1d8914f19f692f21981bfb750b2986647143916017555241aba
     home: https://grafana.com/loki
@@ -5064,7 +5064,7 @@ entries:
     version: 0.12.2
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.508242966Z"
+    created: "2020-12-01T10:24:42.543396094Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 903b814c932766ef44eec3d7e2aea405b5d8e19923f48a5567ee44628c287a3c
     home: https://grafana.com/loki
@@ -5081,7 +5081,7 @@ entries:
     version: 0.12.1
   - apiVersion: v1
     appVersion: v0.3.0
-    created: "2020-12-01T10:22:51.507585777Z"
+    created: "2020-12-01T10:24:42.542553143Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 216c524fd134f125dc4fb95134ffc2efedb8bbf33e4ed81245ac79499b79239a
     home: https://grafana.com/loki
@@ -5098,7 +5098,7 @@ entries:
     version: 0.12.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.506944454Z"
+    created: "2020-12-01T10:24:42.541757354Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 05a019211a6988cc8699828671348138cd9f6d44d3ac57948b3a3111fe9f5c6b
     home: https://grafana.com/loki
@@ -5115,7 +5115,7 @@ entries:
     version: 0.11.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.506286337Z"
+    created: "2020-12-01T10:24:42.540817556Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 56384941f9540591945871be99a749af52a8995eaba577a92d3d5dfdcc376ed2
     home: https://grafana.com/loki
@@ -5132,7 +5132,7 @@ entries:
     version: 0.10.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.545842855Z"
+    created: "2020-12-01T10:24:42.590241703Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: f67126fa79532166c19b6e0ed088d3c7fd5ce1630dfbae1574765b166067fef8
     home: https://grafana.com/loki
@@ -5149,7 +5149,7 @@ entries:
     version: 0.9.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.545125555Z"
+    created: "2020-12-01T10:24:42.58865332Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 1aa00399667183b4dde14e080c149eb194a535cf77c1c8721314a7c5fd76406d
     home: https://grafana.com/loki
@@ -5166,7 +5166,7 @@ entries:
     version: 0.8.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.544402153Z"
+    created: "2020-12-01T10:24:42.587393919Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 0db5fa4bce678066c06673fc2e6cca66648d1ec667d8d163822fc925efed993e
     home: https://grafana.com/loki
@@ -5183,7 +5183,7 @@ entries:
     version: 0.8.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.54369491Z"
+    created: "2020-12-01T10:24:42.586369358Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: dbe8049f7b32dfa4f65f1613eec2876a64849753f586585750cd221b7ef5fde1
     home: https://grafana.com/loki
@@ -5200,7 +5200,7 @@ entries:
     version: 0.7.3
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.542973544Z"
+    created: "2020-12-01T10:24:42.585305064Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 593f579c023c1df962196914e8204df6516dc7482c49b53a8d2c75e27977141d
     home: https://grafana.com/loki
@@ -5217,7 +5217,7 @@ entries:
     version: 0.7.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.542268863Z"
+    created: "2020-12-01T10:24:42.584209395Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 728037bd94c46bc21309aa259c8531aa53f216400e8f42c40aa0755890065be2
     home: https://grafana.com/loki
@@ -5234,7 +5234,7 @@ entries:
     version: 0.7.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.540709506Z"
+    created: "2020-12-01T10:24:42.581752131Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: af2dca916bb95b909646de6710a82c5ad6714b410ee97ce0b4ccb0455320d507
     home: https://grafana.com/loki
@@ -5251,7 +5251,7 @@ entries:
     version: 0.7.0
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.539137779Z"
+    created: "2020-12-01T10:24:42.579346971Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 61ec9fb6727069ddfe37657db06a22163de31c5deb27aeb5333e7c5fdf34aa2d
     home: https://grafana.com/loki
@@ -5268,7 +5268,7 @@ entries:
     version: 0.6.3
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.537728748Z"
+    created: "2020-12-01T10:24:42.577170398Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 8461f3df3e011b95ef3d060a974a821441a0a503fc472c5ac425a340d0682ea5
     home: https://grafana.com/loki
@@ -5285,7 +5285,7 @@ entries:
     version: 0.6.2
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.536342729Z"
+    created: "2020-12-01T10:24:42.575081543Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: 639b884367892721200310029a54f6f63f1a7c08493174f0925604a37b03a182
     home: https://grafana.com/loki
@@ -5302,7 +5302,7 @@ entries:
     version: 0.6.1
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2020-12-01T10:22:51.534628047Z"
+    created: "2020-12-01T10:24:42.572764599Z"
     description: Responsible for gathering logs and sending them to Loki
     digest: d8c072989461b9a6f416f5f37c408d616c1264f3109dc2f3301d310981b30894
     home: https://grafana.com/loki
@@ -5317,4 +5317,4 @@ entries:
     urls:
     - promtail-0.6.0.tgz
     version: 0.6.0
-generated: "2020-12-01T10:22:50.839111547Z"
+generated: "2020-12-01T10:24:41.707087955Z"
