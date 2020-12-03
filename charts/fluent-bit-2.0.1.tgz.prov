@@ -18,14 +18,14 @@ version: 2.0.1
 
 ...
 files:
-  fluent-bit-2.0.1.tgz: sha256:e9ed2d5817758c989d3da1fca5ad34fbf7397c004d93a9ee0d849b01f898d10e
+  fluent-bit-2.0.1.tgz: sha256:b57efb84c1cf3d7b7e2cdae02f7c068e9189a02c5a8abac3966728ca5b9555dc
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfyPU3CRBwVKlVnTz7CwAAwMEIAKGUW4BVRYwsRJVxPSjjW0dx
-qVwKT8mbZ1g2nJw5zJiMSp2firmIuyvGDwUR46LtiixIvc067Kpjh3xuvGDWOi0p
-DvJ+VvVNnCpXR0HJ0EialgP3A/zxfc1eN6FY51XcAe+WyP/434Rxh6Ab31mdOpGk
-6RV6UdmTyzhkUXNWBrNaD5Jv7bHx8UR4O44gCN25Y2tXFdonNSomEpcxbK5jmXxf
-jVlhbPNdcCNUFsqr/vU1R5TEY18fcn3U9BPIU5eddQq+c1bf9GGsBAk2gnvZ2f+m
-TzmLZf44W6LxBNMai40QBe4mfQu/iMkNs1Bq6288rERwO8uxtDdQMzKVaBfV1lQ=
-=jPaT
+wsBcBAEBCgAQBQJfyQ1ECRBwVKlVnTz7CwAAelgIABt2GxMvqs5/nOrucU56tnVs
+0V5w+WzkqTP3PRqcPsWG1CtpzLr/AHvzkonuj1RGUNzz3JLk3Uoy+wTh2ecWMIa9
+yRc609U6lY8M8z6qX7MpZxQBseGYRMz8reax24uuXvSso2Lj2eId+hOsNkfoLPGn
+SnGTJgCd4NarhKp6riYcukSkd2qi7+DOC6nw88h2lWKuDz8Y/FmmKi4HgzjpPm/O
+pUw/Lc/apm+dAbNV3v/2xpi1r2QE16977EsUIBzk+w5Bx3WNikrOkwbydckEtuUx
+kAhcALVSgoUrlbunzg82KuP0wNeklcIl1Pcbnv01kkSXrOmU1hDeVL9hvJ9HyQc=
+=g7bd
 -----END PGP SIGNATURE-----
