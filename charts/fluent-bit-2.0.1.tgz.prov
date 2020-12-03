@@ -18,14 +18,14 @@ version: 2.0.1
 
 ...
 files:
-  fluent-bit-2.0.1.tgz: sha256:b57efb84c1cf3d7b7e2cdae02f7c068e9189a02c5a8abac3966728ca5b9555dc
+  fluent-bit-2.0.1.tgz: sha256:66d319d941f8c528abe323759b345d4ab8864571537bd0e20d3d0aaa35853491
 -----BEGIN PGP SIGNATURE-----
 
-wsBcBAEBCgAQBQJfyQ1ECRBwVKlVnTz7CwAAelgIABt2GxMvqs5/nOrucU56tnVs
-0V5w+WzkqTP3PRqcPsWG1CtpzLr/AHvzkonuj1RGUNzz3JLk3Uoy+wTh2ecWMIa9
-yRc609U6lY8M8z6qX7MpZxQBseGYRMz8reax24uuXvSso2Lj2eId+hOsNkfoLPGn
-SnGTJgCd4NarhKp6riYcukSkd2qi7+DOC6nw88h2lWKuDz8Y/FmmKi4HgzjpPm/O
-pUw/Lc/apm+dAbNV3v/2xpi1r2QE16977EsUIBzk+w5Bx3WNikrOkwbydckEtuUx
-kAhcALVSgoUrlbunzg82KuP0wNeklcIl1Pcbnv01kkSXrOmU1hDeVL9hvJ9HyQc=
-=g7bd
+wsBcBAEBCgAQBQJfyS5XCRBwVKlVnTz7CwAAOQoIABz4ZQW3eHCTyVt14nI5Gl02
+5EwazFUPO1pNhAwTrCHnaqnLft1UXKL/iZKI79rtpIA46CXcGsDUfBtNbQ1socoM
+Tuc2+sGxrxYoGK1CedvBP8lBfBS7hLoPKXBEuXAYb9viX6ZvVASKLaTxvH+V4xi4
+6r9e7Sgcup5kaheCZsKTvNhesoB5vX4X26kYamWyA5jTXifMm+3qPSnHq+QCso/3
+WqKu74yWP+FS2cpiOak8QslX4r9yY3bUoL084fL0tKyXlgg7Dxcl0YMag1DGr8sh
+F7XXsqmk/ELPhHHgh6ztVAgp7fQVw258iMWAcn4gjgG5nJzfqn2iIVZgzd4lC9k=
+=wSw0
 -----END PGP SIGNATURE-----
