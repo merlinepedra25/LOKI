@@ -1,0 +1,28 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v1
+appVersion: v2.0.0
+deprecated: true
+description: 'DEPRECATED Loki: like Prometheus, but for logs.'
+home: https://grafana.com/loki
+icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+kubeVersion: ^1.10.0-0
+name: loki
+sources:
+- - https://github.com/grafana/loki
+version: 2.1.1
+
+...
+files:
+  loki-2.1.1.tgz: sha256:df423b186faf0203900b0aea6dcb788a094ab75b0522da8ba8365e6aae3c4e9c
+-----BEGIN PGP SIGNATURE-----
+
+wsBcBAEBCgAQBQJf1OGzCRBwVKlVnTz7CwAAyYQIACUBIbmClchngTDUnakAQCeM
+mJmYFC6Y/RW2W3a6gbu7F3b7gYIaWpV1xnd41OIdUDjd99X4VvOetsxgjpgN8UAz
+ETalmo2slyTYUOeaCRI+lDK8YQXiohBzfH5l9er1HYvb5i+JG5860gFB3/v4D40Z
+v8GFDiugwFKuImOhj6I7n2O86u+W6RFN4dOXp0+OZ3sc+KYtJuaXxGE2dlyBhYuU
+ZB4Lq5xiS/NAFNwtiUGYxyYnOqCIJQK434wB1XBawh7VKX0RPrYySWv8hkI0LhMc
+6K043YLDVXGJrUxPhgTS/DbqkdW2XN7jKtguUBrj+3/aYV7VvKrYWh62iLp/uNE=
+=WmNm
+-----END PGP SIGNATURE-----

@@ -1,0 +1,28 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v1
+appVersion: v2.0.0
+deprecated: true
+description: DEPRECATED Responsible for gathering logs and sending them to Loki
+home: https://grafana.com/loki
+icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+kubeVersion: ^1.10.0-0
+name: promtail
+sources:
+- - https://github.com/grafana/loki
+version: 2.0.2
+
+...
+files:
+  promtail-2.0.2.tgz: sha256:2ed714142482beeffec8bb83de3806f802b2b610106ad4c020cc4b75639ced7e
+-----BEGIN PGP SIGNATURE-----
+
+wsBcBAEBCgAQBQJf1OGzCRBwVKlVnTz7CwAAbioIAFUjxbgvcC3ywpvYPHHIdk/D
+bkLhriIb3Y0n0pZQVXcqtpyJB8xjqNk2lHS3byBpFXUEjIGn9DP1adoJimPCwLMX
+yZ5RDf6/5niOn1AIA4OI1qoY/3zgfYiqFKgK4ffDj4GHNLOTjl+s9wPEhSAJYJcJ
+10qEYfLMyVLuq1USMes/dUwLUuEXjnMBWah4fbcKcRtKJ9NKx+hRnjC+t5A1J13R
+Q5hc8sgBYNojT+4MtP5esvMaE7YzlT8o2mkwZmn/eXO6TiurGY8ht/rLvKq8FdVa
+q2Cps6NkQuwuPS3QdAfXc4kqJ2FWaNz/6y2SxT5eitL3kngBGP+AzDBSPUqR6iw=
+=XC9n
+-----END PGP SIGNATURE-----

@@ -1,0 +1,57 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v1
+appVersion: v2.0.0
+dependencies:
+- - condition: loki.enabled
+  name: loki
+  repository: file://../loki
+  version: ^2.0.0
+- - condition: promtail.enabled
+  name: promtail
+  repository: file://../promtail
+  version: ^2.0.0
+- - condition: fluent-bit.enabled
+  name: fluent-bit
+  repository: file://../fluent-bit
+  version: ^2.0.0
+- - condition: grafana.enabled
+  name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: ~5.7.0
+- - condition: prometheus.enabled
+  name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: ~11.16.0
+- - condition: filebeat.enabled
+  name: filebeat
+  repository: https://helm.elastic.co
+  version: ~7.8.0
+- - condition: logstash.enabled
+  name: logstash
+  repository: https://helm.elastic.co
+  version: ~7.8.0
+deprecated: true
+description: 'DEPRECATED Loki: like Prometheus, but for logs.'
+home: https://grafana.com/loki
+icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+kubeVersion: ^1.10.0-0
+name: loki-stack
+sources:
+- - https://github.com/grafana/loki
+version: 2.1.2
+
+...
+files:
+  loki-stack-2.1.2.tgz: sha256:9215072545f8560f8d21862bd069d55e0f028b4b460469e28fc40d28ded5ec21
+-----BEGIN PGP SIGNATURE-----
+
+wsBcBAEBCgAQBQJf1OG1CRBwVKlVnTz7CwAA2psIAGxIfK5P++0guZL2iGV1gedI
+nc8r/koKOlz4j91y8yF9ofAiCRW7Ssk+FwzwIq/AstMZxkqfCEV2zMlMsOpoGW9n
++UZQ7ZSAubEiGvZTN8CQ/5+qwGF/JvY3Z/oQCfNgHET+CI8OyqcrciZYKbOy2/EX
+6O0PuHGswosVRrvLUQ+E4c/2S8Q0WG5ddZVaOE7lkdsTaH05dH1S5cxyzd9/n+mP
+63uv5DgFizSDWZHr//ewV6IeFLxQ02AR9jCBy04gijOV6uHXyydyIbK2E9/8XJM8
+ya8jscd8qppedZIluPLjidlfbA8uJu7qycVExGOqEkZk2l6KKKtaN1EMt7xAP+E=
+=xO3K
+-----END PGP SIGNATURE-----
