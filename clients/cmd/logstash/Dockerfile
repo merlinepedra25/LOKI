@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 FROM logstash:7.9.3
 
 USER logstash

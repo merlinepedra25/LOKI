@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 Verify the application is working by running these commands:
 
 `kubectl --namespace {{ .Release.Namespace }} port-forward daemonset/{{ include "promtail.fullname" . }} {{ .Values.config.server.http_listen_port }}`

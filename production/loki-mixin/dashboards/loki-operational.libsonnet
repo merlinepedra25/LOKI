@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 local lokiOperational = (import './dashboard-loki-operational.json');
 local utils = import 'mixin-utils/utils.libsonnet';
 

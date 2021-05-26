@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # Contributing to Loki Logstash Output Plugin
 
 For information about how to use this plugin see this [documentation](../../docs/sources/clients/logstash/_index.md).

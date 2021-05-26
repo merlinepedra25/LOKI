@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 local g = import 'grafana-builder/grafana.libsonnet';
 local utils = import 'mixin-utils/utils.libsonnet';
 

@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # lambda-promtail
 
 This is a sample template for lambda-promtail - Below is a brief explanation of what we have generated for you:

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 local scrape_config = import './scrape_config.libsonnet';
 local config = import 'config.libsonnet';
 local k = import 'ksonnet-util/kausal.libsonnet';

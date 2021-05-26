@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: Apache-2.0
+
+
 ##########################################
 # Generate the scrape_config for the
 # promtail.sh script and the helm chart.

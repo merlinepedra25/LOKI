@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 {
   local with(x) = if $._config.wal_enabled then x else {},
 

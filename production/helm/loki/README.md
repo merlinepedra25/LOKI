@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # ⚠️  DEPRECATED - Loki Helm Chart
 
 This chart was moved to <https://github.com/grafana/helm-charts>.

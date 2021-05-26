@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 {
   _config+: {
     namespace: error 'must define namespace',

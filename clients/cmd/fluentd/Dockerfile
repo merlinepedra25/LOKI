@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 FROM ruby:2.6 as build
 
 ENV DEBIAN_FRONTEND=noninteractive

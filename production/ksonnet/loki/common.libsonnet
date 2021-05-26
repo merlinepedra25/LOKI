@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 {
   namespace:
     $.core.v1.namespace.new($._config.namespace),

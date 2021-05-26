@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 FROM       grafana/bigtable-backup:master-18e7589
 RUN        apk add --update --no-cache python3 python3-dev git \
             && pip3 install --no-cache-dir --upgrade pip

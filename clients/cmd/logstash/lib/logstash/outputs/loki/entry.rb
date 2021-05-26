@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 module Loki
     def to_ns(s)
         (s.to_f * (10**9)).to_i

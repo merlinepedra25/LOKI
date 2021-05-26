@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: Apache-2.0
+
+
 # sed-wrap runs the appropriate sed command based on the
 # underlying value of $OSTYPE
 sed-wrap() {

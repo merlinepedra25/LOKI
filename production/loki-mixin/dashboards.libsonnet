@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 (import 'config.libsonnet') +
 (import 'dashboards/loki-retention.libsonnet') +
 (import 'dashboards/loki-chunks.libsonnet') +

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: Apache-2.0
+
+
 #  This script was sourced here: https://github.com/fmahnke/shell-semver and had the following license:
 
 #  The MIT License (MIT)

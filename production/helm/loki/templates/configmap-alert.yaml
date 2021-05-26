@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 {{- if gt (len .Values.alerting_groups) 0 }}
 ---
 apiVersion: v1

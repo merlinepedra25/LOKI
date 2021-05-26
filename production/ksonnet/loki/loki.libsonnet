@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 (import 'ksonnet-util/kausal.libsonnet') +
 (import 'jaeger-agent-mixin/jaeger.libsonnet') +
 (import 'images.libsonnet') +

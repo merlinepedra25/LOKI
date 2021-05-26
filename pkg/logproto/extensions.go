@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package logproto
 
 import "github.com/prometheus/prometheus/pkg/labels"

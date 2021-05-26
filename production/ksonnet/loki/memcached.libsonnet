@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 local memcached = import 'memcached/memcached.libsonnet';
 
 memcached {

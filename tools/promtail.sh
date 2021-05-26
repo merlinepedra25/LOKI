@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: Apache-2.0
+
+
 INSTANCEID="${1:-}"
 APIKEY="${2:-}"
 INSTANCEURL="${3:-}"

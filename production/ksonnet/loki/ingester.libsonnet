@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 {
   local container = $.core.v1.container,
   local pvc = $.core.v1.persistentVolumeClaim,

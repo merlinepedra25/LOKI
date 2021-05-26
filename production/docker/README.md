@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # Loki cluster using docker-compose
 
 To deploy a cluster of loki nodes on a local machine (as shown below), you could use the `docker-compose-ha-member.yaml` file.

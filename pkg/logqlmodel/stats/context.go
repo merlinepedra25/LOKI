@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 /*
 Package stats provides primitives for recording metrics across the query path.
 Statistics are passed through the query context.

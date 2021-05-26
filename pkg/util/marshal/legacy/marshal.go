@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 // Package marshal converts internal objects to loghttp model objects.  This package is designed to work with
 //  models in pkg/loghttp/legacy.
 package marshal

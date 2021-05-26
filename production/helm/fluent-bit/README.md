@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # ⚠️  DEPRECATED - Fluent Bit Loki chart
 
 This chart was moved to <https://github.com/grafana/helm-charts>.

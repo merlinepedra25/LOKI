@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 This is release `${CIRCLE_TAG}` of Loki.
 
 ### Notable changes:

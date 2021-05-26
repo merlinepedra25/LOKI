@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 {
   _images+:: {
     promtail: 'grafana/promtail:2.2.0',

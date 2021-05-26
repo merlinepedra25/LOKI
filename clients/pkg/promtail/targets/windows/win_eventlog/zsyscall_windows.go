@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 // The MIT License (MIT)
 
 // Copyright (c) 2015-2020 InfluxData Inc.

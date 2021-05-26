@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # Cloud provisioning for GCP logs
 
 This document covers how to configure your GCP via Terraform to make cloud logs available for `promtail` to consume.

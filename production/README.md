@@ -1,3 +1,5 @@
+<--- SPDX-License-Identifier: Apache-2.0 -->
+
 # Running Loki
 
 Currently there are five ways to try out Loki, in order from easier to hardest:

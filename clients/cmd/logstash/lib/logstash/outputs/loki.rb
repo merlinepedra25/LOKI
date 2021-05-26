@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 # encoding: utf-8
 require "logstash/outputs/base"
 require "logstash/outputs/loki/entry"

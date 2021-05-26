@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package util
 
 // MinUint32 return the min of a and b.
