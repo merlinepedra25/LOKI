@@ -227,74 +227,84 @@ func (e *pipelineExpr) HasFilter() bool {
 	return false
 }
 
-type functionLineFilterExpr struct {
-	ty     labels.MatchType
-	op     string
-	params string
-	implicit
-}
+// type functionLineFilterExpr struct {
+// 	ty     labels.MatchType
+// 	op     string
+// 	params string
+// 	implicit
+// }
 
-func newFunctionLineFilterExpr(op, params string, ty labels.MatchType) *functionLineFilterExpr {
-	switch op {
-	case OpFilterIP:
-		// todo filter panic(newParseError("this is not an ip or range", 0, 0))
-	}
-	return &functionLineFilterExpr{
-		op:     op,
-		params: params,
-		ty:     ty,
-	}
-}
+// func newFunctionLineFilterExpr(op, params string, ty labels.MatchType) *functionLineFilterExpr {
+// 	switch op {
+// 	case OpFilterIP:
+// 		// todo filter panic(newParseError("this is not an ip or range", 0, 0))
+// 	}
+// 	return &functionLineFilterExpr{
+// 		op:     op,
+// 		params: params,
+// 		ty:     ty,
+// 	}
+// }
 
-func (e *functionLineFilterExpr) String() string {
-	var sb strings.Builder
-	switch e.ty {
-	case labels.MatchRegexp:
-		sb.WriteString("|~")
-	case labels.MatchNotRegexp:
-		sb.WriteString("!~")
-	case labels.MatchEqual:
-		sb.WriteString("|=")
-	case labels.MatchNotEqual:
-		sb.WriteString("!=")
-	}
-	sb.WriteString(" ")
-	sb.WriteString(e.op)
-	sb.WriteString("(")
-	sb.WriteString(strconv.Quote(e.params))
-	sb.WriteString(")")
-	return sb.String()
-}
+// func (e *functionLineFilterExpr) String() string {
+// 	var sb strings.Builder
+// 	switch e.ty {
+// 	case labels.MatchRegexp:
+// 		sb.WriteString("|~")
+// 	case labels.MatchNotRegexp:
+// 		sb.WriteString("!~")
+// 	case labels.MatchEqual:
+// 		sb.WriteString("|=")
+// 	case labels.MatchNotEqual:
+// 		sb.WriteString("!=")
+// 	}
+// 	sb.WriteString(" ")
+// 	sb.WriteString(e.op)
+// 	sb.WriteString("(")
+// 	sb.WriteString(strconv.Quote(e.params))
+// 	sb.WriteString(")")
+// 	return sb.String()
+// }
 
-func (e *functionLineFilterExpr) Shardable() bool { return true }
+// func (e *functionLineFilterExpr) Shardable() bool { return true }
 
-func (e *functionLineFilterExpr) Stage() (log.Stage, error) {
-	switch e.op {
-	case OpFilterIP:
-		return log.NewLineIpFilter(e.params)
-	default:
-		return nil, fmt.Errorf("unknown function %q", e.op)
-	}
-}
+// func (e *functionLineFilterExpr) Stage() (log.Stage, error) {
+// 	switch e.op {
+// 	case OpFilterIP:
+// 		return log.NewLineIpFilter(e.params)
+// 	default:
+// 		return nil, fmt.Errorf("unknown function %q", e.op)
+// 	}
+// }
 
 type lineFilterExpr struct {
 	left  *lineFilterExpr
 	ty    labels.MatchType
 	match string
+	op    string
 	implicit
 }
 
-func newLineFilterExpr(left *lineFilterExpr, ty labels.MatchType, match string) *lineFilterExpr {
+func newLineFilterExpr(ty labels.MatchType, op, match string) *lineFilterExpr {
 	return &lineFilterExpr{
-		left:  left,
 		ty:    ty,
 		match: match,
+		op:    op,
+	}
+}
+
+func newNestedLineFilterExpr(left *lineFilterExpr, right *lineFilterExpr) *lineFilterExpr {
+	return &lineFilterExpr{
+		left:  left,
+		ty:    right.ty,
+		match: right.match,
+		op:    right.op,
 	}
 }
 
 // AddFilterExpr adds a filter expression to a logselector expression.
-func AddFilterExpr(expr LogSelectorExpr, ty labels.MatchType, match string) (LogSelectorExpr, error) {
-	filter := newLineFilterExpr(nil, ty, match)
+func AddFilterExpr(expr LogSelectorExpr, ty labels.MatchType, op, match string) (LogSelectorExpr, error) {
+	filter := newLineFilterExpr(ty, op, match)
 	switch e := expr.(type) {
 	case *matchersExpr:
 		return newPipelineExpr(e, MultiStageExpr{filter}), nil
@@ -325,11 +335,19 @@ func (e *lineFilterExpr) String() string {
 		sb.WriteString("!=")
 	}
 	sb.WriteString(" ")
+	if e.op == "" {
+		sb.WriteString(strconv.Quote(e.match))
+		return sb.String()
+	}
+	sb.WriteString(e.op)
+	sb.WriteString("(")
 	sb.WriteString(strconv.Quote(e.match))
+	sb.WriteString(")")
 	return sb.String()
 }
 
 func (e *lineFilterExpr) Filter() (log.Filterer, error) {
+	// todo do validation e.g ip matcher does not support all match types.
 	f, err := log.NewFilter(e.match, e.ty)
 	if err != nil {
 		return nil, err

@@ -36,7 +36,7 @@ import (
   BinOpModifier           BinOpOptions
   LabelParser             *labelParserExpr
   LineFilters             *lineFilterExpr
-  FunctionFilter          *functionLineFilterExpr
+  LineFilter              *lineFilterExpr
   PipelineExpr            MultiStageExpr
   PipelineStage           StageExpr
   BytesFilter             log.LabelFilterer
@@ -84,8 +84,8 @@ import (
 %type <NumberFilter>          numberFilter
 %type <DurationFilter>        durationFilter
 %type <LabelFilter>           labelFilter
-%type <FunctionFilter>        functionFilter
 %type <LineFilters>           lineFilters
+%type <LineFilter>            lineFilter
 %type <LineFormatExpr>        lineFormatExpr
 %type <LabelFormatExpr>       labelFormatExpr
 %type <LabelFormat>           labelFormat
@@ -234,7 +234,6 @@ pipelineExpr:
 
 pipelineStage:
    lineFilters                   { $$ = $1 }
-  | functionFilter               { $$ = $1 }
   | PIPE labelParser             { $$ = $2 }
   | PIPE jsonExpressionParser    { $$ = $2 }
   | PIPE labelFilter             { $$ = &labelFilterExpr{LabelFilterer: $2 }}
@@ -246,15 +245,13 @@ filterOp:
   IP { $$ = OpFilterIP }
   ;
 
-
-functionFilter:
-  PIPE_EXACT filterOp OPEN_PARENTHESIS STRING CLOSE_PARENTHESIS { $$ = newFunctionLineFilterExpr($2, $4, labels.MatchEqual) }
-  | NEQ filterOp OPEN_PARENTHESIS STRING CLOSE_PARENTHESIS      { $$ = newFunctionLineFilterExpr($2, $4, labels.MatchNotEqual) }
-  ;
+lineFilter:
+    filter STRING                                             { $$ = newLineFilterExpr($1, "", $2,) }
+  | filter filterOp OPEN_PARENTHESIS STRING CLOSE_PARENTHESIS { $$ = newLineFilterExpr($1, $2, $4) }
 
 lineFilters:
-    filter STRING                 { $$ = newLineFilterExpr(nil, $1, $2 ) }
-  | lineFilters filter STRING     { $$ = newLineFilterExpr($1, $2, $3 ) }
+    lineFilter                { $$ = $1 }
+  | lineFilters lineFilter    { $$ = newNestedLineFilterExpr($1, $2) }
 
 labelParser:
     JSON           { $$ = newLabelParserExpr(OpParserTypeJSON, "") }
