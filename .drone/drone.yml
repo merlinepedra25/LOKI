@@ -12,28 +12,28 @@ workspace:
 
 steps:
 - name: test
-  image: grafana/loki-build-image:0.16.0
+  image: grafana/loki-build-image:0.17.0
   commands:
   - make BUILD_IN_CONTAINER=false test
   depends_on:
   - clone
 
 - name: lint
-  image: grafana/loki-build-image:0.16.0
+  image: grafana/loki-build-image:0.17.0
   commands:
   - make BUILD_IN_CONTAINER=false lint
   depends_on:
   - clone
 
 - name: check-generated-files
-  image: grafana/loki-build-image:0.16.0
+  image: grafana/loki-build-image:0.17.0
   commands:
   - make BUILD_IN_CONTAINER=false check-generated-files
   depends_on:
   - clone
 
 - name: check-mod
-  image: grafana/loki-build-image:0.16.0
+  image: grafana/loki-build-image:0.17.0
   commands:
   - make BUILD_IN_CONTAINER=false check-mod
   depends_on:
@@ -973,6 +973,6 @@ get:
 
 ---
 kind: signature
-hmac: 6be76e065b1af696272ae56550a9e435e57c4fb68e8cca62d2edb8400d1c7fc0
+hmac: b70be41d1a7f91c11af945a34bdbdc7a4f7613cf830c13f5438dba0bf33a1ec5
 
 ...

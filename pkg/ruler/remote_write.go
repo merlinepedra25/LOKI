@@ -9,6 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/prometheus/pkg/labels"
+	"github.com/prometheus/prometheus/pkg/relabel"
 	"github.com/prometheus/prometheus/storage/remote"
 
 	"github.com/grafana/loki/pkg/util"
@@ -33,6 +34,8 @@ type RemoteWriteClient struct {
 
 	labels  []labels.Labels
 	samples []cortexpb.Sample
+
+	relabelConfigs []*relabel.Config
 }
 
 type remoteWriteMetrics struct {
@@ -58,7 +61,8 @@ func NewRemoteWriter(cfg Config, userID string) (RemoteWriter, error) {
 	}
 
 	return &RemoteWriteClient{
-		WriteClient: writeClient,
+		relabelConfigs: cfg.RemoteWrite.Client.WriteRelabelConfigs,
+		WriteClient:    writeClient,
 	}, nil
 }
 
@@ -78,6 +82,11 @@ func (r *RemoteWriteClient) prepare(queue util.Queue) error {
 		entry, ok := entry.(TimeSeriesEntry)
 		if !ok {
 			return fmt.Errorf("queue contains invalid entry of type: %T", entry)
+		}
+
+		// apply relabelling if defined
+		if len(r.relabelConfigs) > 0 {
+			entry.Labels = relabel.Process(entry.Labels, r.relabelConfigs...)
 		}
 
 		r.labels = append(r.labels, entry.Labels)
@@ -124,11 +133,12 @@ func newRemoteWriteMetrics(r prometheus.Registerer) *remoteWriteMetrics {
 			Name:      "recording_rules_samples_queued_current",
 			Help:      "Number of samples queued to be remote-written.",
 		}, []string{"tenant", "group_key"}),
+		// even though capacity can only be set per tenant, it's convenient to have a metric per rulegroup for calculations
 		samplesQueueCapacity: promauto.With(r).NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: "loki",
 			Name:      "recording_rules_samples_queue_capacity",
 			Help:      "Number of samples that can be queued before eviction of oldest samples occurs.",
-		}, []string{"tenant"}),
+		}, []string{"tenant", "group_key"}),
 		remoteWriteErrors: promauto.With(r).NewCounterVec(prometheus.CounterOpts{
 			Namespace: "loki",
 			Name:      "recording_rules_remote_write_errors",

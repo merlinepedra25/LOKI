@@ -3,29 +3,36 @@ package queryrange
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/cortexproject/cortex/pkg/querier/astmapper"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/cortexproject/cortex/pkg/tenant"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/pkg/errors"
 	"github.com/prometheus/prometheus/promql/parser"
+	"github.com/weaveworks/common/httpgrpc"
 
 	"github.com/grafana/loki/pkg/loghttp"
 	"github.com/grafana/loki/pkg/logql"
 	"github.com/grafana/loki/pkg/logqlmodel"
+	"github.com/grafana/loki/pkg/storage/chunk"
 	"github.com/grafana/loki/pkg/util/marshal"
 )
+
+var errInvalidShardingRange = errors.New("Query does not fit in a single sharding configuration")
 
 // NewQueryShardMiddleware creates a middleware which downstreams queries after AST mapping and query encoding.
 func NewQueryShardMiddleware(
 	logger log.Logger,
-	confs queryrange.ShardingConfigs,
+	confs ShardingConfigs,
 	middlewareMetrics *queryrange.InstrumentMiddlewareMetrics,
 	shardingMetrics *logql.ShardingMetrics,
-	limits logql.Limits,
+	limits Limits,
 ) queryrange.Middleware {
 
 	noshards := !hasShards(confs)
@@ -44,15 +51,20 @@ func NewQueryShardMiddleware(
 	})
 
 	return queryrange.MiddlewareFunc(func(next queryrange.Handler) queryrange.Handler {
-		return queryrange.MergeMiddlewares(
-			queryrange.InstrumentMiddleware("shardingware", middlewareMetrics),
-			mapperware,
-		).Wrap(next)
+		return &shardSplitter{
+			limits: limits,
+			shardingware: queryrange.MergeMiddlewares(
+				queryrange.InstrumentMiddleware("shardingware", middlewareMetrics),
+				mapperware,
+			).Wrap(next),
+			now:  time.Now,
+			next: queryrange.InstrumentMiddleware("sharding-bypass", middlewareMetrics).Wrap(next),
+		}
 	})
 }
 
 func newASTMapperware(
-	confs queryrange.ShardingConfigs,
+	confs ShardingConfigs,
 	next queryrange.Handler,
 	logger log.Logger,
 	metrics *logql.ShardingMetrics,
@@ -69,7 +81,7 @@ func newASTMapperware(
 }
 
 type astMapperware struct {
-	confs   queryrange.ShardingConfigs
+	confs   ShardingConfigs
 	logger  log.Logger
 	next    queryrange.Handler
 	ng      *logql.ShardedEngine
@@ -156,13 +168,14 @@ func (ast *astMapperware) Do(ctx context.Context, r queryrange.Request) (queryra
 			},
 		}, nil
 	case parser.ValueTypeVector:
-		return &LokiPromResponse{Response: &queryrange.PrometheusResponse{
-			Status: loghttp.QueryStatusSuccess,
-			Data: queryrange.PrometheusData{
-				ResultType: loghttp.ResultTypeVector,
-				Result:     toProtoVector(value.(loghttp.Vector)),
+		return &LokiPromResponse{
+			Response: &queryrange.PrometheusResponse{
+				Status: loghttp.QueryStatusSuccess,
+				Data: queryrange.PrometheusData{
+					ResultType: loghttp.ResultTypeVector,
+					Result:     toProtoVector(value.(loghttp.Vector)),
+				},
 			},
-		},
 		}, nil
 	default:
 		return nil, fmt.Errorf("unexpected downstream response type (%T)", res.Data.Type())
@@ -173,15 +186,22 @@ func (ast *astMapperware) Do(ctx context.Context, r queryrange.Request) (queryra
 // This is used to send nonsharded requests to the ingesters in order to not overload them.
 // TODO(owen-d): export in cortex so we don't duplicate code
 type shardSplitter struct {
-	MinShardingLookback time.Duration      // delimiter for splitting sharded vs non-sharded queries
-	shardingware        queryrange.Handler // handler for sharded queries
-	next                queryrange.Handler // handler for non-sharded queries
-	now                 func() time.Time   // injectable time.Now
+	limits       Limits             // delimiter for splitting sharded vs non-sharded queries
+	shardingware queryrange.Handler // handler for sharded queries
+	next         queryrange.Handler // handler for non-sharded queries
+	now          func() time.Time   // injectable time.Now
 }
 
 func (splitter *shardSplitter) Do(ctx context.Context, r queryrange.Request) (queryrange.Response, error) {
-	cutoff := splitter.now().Add(-splitter.MinShardingLookback)
-
+	userid, err := tenant.TenantID(ctx)
+	if err != nil {
+		return nil, httpgrpc.Errorf(http.StatusBadRequest, err.Error())
+	}
+	minShardingLookback := splitter.limits.MinShardingLookback(userid)
+	if minShardingLookback == 0 {
+		return splitter.shardingware.Do(ctx, r)
+	}
+	cutoff := splitter.now().Add(-minShardingLookback)
 	// Only attempt to shard queries which are older than the sharding lookback (the period for which ingesters are also queried).
 	if !cutoff.After(util.TimeFromMillis(r.GetEnd())) {
 		return splitter.next.Do(ctx, r)
@@ -189,8 +209,7 @@ func (splitter *shardSplitter) Do(ctx context.Context, r queryrange.Request) (qu
 	return splitter.shardingware.Do(ctx, r)
 }
 
-// TODO(owen-d): export in cortex so we don't duplicate code
-func hasShards(confs queryrange.ShardingConfigs) bool {
+func hasShards(confs ShardingConfigs) bool {
 	for _, conf := range confs {
 		if conf.RowShards > 0 {
 			return true
@@ -199,10 +218,49 @@ func hasShards(confs queryrange.ShardingConfigs) bool {
 	return false
 }
 
+// ShardingConfigs is a slice of chunk shard configs
+type ShardingConfigs []chunk.PeriodConfig
+
+// ValidRange extracts a non-overlapping sharding configuration from a list of configs and a time range.
+func (confs ShardingConfigs) ValidRange(start, end int64) (chunk.PeriodConfig, error) {
+	for i, conf := range confs {
+		if start < int64(conf.From.Time) {
+			// the query starts before this config's range
+			return chunk.PeriodConfig{}, errInvalidShardingRange
+		} else if i == len(confs)-1 {
+			// the last configuration has no upper bound
+			return conf, nil
+		} else if end < int64(confs[i+1].From.Time) {
+			// The request is entirely scoped into this shard config
+			return conf, nil
+		} else {
+			continue
+		}
+	}
+
+	return chunk.PeriodConfig{}, errInvalidShardingRange
+}
+
+// GetConf will extract a shardable config corresponding to a request and the shardingconfigs
+func (confs ShardingConfigs) GetConf(r queryrange.Request) (chunk.PeriodConfig, error) {
+	conf, err := confs.ValidRange(r.GetStart(), r.GetEnd())
+	// query exists across multiple sharding configs
+	if err != nil {
+		return conf, err
+	}
+
+	// query doesn't have shard factor, so don't try to do AST mapping.
+	if conf.RowShards < 2 {
+		return conf, errors.Errorf("shard factor not high enough: [%d]", conf.RowShards)
+	}
+
+	return conf, nil
+}
+
 // NewSeriesQueryShardMiddleware creates a middleware which shards series queries.
 func NewSeriesQueryShardMiddleware(
 	logger log.Logger,
-	confs queryrange.ShardingConfigs,
+	confs ShardingConfigs,
 	middlewareMetrics *queryrange.InstrumentMiddlewareMetrics,
 	shardingMetrics *logql.ShardingMetrics,
 	limits queryrange.Limits,
@@ -234,7 +292,7 @@ func NewSeriesQueryShardMiddleware(
 }
 
 type seriesShardingHandler struct {
-	confs   queryrange.ShardingConfigs
+	confs   ShardingConfigs
 	logger  log.Logger
 	next    queryrange.Handler
 	metrics *logql.ShardingMetrics

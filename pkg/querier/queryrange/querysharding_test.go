@@ -10,7 +10,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/chunk"
 	"github.com/cortexproject/cortex/pkg/cortexpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	"github.com/cortexproject/cortex/pkg/util"
@@ -21,6 +20,7 @@ import (
 	"github.com/grafana/loki/pkg/loghttp"
 	"github.com/grafana/loki/pkg/logproto"
 	"github.com/grafana/loki/pkg/logql"
+	"github.com/grafana/loki/pkg/storage/chunk"
 )
 
 var (
@@ -100,21 +100,27 @@ func Test_shardSplitter(t *testing.T) {
 			lookback:    end.Sub(start) + 1, // the entire query is in the ingester range and should avoid sharding.
 			shouldShard: false,
 		},
+		{
+			desc:        "default",
+			lookback:    0,
+			shouldShard: true,
+		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			var didShard bool
-
 			splitter := &shardSplitter{
 				shardingware: queryrange.HandlerFunc(func(ctx context.Context, req queryrange.Request) (queryrange.Response, error) {
 					didShard = true
 					return mockHandler(lokiResps[0], nil).Do(ctx, req)
 				}),
-				next:                mockHandler(lokiResps[1], nil),
-				now:                 func() time.Time { return end },
-				MinShardingLookback: tc.lookback,
+				next: mockHandler(lokiResps[1], nil),
+				now:  func() time.Time { return end },
+				limits: fakeLimits{
+					minShardingLookback: tc.lookback,
+				},
 			}
 
-			resp, err := splitter.Do(context.Background(), req)
+			resp, err := splitter.Do(user.InjectOrgID(context.Background(), "1"), req)
 			require.Nil(t, err)
 
 			require.Equal(t, tc.shouldShard, didShard)
@@ -142,7 +148,7 @@ func Test_astMapper(t *testing.T) {
 	})
 
 	mware := newASTMapperware(
-		queryrange.ShardingConfigs{
+		ShardingConfigs{
 			chunk.PeriodConfig{
 				RowShards: 2,
 			},
@@ -171,7 +177,7 @@ func Test_ShardingByPass(t *testing.T) {
 	})
 
 	mware := newASTMapperware(
-		queryrange.ShardingConfigs{
+		ShardingConfigs{
 			chunk.PeriodConfig{
 				RowShards: 2,
 			},
@@ -189,23 +195,23 @@ func Test_ShardingByPass(t *testing.T) {
 
 func Test_hasShards(t *testing.T) {
 	for i, tc := range []struct {
-		input    queryrange.ShardingConfigs
+		input    ShardingConfigs
 		expected bool
 	}{
 		{
-			input: queryrange.ShardingConfigs{
+			input: ShardingConfigs{
 				{},
 			},
 			expected: false,
 		},
 		{
-			input: queryrange.ShardingConfigs{
+			input: ShardingConfigs{
 				{RowShards: 16},
 			},
 			expected: true,
 		},
 		{
-			input: queryrange.ShardingConfigs{
+			input: ShardingConfigs{
 				{},
 				{RowShards: 16},
 				{},
@@ -242,7 +248,7 @@ func Test_InstantSharding(t *testing.T) {
 	called := 0
 	shards := []string{}
 
-	sharding := NewQueryShardMiddleware(log.NewNopLogger(), queryrange.ShardingConfigs{
+	sharding := NewQueryShardMiddleware(log.NewNopLogger(), ShardingConfigs{
 		chunk.PeriodConfig{
 			RowShards: 3,
 		},
@@ -300,7 +306,7 @@ func Test_InstantSharding(t *testing.T) {
 }
 
 func Test_SeriesShardingHandler(t *testing.T) {
-	sharding := NewSeriesQueryShardMiddleware(log.NewNopLogger(), queryrange.ShardingConfigs{
+	sharding := NewSeriesQueryShardMiddleware(log.NewNopLogger(), ShardingConfigs{
 		chunk.PeriodConfig{
 			RowShards: 3,
 		},
