@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	discardReasonLabel = "reason"
+	reasonLabel = "reason"
 	// InvalidLabels is a reason for discarding log lines which have labels that cannot be parsed.
 	InvalidLabels = "invalid_labels"
 	MissingLabels = "missing_labels"
@@ -23,6 +23,7 @@ const (
 	// because the limit of active streams has been reached.
 	StreamLimit         = "stream_limit"
 	StreamLimitErrorMsg = "Maximum active stream limit exceeded, reduce the number of active streams (reduce labels or reduce label values), or contact your Loki administrator to see if the limit can be increased"
+	OutOfOrder          = "out_of_order"
 	// GreaterThanMaxSampleAge is a reason for discarding log lines which are older than the current time - `reject_old_samples_max_age`
 	GreaterThanMaxSampleAge         = "greater_than_max_sample_age"
 	GreaterThanMaxSampleAgeErrorMsg = "entry for stream '%s' has timestamp too old: %v"
@@ -43,6 +44,26 @@ const (
 	DuplicateLabelNamesErrorMsg = "stream '%s' has duplicate label name: '%s'"
 )
 
+// MutatedSamples is a metric of the total number of lines mutated, by reason.
+var MutatedSamples = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Namespace: "loki",
+		Name:      "mutated_samples_total",
+		Help:      "The total number of samples that have been mutated.",
+	},
+	[]string{reasonLabel, "truncated"},
+)
+
+// MutatedBytes is a metric of the total mutated bytes, by reason.
+var MutatedBytes = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Namespace: "loki",
+		Name:      "mutated_bytes_total",
+		Help:      "The total number of bytes that have been mutated.",
+	},
+	[]string{reasonLabel, "truncated"},
+)
+
 // DiscardedBytes is a metric of the total discarded bytes, by reason.
 var DiscardedBytes = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
@@ -50,7 +71,7 @@ var DiscardedBytes = prometheus.NewCounterVec(
 		Name:      "discarded_bytes_total",
 		Help:      "The total number of bytes that were discarded.",
 	},
-	[]string{discardReasonLabel, "tenant"},
+	[]string{reasonLabel, "tenant"},
 )
 
 // DiscardedSamples is a metric of the number of discarded samples, by reason.
@@ -60,7 +81,7 @@ var DiscardedSamples = prometheus.NewCounterVec(
 		Name:      "discarded_samples_total",
 		Help:      "The total number of samples that were discarded.",
 	},
-	[]string{discardReasonLabel, "tenant"},
+	[]string{reasonLabel, "tenant"},
 )
 
 func init() {

@@ -14,6 +14,7 @@ import (
 	"github.com/cortexproject/cortex/pkg/frontend"
 	"github.com/cortexproject/cortex/pkg/frontend/transport"
 	"github.com/cortexproject/cortex/pkg/frontend/v1/frontendv1pb"
+	"github.com/cortexproject/cortex/pkg/frontend/v2/frontendv2pb"
 
 	"github.com/cortexproject/cortex/pkg/cortex"
 	cortex_querier_worker "github.com/cortexproject/cortex/pkg/querier/worker"
@@ -21,6 +22,8 @@ import (
 	"github.com/cortexproject/cortex/pkg/ring/kv/codec"
 	"github.com/cortexproject/cortex/pkg/ring/kv/memberlist"
 	cortex_ruler "github.com/cortexproject/cortex/pkg/ruler"
+	"github.com/cortexproject/cortex/pkg/scheduler"
+	"github.com/cortexproject/cortex/pkg/scheduler/schedulerpb"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/cortexproject/cortex/pkg/util/runtimeconfig"
 	"github.com/cortexproject/cortex/pkg/util/services"
@@ -31,7 +34,6 @@ import (
 	"github.com/weaveworks/common/middleware"
 	"github.com/weaveworks/common/server"
 	"github.com/weaveworks/common/user"
-	"google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/grafana/loki/pkg/distributor"
 	"github.com/grafana/loki/pkg/ingester"
@@ -78,6 +80,7 @@ const (
 	MemberlistKV             string = "memberlist-kv"
 	Compactor                string = "compactor"
 	IndexGateway             string = "index-gateway"
+	QueryScheduler           string = "query-scheduler"
 	All                      string = "all"
 )
 
@@ -193,10 +196,8 @@ func (t *Loki) initQuerier() (services.Service, error) {
 		err    error
 	)
 
-	// NewQuerierWorker now expects Frontend (or Scheduler) address to be set. Loki only supports Frontend for now.
-	if t.Cfg.Worker.FrontendAddress != "" {
-		// In case someone set scheduler address, we ignore it.
-		t.Cfg.Worker.SchedulerAddress = ""
+	// NewQuerierWorker now expects Frontend (or Scheduler) address to be set.
+	if t.Cfg.Worker.FrontendAddress != "" || t.Cfg.Worker.SchedulerAddress != "" {
 		t.Cfg.Worker.MaxConcurrentRequests = t.Cfg.Querier.MaxConcurrent
 		level.Debug(util_log.Logger).Log("msg", "initializing querier worker", "config", fmt.Sprintf("%+v", t.Cfg.Worker))
 		worker, err = cortex_querier_worker.NewQuerierWorker(t.Cfg.Worker, httpgrpc_server.NewServer(t.Server.HTTPServer.Handler), util_log.Logger, prometheus.DefaultRegisterer)
@@ -250,7 +251,6 @@ func (t *Loki) initIngester() (_ services.Service, err error) {
 	logproto.RegisterPusherServer(t.Server.GRPC, t.Ingester)
 	logproto.RegisterQuerierServer(t.Server.GRPC, t.Ingester)
 	logproto.RegisterIngesterServer(t.Server.GRPC, t.Ingester)
-	grpc_health_v1.RegisterHealthServer(t.Server.GRPC, t.Ingester)
 	t.Server.HTTP.Path("/flush").Handler(http.HandlerFunc(t.Ingester.FlushHandler))
 	t.Server.HTTP.Methods("POST").Path("/ingester/flush_shutdown").Handler(http.HandlerFunc(t.Ingester.ShutdownHandler))
 	return t.Ingester, nil
@@ -416,18 +416,26 @@ func (t *Loki) initQueryFrontendTripperware() (_ services.Service, err error) {
 func (t *Loki) initQueryFrontend() (_ services.Service, err error) {
 	level.Debug(util_log.Logger).Log("msg", "initializing query frontend", "config", fmt.Sprintf("%+v", t.Cfg.Frontend))
 
-	roundTripper, frontendV1, _, err := frontend.InitFrontend(frontend.CombinedFrontendConfig{
-		// Don't set FrontendV2 field to make sure that only frontendV1 can be initialized.
+	roundTripper, frontendV1, frontendV2, err := frontend.InitFrontend(frontend.CombinedFrontendConfig{
 		Handler:       t.Cfg.Frontend.Handler,
 		FrontendV1:    t.Cfg.Frontend.FrontendV1,
+		FrontendV2:    t.Cfg.Frontend.FrontendV2,
 		DownstreamURL: t.Cfg.Frontend.DownstreamURL,
 	}, disabledShuffleShardingLimits{}, t.Cfg.Server.GRPCListenPort, util_log.Logger, prometheus.DefaultRegisterer)
 	if err != nil {
 		return nil, err
 	}
-	t.frontend = frontendV1
-	if t.frontend != nil {
-		frontendv1pb.RegisterFrontendServer(t.Server.GRPC, t.frontend)
+
+	if frontendV1 != nil {
+		frontendv1pb.RegisterFrontendServer(t.Server.GRPC, frontendV1)
+		t.frontend = frontendV1
+		level.Debug(util_log.Logger).Log("msg", "using query frontend", "version", "v1")
+	} else if frontendV2 != nil {
+		frontendv2pb.RegisterFrontendForQuerierServer(t.Server.GRPC, frontendV2)
+		t.frontend = frontendV2
+		level.Debug(util_log.Logger).Log("msg", "using query frontend", "version", "v2")
+	} else {
+		level.Debug(util_log.Logger).Log("msg", "no query frontend configured")
 	}
 
 	roundTripper = t.QueryFrontEndTripperware(roundTripper)
@@ -641,6 +649,17 @@ func (t *Loki) initIndexGateway() (services.Service, error) {
 	gateway := indexgateway.NewIndexGateway(shipperIndexClient.(*shipper.Shipper))
 	indexgatewaypb.RegisterIndexGatewayServer(t.Server.GRPC, gateway)
 	return gateway, nil
+}
+
+func (t *Loki) initQueryScheduler() (services.Service, error) {
+	s, err := scheduler.NewScheduler(t.Cfg.QueryScheduler, t.overrides, util_log.Logger, prometheus.DefaultRegisterer)
+	if err != nil {
+		return nil, err
+	}
+
+	schedulerpb.RegisterSchedulerForFrontendServer(t.Server.GRPC, s)
+	schedulerpb.RegisterSchedulerForQuerierServer(t.Server.GRPC, s)
+	return s, nil
 }
 
 func calculateMaxLookBack(pc chunk.PeriodConfig, maxLookBackConfig, minDuration time.Duration) (time.Duration, error) {

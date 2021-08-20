@@ -23,7 +23,7 @@ import (
 	"github.com/grafana/loki/pkg/storage/chunk"
 )
 
-const indexShards = 32
+const DefaultIndexShards = 32
 
 var ErrInvalidShardQuery = errors.New("incompatible index shard query")
 
@@ -32,11 +32,6 @@ var ErrInvalidShardQuery = errors.New("incompatible index shard query")
 type InvertedIndex struct {
 	totalShards uint32
 	shards      []*indexShard
-}
-
-// New returns a new InvertedIndex.
-func New() *InvertedIndex {
-	return NewWithShards(indexShards)
 }
 
 func NewWithShards(totalShards uint32) *InvertedIndex {
@@ -58,21 +53,15 @@ func (ii *InvertedIndex) getShards(shard *astmapper.ShardAnnotation) []*indexSha
 		return ii.shards
 	}
 
-	indexFactor := int(ii.totalShards)
-	// calculate the start of the hash ring desired
-	lowerBound := shard.Shard * indexFactor / shard.Of
-	// calculate the end of the hash ring desired
-	upperBound := (shard.Shard + 1) * indexFactor / shard.Of
-	// see if the upper bound is cleanly doesn't align cleanly with the next shard
-	// which can happen when the schema sharding factor and inverted index
-	// sharding factor are not multiples of each other.
-	rem := (shard.Shard + 1) * indexFactor % shard.Of
-	if rem > 0 {
-		// there's overlap on the upper shard
-		upperBound = upperBound + 1
+	totalRequested := int(ii.totalShards) / shard.Of
+	result := make([]*indexShard, totalRequested)
+	var j int
+	for i := 0; i < totalRequested; i++ {
+		subShard := ((shard.Shard) + (i * shard.Of))
+		result[j] = ii.shards[subShard]
+		j++
 	}
-
-	return ii.shards[lowerBound:upperBound]
+	return result
 }
 
 func validateShard(totalShards uint32, shard *astmapper.ShardAnnotation) error {
@@ -80,7 +69,7 @@ func validateShard(totalShards uint32, shard *astmapper.ShardAnnotation) error {
 		return nil
 	}
 	if int(totalShards)%shard.Of != 0 || uint32(shard.Of) > totalShards {
-		return fmt.Errorf("%w index_shard:%d query_shard:%d_%d", ErrInvalidShardQuery, totalShards, shard.Of, shard.Shard)
+		return fmt.Errorf("%w index_shard:%d query_shard:%v", ErrInvalidShardQuery, totalShards, shard)
 	}
 	return nil
 }
@@ -131,6 +120,9 @@ func labelsSeriesID(ls labels.Labels, dest []byte) {
 
 // Backwards-compatible with model.Metric.String()
 func labelsString(b *bytes.Buffer, ls labels.Labels) {
+	// metrics name is used in the store for computing shards.
+	// see chunk/schema_util.go for more details. `labelsString()`
+	b.WriteString("logs")
 	b.WriteByte('{')
 	i := 0
 	for _, l := range ls {
