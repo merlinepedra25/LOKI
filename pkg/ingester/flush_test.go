@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/ring"
+	"github.com/grafana/dskit/ring"
 	"github.com/cortexproject/cortex/pkg/tenant"
 	gokitlog "github.com/go-kit/kit/log"
 	"github.com/grafana/dskit/flagext"

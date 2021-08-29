@@ -7,8 +7,8 @@ import (
 	"time"
 
 	cortex_distributor "github.com/cortexproject/cortex/pkg/distributor"
-	"github.com/cortexproject/cortex/pkg/ring"
-	ring_client "github.com/cortexproject/cortex/pkg/ring/client"
+	"github.com/grafana/dskit/ring"
+	ring_client "github.com/grafana/dskit/ring/client"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/grafana/dskit/services"
 	"github.com/pkg/errors"
