@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/cortexproject/cortex/pkg/distributor"
-	"github.com/cortexproject/cortex/pkg/ring"
-	ring_client "github.com/cortexproject/cortex/pkg/ring/client"
+	"github.com/grafana/dskit/ring"
+	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/cortexproject/cortex/pkg/util/grpcclient"
 
 	"github.com/prometheus/client_golang/prometheus"
