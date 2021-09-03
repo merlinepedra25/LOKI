@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	cortex_distributor "github.com/cortexproject/cortex/pkg/distributor"
-	"github.com/grafana/dskit/ring"
-	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/cortexproject/cortex/pkg/tenant"
 	"github.com/cortexproject/cortex/pkg/util/limiter"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/grafana/dskit/distributor"
+	"github.com/grafana/dskit/ring"
+	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/grafana/dskit/services"
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/opentracing/opentracing-go"
@@ -37,7 +37,7 @@ var maxLabelCacheSize = 100000
 // Config for a Distributor.
 type Config struct {
 	// Distributors ring
-	DistributorRing cortex_distributor.RingConfig `yaml:"ring,omitempty"`
+	DistributorRing distributor.RingConfig `yaml:"ring,omitempty"`
 
 	// For testing.
 	factory ring_client.PoolFactory `yaml:"-"`
@@ -99,7 +99,7 @@ func New(cfg Config, clientCfg client.Config, configs *runtime.TenantConfigs, in
 
 	if overrides.IngestionRateStrategy() == validation.GlobalIngestionRateStrategy {
 		var err error
-		distributorsRing, err = ring.NewLifecycler(cfg.DistributorRing.ToLifecyclerConfig(), nil, "distributor", ring.DistributorRingKey, false, registerer)
+		distributorsRing, err = ring.NewLifecycler(cfg.DistributorRing.ToLifecyclerConfig(), nil, "distributor", ring.DistributorRingKey, false, registerer, util_log.Logger)
 		if err != nil {
 			return nil, err
 		}
@@ -122,7 +122,7 @@ func New(cfg Config, clientCfg client.Config, configs *runtime.TenantConfigs, in
 		ingestersRing:        ingestersRing,
 		distributorsRing:     distributorsRing,
 		validator:            validator,
-		pool:                 cortex_distributor.NewPool(clientCfg.PoolConfig, ingestersRing, factory, util_log.Logger),
+		pool:                 distributor.NewPool(clientCfg.PoolConfig, ingestersRing, factory, util_log.Logger),
 		ingestionRateLimiter: limiter.NewRateLimiter(ingestionRateStrategy, 10*time.Second),
 		labelCache:           labelCache,
 		ingesterAppends: promauto.With(registerer).NewCounterVec(prometheus.CounterOpts{

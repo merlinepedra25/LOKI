@@ -5,8 +5,9 @@ import (
 	"io"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/distributor"
 	"github.com/cortexproject/cortex/pkg/util/grpcclient"
+	cortex_middleware "github.com/cortexproject/cortex/pkg/util/middleware"
+	"github.com/grafana/dskit/distributor"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
@@ -14,8 +15,6 @@ import (
 	"github.com/weaveworks/common/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
-
-	cortex_middleware "github.com/cortexproject/cortex/pkg/util/middleware"
 
 	"github.com/grafana/loki/pkg/logproto"
 )

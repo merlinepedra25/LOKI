@@ -2,7 +2,6 @@ package ring
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"math"
@@ -10,6 +9,8 @@ import (
 	"sort"
 	strings "strings"
 	"time"
+
+	"github.com/grafana/dskit/dshttp"
 )
 
 const pageContent = `
@@ -188,7 +189,7 @@ func (r *Ring) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func renderHTTPResponse(w http.ResponseWriter, v interface{}, t *template.Template, r *http.Request) {
 	accept := r.Header.Get("Accept")
 	if strings.Contains(accept, "application/json") {
-		writeJSONResponse(w, v)
+		dshttp.WriteJSONResponse(w, v)
 		return
 	}
 
@@ -196,20 +197,4 @@ func renderHTTPResponse(w http.ResponseWriter, v interface{}, t *template.Templa
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// writeJSONResponse writes some JSON as a HTTP response.
-func writeJSONResponse(w http.ResponseWriter, v interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-
-	data, err := json.Marshal(v)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// We ignore errors here, because we cannot do anything about them.
-	// Write will trigger sending Status code, so we cannot send a different status code afterwards.
-	// Also this isn't internal error, but error communicating with client.
-	_, _ = w.Write(data)
 }

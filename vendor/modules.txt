@@ -1,4 +1,4 @@
-# cloud.google.com/go v0.87.0
+# cloud.google.com/go v0.90.0
 cloud.google.com/go
 cloud.google.com/go/compute/metadata
 cloud.google.com/go/iam
@@ -20,17 +20,17 @@ cloud.google.com/go/pubsub
 cloud.google.com/go/pubsub/apiv1
 cloud.google.com/go/pubsub/internal/distribution
 cloud.google.com/go/pubsub/pstest
-# cloud.google.com/go/storage v1.10.0
+# cloud.google.com/go/storage v1.16.0
 ## explicit
 cloud.google.com/go/storage
-# github.com/Azure/azure-pipeline-go v0.2.2
+# github.com/Azure/azure-pipeline-go v0.2.3
 ## explicit
 github.com/Azure/azure-pipeline-go/pipeline
 # github.com/Azure/azure-sdk-for-go v55.2.0+incompatible => github.com/Azure/azure-sdk-for-go v36.2.0+incompatible
 github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute
 github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-10-01/network
 github.com/Azure/azure-sdk-for-go/version
-# github.com/Azure/azure-storage-blob-go v0.8.0
+# github.com/Azure/azure-storage-blob-go v0.14.0
 ## explicit
 github.com/Azure/azure-storage-blob-go/azblob
 # github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78
@@ -87,10 +87,12 @@ github.com/alecthomas/template/parse
 github.com/alecthomas/units
 # github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a
 github.com/alicebob/gopher-json
-# github.com/alicebob/miniredis/v2 v2.14.3
+# github.com/alicebob/miniredis/v2 v2.15.1
 ## explicit
 github.com/alicebob/miniredis/v2
 github.com/alicebob/miniredis/v2/geohash
+github.com/alicebob/miniredis/v2/hyperloglog
+github.com/alicebob/miniredis/v2/metro
 github.com/alicebob/miniredis/v2/server
 # github.com/armon/go-metrics v0.3.6
 github.com/armon/go-metrics
@@ -408,10 +410,11 @@ github.com/fluent/fluent-bit-go/output
 github.com/form3tech-oss/jwt-go
 # github.com/fsnotify/fsnotify v1.4.9
 github.com/fsnotify/fsnotify
-# github.com/fsouza/fake-gcs-server v1.7.0
+# github.com/fsouza/fake-gcs-server v1.30.1
 ## explicit
 github.com/fsouza/fake-gcs-server/fakestorage
 github.com/fsouza/fake-gcs-server/internal/backend
+github.com/fsouza/fake-gcs-server/internal/checksum
 # github.com/go-kit/kit v0.11.0
 ## explicit
 github.com/go-kit/kit/log
@@ -453,7 +456,7 @@ github.com/go-openapi/strfmt
 github.com/go-openapi/swag
 # github.com/go-openapi/validate v0.20.2
 github.com/go-openapi/validate
-# github.com/go-redis/redis/v8 v8.9.0
+# github.com/go-redis/redis/v8 v8.11.3
 ## explicit
 github.com/go-redis/redis/v8
 github.com/go-redis/redis/v8/internal
@@ -467,7 +470,7 @@ github.com/go-redis/redis/v8/internal/util
 github.com/go-stack/stack
 # github.com/go-zookeeper/zk v1.0.2
 github.com/go-zookeeper/zk
-# github.com/gocql/gocql v0.0.0-20200526081602-cd04bd7f22a7 => github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85
+# github.com/gocql/gocql v0.0.0-20210817081954-bc256bbb90de => github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85
 ## explicit
 github.com/gocql/gocql
 github.com/gocql/gocql/internal/lru
@@ -532,7 +535,7 @@ github.com/google/go-cmp/cmp/internal/value
 github.com/google/go-querystring/query
 # github.com/google/gofuzz v1.1.0
 github.com/google/gofuzz
-# github.com/google/pprof v0.0.0-20210609004039-a478d1d731e9
+# github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1
 github.com/google/pprof/profile
 # github.com/google/uuid v1.2.0
 github.com/google/uuid
@@ -555,31 +558,78 @@ github.com/gophercloud/gophercloud/openstack/identity/v3/extensions/oauth1
 github.com/gophercloud/gophercloud/openstack/identity/v3/tokens
 github.com/gophercloud/gophercloud/openstack/utils
 github.com/gophercloud/gophercloud/pagination
+# github.com/gorilla/handlers v1.5.1
+github.com/gorilla/handlers
 # github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/grafana/dskit v0.0.0-20210827060659-9daca2f00327 => github.com/grafana/dskit v0.0.0-20210829123811-8081ec162556
+# github.com/grafana/dskit v0.0.0-20210903115148-c2809f40af07
 ## explicit
 github.com/grafana/dskit/backoff
+github.com/grafana/dskit/chunk
+github.com/grafana/dskit/chunk/aws
+github.com/grafana/dskit/chunk/azure
+github.com/grafana/dskit/chunk/cache
+github.com/grafana/dskit/chunk/encoding
+github.com/grafana/dskit/chunk/gcp
+github.com/grafana/dskit/chunk/objectclient
+github.com/grafana/dskit/chunk/openstack
+github.com/grafana/dskit/chunk/testutils
 github.com/grafana/dskit/closer
+github.com/grafana/dskit/concurrency
+github.com/grafana/dskit/configs/client
+github.com/grafana/dskit/configs/legacy_promql
+github.com/grafana/dskit/configs/userconfig
+github.com/grafana/dskit/distributor
+github.com/grafana/dskit/dshttp
+github.com/grafana/dskit/dskitpb
+github.com/grafana/dskit/dslog
+github.com/grafana/dskit/extract
 github.com/grafana/dskit/flagext
+github.com/grafana/dskit/grpcclient
+github.com/grafana/dskit/grpcencoding/snappy
+github.com/grafana/dskit/ingester/client
 github.com/grafana/dskit/kv
 github.com/grafana/dskit/kv/codec
 github.com/grafana/dskit/kv/consul
 github.com/grafana/dskit/kv/etcd
 github.com/grafana/dskit/kv/kvtls
 github.com/grafana/dskit/kv/memberlist
+github.com/grafana/dskit/labels
+github.com/grafana/dskit/math
+github.com/grafana/dskit/middleware
 github.com/grafana/dskit/modules
 github.com/grafana/dskit/netutil
+github.com/grafana/dskit/prom1/storage/metric
+github.com/grafana/dskit/promext
+github.com/grafana/dskit/querier
+github.com/grafana/dskit/querier/astmapper
 github.com/grafana/dskit/ring
 github.com/grafana/dskit/ring/client
+github.com/grafana/dskit/ruler
+github.com/grafana/dskit/ruler/rulespb
+github.com/grafana/dskit/ruler/rulestore
+github.com/grafana/dskit/ruler/rulestore/bucketclient
+github.com/grafana/dskit/ruler/rulestore/configdb
+github.com/grafana/dskit/ruler/rulestore/local
+github.com/grafana/dskit/ruler/rulestore/objectclient
 github.com/grafana/dskit/runtimeconfig
 github.com/grafana/dskit/services
+github.com/grafana/dskit/sharding
+github.com/grafana/dskit/storage/bucket
+github.com/grafana/dskit/storage/bucket/azure
+github.com/grafana/dskit/storage/bucket/filesystem
+github.com/grafana/dskit/storage/bucket/gcs
+github.com/grafana/dskit/storage/bucket/s3
+github.com/grafana/dskit/storage/bucket/swift
 github.com/grafana/dskit/stringutil
+github.com/grafana/dskit/tenant
 github.com/grafana/dskit/timeutil
+github.com/grafana/dskit/userreg
+github.com/grafana/dskit/validation
 # github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 ## explicit
 github.com/grpc-ecosystem/go-grpc-middleware
@@ -706,7 +756,7 @@ github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
 # github.com/mattn/go-colorable v0.1.6
 github.com/mattn/go-colorable
-# github.com/mattn/go-ieproxy v0.0.0-20191113090002-7c0f6868bffe
+# github.com/mattn/go-ieproxy v0.0.1
 github.com/mattn/go-ieproxy
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
@@ -716,7 +766,7 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 github.com/miekg/dns
 # github.com/minio/md5-simd v1.1.0
 github.com/minio/md5-simd
-# github.com/minio/minio-go/v7 v7.0.10
+# github.com/minio/minio-go/v7 v7.0.13
 ## explicit
 github.com/minio/minio-go/v7
 github.com/minio/minio-go/v7/pkg/credentials
@@ -1203,7 +1253,6 @@ go.opentelemetry.io/otel/exporters/otlp/internal/transform
 go.opentelemetry.io/otel/exporters/otlp/otlpgrpc
 # go.opentelemetry.io/otel/metric v0.20.0
 go.opentelemetry.io/otel/metric
-go.opentelemetry.io/otel/metric/global
 go.opentelemetry.io/otel/metric/number
 go.opentelemetry.io/otel/metric/registry
 # go.opentelemetry.io/otel/sdk v0.20.0
@@ -1293,7 +1342,7 @@ golang.org/x/net/netutil
 golang.org/x/net/proxy
 golang.org/x/net/publicsuffix
 golang.org/x/net/trace
-# golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914
+# golang.org/x/oauth2 v0.0.0-20210805134026-6f1e6394065a
 golang.org/x/oauth2
 golang.org/x/oauth2/authhandler
 golang.org/x/oauth2/clientcredentials
@@ -1306,7 +1355,7 @@ golang.org/x/oauth2/jwt
 ## explicit
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20210616094352-59db8d763f22
+# golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069
 ## explicit
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
@@ -1327,7 +1376,7 @@ golang.org/x/text/width
 # golang.org/x/time v0.0.0-20210611083556-38a9dc6acbc6
 ## explicit
 golang.org/x/time/rate
-# golang.org/x/tools v0.1.4
+# golang.org/x/tools v0.1.5
 golang.org/x/tools/cmd/goimports
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/gcexportdata
@@ -1344,7 +1393,7 @@ golang.org/x/tools/internal/typeparams
 # golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
-# google.golang.org/api v0.50.0
+# google.golang.org/api v0.54.0
 ## explicit
 google.golang.org/api/cloudresourcemanager/v1
 google.golang.org/api/compute/v1
@@ -1377,7 +1426,7 @@ google.golang.org/appengine/internal/socket
 google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/socket
 google.golang.org/appengine/urlfetch
-# google.golang.org/genproto v0.0.0-20210713002101-d411969a0d9a
+# google.golang.org/genproto v0.0.0-20210805201207-89edb61ffb67
 google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/api/httpbody
 google.golang.org/genproto/googleapis/bigtable/admin/v2
@@ -1389,7 +1438,7 @@ google.golang.org/genproto/googleapis/rpc/code
 google.golang.org/genproto/googleapis/rpc/status
 google.golang.org/genproto/googleapis/type/expr
 google.golang.org/genproto/protobuf/field_mask
-# google.golang.org/grpc v1.39.0
+# google.golang.org/grpc v1.39.1
 ## explicit
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -1739,4 +1788,3 @@ sigs.k8s.io/yaml
 # github.com/hashicorp/consul => github.com/hashicorp/consul v1.5.1
 # github.com/gocql/gocql => github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85
 # github.com/bradfitz/gomemcache => github.com/themihai/gomemcache v0.0.0-20180902122335-24332e2d58ab
-# github.com/grafana/dskit => github.com/grafana/dskit v0.0.0-20210829123811-8081ec162556

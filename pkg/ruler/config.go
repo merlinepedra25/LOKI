@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/cortexproject/cortex/pkg/ruler"
+	"github.com/grafana/dskit/ruler"
 	"github.com/pkg/errors"
 	"github.com/prometheus/prometheus/config"
 )
