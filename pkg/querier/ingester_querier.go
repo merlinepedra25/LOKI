@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	cortex_distributor "github.com/cortexproject/cortex/pkg/distributor"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/grafana/dskit/distributor"
 	"github.com/grafana/dskit/ring"
 	ring_client "github.com/grafana/dskit/ring/client"
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/grafana/dskit/services"
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
@@ -48,7 +48,7 @@ func NewIngesterQuerier(clientCfg client.Config, ring ring.ReadRing, extraQueryD
 func newIngesterQuerier(clientCfg client.Config, ring ring.ReadRing, extraQueryDelay time.Duration, clientFactory ring_client.PoolFactory) (*IngesterQuerier, error) {
 	iq := IngesterQuerier{
 		ring:            ring,
-		pool:            cortex_distributor.NewPool(clientCfg.PoolConfig, ring, clientFactory, util_log.Logger),
+		pool:            distributor.NewPool(clientCfg.PoolConfig, ring, clientFactory, util_log.Logger),
 		extraQueryDelay: extraQueryDelay,
 	}
 

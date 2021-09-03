@@ -74,6 +74,7 @@ Implemented commands:
    - GETBIT
    - GETRANGE
    - GETSET
+   - GETDEL
    - INCR
    - INCRBY
    - INCRBYFLOAT
@@ -176,9 +177,10 @@ Implemented commands:
    - XINFO STREAM -- partly
    - XLEN
    - XRANGE
-   - XREAD -- partly
-   - XREADGROUP -- partly
+   - XREAD
+   - XREADGROUP
    - XREVRANGE
+   - XPENDING
  - Scripting
    - EVAL
    - EVALSHA
@@ -200,6 +202,10 @@ Implemented commands:
    - CLUSTER SLOTS
    - CLUSTER KEYSLOT
    - CLUSTER NODES
+ - HyperLogLog (complete)
+   - PFADD
+   - PFCOUNT
+   - PFMERGE
 
 
 ## TTLs, key expiration, and time
@@ -278,10 +284,6 @@ Commands which will probably not be implemented:
     - ~~CLUSTER *~~
     - ~~READONLY~~
     - ~~READWRITE~~
- - HyperLogLog (all) -- unless someone needs these
-    - ~~PFADD~~
-    - ~~PFCOUNT~~
-    - ~~PFMERGE~~
  - Key
     - ~~DUMP~~
     - ~~MIGRATE~~
@@ -310,7 +312,7 @@ Commands which will probably not be implemented:
 
 ## &c.
 
-Integration tests are run against Redis 6.0.10. The [./integration](./integration/) subdir
+Integration tests are run against Redis 6.2.4. The [./integration](./integration/) subdir
 compares miniredis against a real redis instance.
 
 The Redis 6 RESP3 protocol is supported. If there are problems, please open
@@ -320,5 +322,5 @@ If you want to test Redis Sentinel have a look at [minisentinel](https://github.
 
 A changelog is kept at [CHANGELOG.md](https://github.com/alicebob/miniredis/blob/master/CHANGELOG.md).
 
-[![Build Status](https://travis-ci.org/alicebob/miniredis.svg?branch=master)](https://travis-ci.org/alicebob/miniredis)
+[![Build Status](https://travis-ci.com/alicebob/miniredis.svg?branch=master)](https://travis-ci.com/alicebob/miniredis)
 [![Go Reference](https://pkg.go.dev/badge/github.com/alicebob/miniredis/v2.svg)](https://pkg.go.dev/github.com/alicebob/miniredis/v2)

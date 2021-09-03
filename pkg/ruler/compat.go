@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/ruler"
 	"github.com/cortexproject/cortex/pkg/ruler/rulespb"
 	"github.com/go-kit/kit/log"
+	"github.com/grafana/dskit/ruler"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/model"
@@ -20,6 +20,7 @@ import (
 	"github.com/prometheus/prometheus/promql"
 	"github.com/prometheus/prometheus/promql/parser"
 	"github.com/prometheus/prometheus/rules"
+	"github.com/prometheus/prometheus/storage"
 	"github.com/prometheus/prometheus/template"
 	"github.com/weaveworks/common/user"
 	"gopkg.in/yaml.v3"

@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/grafana/dskit/ring"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	gokitlog "github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/kv"
+	"github.com/grafana/dskit/ring"
 	"github.com/grafana/dskit/services"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

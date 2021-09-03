@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/distributor"
+	"github.com/cortexproject/cortex/pkg/util/grpcclient"
+	"github.com/grafana/dskit/distributor"
 	"github.com/grafana/dskit/ring"
 	ring_client "github.com/grafana/dskit/ring/client"
-	"github.com/cortexproject/cortex/pkg/util/grpcclient"
-
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
