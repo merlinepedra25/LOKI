@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/prometheus/pkg/exemplar"
@@ -107,7 +107,7 @@ func (a *RemoteWriteAppendable) onEvict(userID, groupKey string) func() {
 func (a *RemoteWriteAppender) Append(_ uint64, l labels.Labels, t int64, v float64) (uint64, error) {
 	a.queue.Append(TimeSeriesEntry{
 		Labels: l,
-		Sample: cortexpb.Sample{
+		Sample: dskitpb.Sample{
 			Value:       v,
 			TimestampMs: t,
 		},

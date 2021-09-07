@@ -5,7 +5,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	"github.com/stretchr/testify/require"
 
@@ -60,19 +60,19 @@ func Test_encodePromResponse(t *testing.T) {
 						ResultType: loghttp.ResultTypeMatrix,
 						Result: []queryrange.SampleStream{
 							{
-								Labels: []cortexpb.LabelAdapter{
+								Labels: []dskitpb.LabelAdapter{
 									{Name: "foo", Value: "bar"},
 								},
-								Samples: []cortexpb.Sample{
+								Samples: []dskitpb.Sample{
 									{Value: 1, TimestampMs: 1000},
 									{Value: 1, TimestampMs: 2000},
 								},
 							},
 							{
-								Labels: []cortexpb.LabelAdapter{
+								Labels: []dskitpb.LabelAdapter{
 									{Name: "foo", Value: "buzz"},
 								},
-								Samples: []cortexpb.Sample{
+								Samples: []dskitpb.Sample{
 									{Value: 4, TimestampMs: 1000},
 									{Value: 5, TimestampMs: 2000},
 								},
@@ -108,18 +108,18 @@ func Test_encodePromResponse(t *testing.T) {
 						ResultType: loghttp.ResultTypeVector,
 						Result: []queryrange.SampleStream{
 							{
-								Labels: []cortexpb.LabelAdapter{
+								Labels: []dskitpb.LabelAdapter{
 									{Name: "foo", Value: "bar"},
 								},
-								Samples: []cortexpb.Sample{
+								Samples: []dskitpb.Sample{
 									{Value: 1, TimestampMs: 1000},
 								},
 							},
 							{
-								Labels: []cortexpb.LabelAdapter{
+								Labels: []dskitpb.LabelAdapter{
 									{Name: "foo", Value: "buzz"},
 								},
-								Samples: []cortexpb.Sample{
+								Samples: []dskitpb.Sample{
 									{Value: 4, TimestampMs: 1000},
 								},
 							},

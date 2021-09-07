@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 	promConfig "github.com/prometheus/common/config"
@@ -124,7 +124,7 @@ func TestAppendSample(t *testing.T) {
 
 	sample := TimeSeriesEntry{
 		Labels: labels,
-		Sample: cortexpb.Sample{
+		Sample: dskitpb.Sample{
 			Value:       val,
 			TimestampMs: ts,
 		},

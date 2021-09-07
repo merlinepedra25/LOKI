@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
@@ -116,7 +116,7 @@ func (r *ingesterRecoverer) Series(series *Series) error {
 
 		// TODO(owen-d): create another fn to avoid unnecessary label type conversions.
 		stream, err := inst.getOrCreateStream(logproto.Stream{
-			Labels: cortexpb.FromLabelAdaptersToLabels(series.Labels).String(),
+			Labels: dskitpb.FromLabelAdaptersToLabels(series.Labels).String(),
 		}, true, nil)
 
 		if err != nil {

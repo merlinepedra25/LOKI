@@ -3,7 +3,7 @@ package ruler
 import (
 	"fmt"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/golang/snappy"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
@@ -20,7 +20,7 @@ var UserAgent = fmt.Sprintf("loki-remote-write/%s", build.Version)
 
 type TimeSeriesEntry struct {
 	Labels labels.Labels
-	Sample cortexpb.Sample
+	Sample dskitpb.Sample
 }
 
 type RemoteWriter interface {
@@ -33,7 +33,7 @@ type RemoteWriteClient struct {
 	remote.WriteClient
 
 	labels  []labels.Labels
-	samples []cortexpb.Sample
+	samples []dskitpb.Sample
 
 	relabelConfigs []*relabel.Config
 }
@@ -72,7 +72,7 @@ func (r *RemoteWriteClient) prepare(queue util.Queue) error {
 		r.labels = make([]labels.Labels, 0, queue.Length())
 	}
 	if cap(r.samples) < queue.Length() {
-		r.samples = make([]cortexpb.Sample, 0, queue.Length())
+		r.samples = make([]dskitpb.Sample, 0, queue.Length())
 	}
 
 	r.labels = r.labels[:0]
@@ -105,8 +105,8 @@ func (r *RemoteWriteClient) PrepareRequest(queue util.Queue) ([]byte, error) {
 		return nil, err
 	}
 
-	req := cortexpb.ToWriteRequest(r.labels, r.samples, nil, cortexpb.RULE)
-	defer cortexpb.ReuseSlice(req.Timeseries)
+	req := dskitpb.ToWriteRequest(r.labels, r.samples, nil, dskitpb.RULE)
+	defer dskitpb.ReuseSlice(req.Timeseries)
 
 	reqBytes, err := req.Marshal()
 	if err != nil {

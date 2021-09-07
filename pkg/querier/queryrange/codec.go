@@ -13,7 +13,7 @@ import (
 	strings "strings"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	json "github.com/json-iterator/go"
 	"github.com/opentracing/opentracing-go"
@@ -733,15 +733,15 @@ func toProtoMatrix(m loghttp.Matrix) []queryrange.SampleStream {
 	}
 	res := make([]queryrange.SampleStream, 0, len(m))
 	for _, stream := range m {
-		samples := make([]cortexpb.Sample, 0, len(stream.Values))
+		samples := make([]dskitpb.Sample, 0, len(stream.Values))
 		for _, s := range stream.Values {
-			samples = append(samples, cortexpb.Sample{
+			samples = append(samples, dskitpb.Sample{
 				Value:       float64(s.Value),
 				TimestampMs: int64(s.Timestamp),
 			})
 		}
 		res = append(res, queryrange.SampleStream{
-			Labels:  cortexpb.FromMetricsToLabelAdapters(stream.Metric),
+			Labels:  dskitpb.FromMetricsToLabelAdapters(stream.Metric),
 			Samples: samples,
 		})
 	}
@@ -755,11 +755,11 @@ func toProtoVector(v loghttp.Vector) []queryrange.SampleStream {
 	res := make([]queryrange.SampleStream, 0, len(v))
 	for _, s := range v {
 		res = append(res, queryrange.SampleStream{
-			Samples: []cortexpb.Sample{{
+			Samples: []dskitpb.Sample{{
 				Value:       float64(s.Value),
 				TimestampMs: int64(s.Timestamp),
 			}},
-			Labels: cortexpb.FromMetricsToLabelAdapters(s.Metric),
+			Labels: dskitpb.FromMetricsToLabelAdapters(s.Metric),
 		})
 	}
 	return res

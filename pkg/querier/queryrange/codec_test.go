@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	"github.com/stretchr/testify/require"
 
@@ -907,12 +907,12 @@ var (
   }`
 	sampleStreams = []queryrange.SampleStream{
 		{
-			Labels:  []cortexpb.LabelAdapter{{Name: "filename", Value: "/var/hostlog/apport.log"}, {Name: "job", Value: "varlogs"}},
-			Samples: []cortexpb.Sample{{Value: 0.013333333333333334, TimestampMs: 1568404331324}},
+			Labels:  []dskitpb.LabelAdapter{{Name: "filename", Value: "/var/hostlog/apport.log"}, {Name: "job", Value: "varlogs"}},
+			Samples: []dskitpb.Sample{{Value: 0.013333333333333334, TimestampMs: 1568404331324}},
 		},
 		{
-			Labels:  []cortexpb.LabelAdapter{{Name: "filename", Value: "/var/hostlog/syslog"}, {Name: "job", Value: "varlogs"}},
-			Samples: []cortexpb.Sample{{Value: 3.45, TimestampMs: 1568404331324}, {Value: 4.45, TimestampMs: 1568404331339}},
+			Labels:  []dskitpb.LabelAdapter{{Name: "filename", Value: "/var/hostlog/syslog"}, {Name: "job", Value: "varlogs"}},
+			Samples: []dskitpb.Sample{{Value: 3.45, TimestampMs: 1568404331324}, {Value: 4.45, TimestampMs: 1568404331339}},
 		},
 	}
 	streamsString = `{
@@ -1178,11 +1178,11 @@ func Benchmark_CodecDecodeSamples(b *testing.B) {
 func generateMatrix() (res []queryrange.SampleStream) {
 	for i := 0; i < 100; i++ {
 		s := queryrange.SampleStream{
-			Labels:  []cortexpb.LabelAdapter{},
-			Samples: []cortexpb.Sample{},
+			Labels:  []dskitpb.LabelAdapter{},
+			Samples: []dskitpb.Sample{},
 		}
 		for j := 0; j < 1000; j++ {
-			s.Samples = append(s.Samples, cortexpb.Sample{
+			s.Samples = append(s.Samples, dskitpb.Sample{
 				Value:       float64(j),
 				TimestampMs: int64(j),
 			})

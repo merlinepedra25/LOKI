@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
 	"github.com/golang/snappy"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/config"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -28,7 +28,7 @@ func TestPrepare(t *testing.T) {
 			Value: "us-central1",
 		},
 	}
-	sample := cortexpb.Sample{
+	sample := dskitpb.Sample{
 		Value:       rand.Float64(),
 		TimestampMs: time.Now().Unix(),
 	}
@@ -81,7 +81,7 @@ func TestPrepareRequest(t *testing.T) {
 			Value: "us-central1",
 		},
 	}
-	sample := cortexpb.Sample{
+	sample := dskitpb.Sample{
 		Value:       70,
 		TimestampMs: time.Now().Unix(),
 	}
@@ -91,7 +91,7 @@ func TestPrepareRequest(t *testing.T) {
 	bytes, err := appender.remoteWriter.PrepareRequest(appender.queue)
 	require.Nil(t, err)
 
-	var req cortexpb.WriteRequest
+	var req dskitpb.WriteRequest
 
 	reqBytes, err := snappy.Decode(nil, bytes)
 	require.Nil(t, err)
@@ -109,7 +109,7 @@ func TestRelabelling(t *testing.T) {
 	queue, err := util.NewEvictingQueue(1000, func() {})
 	require.Nil(t, err)
 
-	queue.Append(TimeSeriesEntry{Labels: lbs, Sample: cortexpb.Sample{
+	queue.Append(TimeSeriesEntry{Labels: lbs, Sample: dskitpb.Sample{
 		Value:       rand.Float64(),
 		TimestampMs: time.Now().Unix(),
 	}})

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/astmapper"
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
@@ -131,7 +131,7 @@ func (i *instance) consumeChunk(ctx context.Context, ls labels.Labels, chunk *lo
 	stream, ok := i.streamsByFP[fp]
 	if !ok {
 
-		sortedLabels := i.index.Add(cortexpb.FromLabelsToLabelAdapters(ls), fp)
+		sortedLabels := i.index.Add(dskitpb.FromLabelsToLabelAdapters(ls), fp)
 		stream = newStream(i.cfg, i.limiter, i.instanceID, fp, sortedLabels, i.limiter.UnorderedWrites(i.instanceID), i.metrics)
 		i.streamsByFP[fp] = stream
 		i.streams[stream.labelsString] = stream
@@ -242,7 +242,7 @@ func (i *instance) getOrCreateStream(pushReqStream logproto.Stream, lock bool, r
 	}
 	fp := i.getHashForLabels(labels)
 
-	sortedLabels := i.index.Add(cortexpb.FromLabelsToLabelAdapters(labels), fp)
+	sortedLabels := i.index.Add(dskitpb.FromLabelsToLabelAdapters(labels), fp)
 	stream = newStream(i.cfg, i.limiter, i.instanceID, fp, sortedLabels, i.limiter.UnorderedWrites(i.instanceID), i.metrics)
 	i.streams[pushReqStream.Labels] = stream
 	i.streamsByFP[fp] = stream

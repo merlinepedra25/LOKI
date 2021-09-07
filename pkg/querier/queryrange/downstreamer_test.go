@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/promql"
@@ -22,8 +22,8 @@ import (
 func testSampleStreams() []queryrange.SampleStream {
 	return []queryrange.SampleStream{
 		{
-			Labels: []cortexpb.LabelAdapter{{Name: "foo", Value: "bar"}},
-			Samples: []cortexpb.Sample{
+			Labels: []dskitpb.LabelAdapter{{Name: "foo", Value: "bar"}},
+			Samples: []dskitpb.Sample{
 				{
 					Value:       0,
 					TimestampMs: 0,
@@ -39,8 +39,8 @@ func testSampleStreams() []queryrange.SampleStream {
 			},
 		},
 		{
-			Labels: []cortexpb.LabelAdapter{{Name: "bazz", Value: "buzz"}},
-			Samples: []cortexpb.Sample{
+			Labels: []dskitpb.LabelAdapter{{Name: "bazz", Value: "buzz"}},
+			Samples: []dskitpb.Sample{
 				{
 					Value:       4,
 					TimestampMs: 4,

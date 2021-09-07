@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	"github.com/cortexproject/cortex/pkg/tenant"
 	"github.com/opentracing/opentracing-go"
@@ -131,7 +131,7 @@ func (sl *seriesLimiter) Do(ctx context.Context, req queryrange.Request) (queryr
 	sl.rw.Lock()
 	var hash uint64
 	for _, s := range promResponse.Response.Data.Result {
-		lbs := cortexpb.FromLabelAdaptersToLabels(s.Labels)
+		lbs := dskitpb.FromLabelAdaptersToLabels(s.Labels)
 		hash, sl.buf = lbs.HashWithoutLabels(sl.buf, []string(nil)...)
 		sl.hashes[hash] = struct{}{}
 	}

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/cortexpb"
+	"github.com/grafana/dskit/dskitpb"
 	"github.com/cortexproject/cortex/pkg/querier/queryrange"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log"
@@ -268,8 +268,8 @@ func Test_InstantSharding(t *testing.T) {
 				ResultType: loghttp.ResultTypeVector,
 				Result: []queryrange.SampleStream{
 					{
-						Labels:  []cortexpb.LabelAdapter{{Name: "foo", Value: "bar"}},
-						Samples: []cortexpb.Sample{{Value: 10, TimestampMs: 10}},
+						Labels:  []dskitpb.LabelAdapter{{Name: "foo", Value: "bar"}},
+						Samples: []dskitpb.Sample{{Value: 10, TimestampMs: 10}},
 					},
 				},
 			},
@@ -287,16 +287,16 @@ func Test_InstantSharding(t *testing.T) {
 		ResultType: loghttp.ResultTypeVector,
 		Result: []queryrange.SampleStream{
 			{
-				Labels:  []cortexpb.LabelAdapter{{Name: "foo", Value: "bar"}},
-				Samples: []cortexpb.Sample{{Value: 10, TimestampMs: 10}},
+				Labels:  []dskitpb.LabelAdapter{{Name: "foo", Value: "bar"}},
+				Samples: []dskitpb.Sample{{Value: 10, TimestampMs: 10}},
 			},
 			{
-				Labels:  []cortexpb.LabelAdapter{{Name: "foo", Value: "bar"}},
-				Samples: []cortexpb.Sample{{Value: 10, TimestampMs: 10}},
+				Labels:  []dskitpb.LabelAdapter{{Name: "foo", Value: "bar"}},
+				Samples: []dskitpb.Sample{{Value: 10, TimestampMs: 10}},
 			},
 			{
-				Labels:  []cortexpb.LabelAdapter{{Name: "foo", Value: "bar"}},
-				Samples: []cortexpb.Sample{{Value: 10, TimestampMs: 10}},
+				Labels:  []dskitpb.LabelAdapter{{Name: "foo", Value: "bar"}},
+				Samples: []dskitpb.Sample{{Value: 10, TimestampMs: 10}},
 			},
 		},
 	}, response.(*LokiPromResponse).Response.Data)
