@@ -12,18 +12,15 @@ import (
 	"testing"
 	"time"
 
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
-
-	"github.com/stretchr/testify/assert"
-
 	"github.com/cespare/xxhash/v2"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/grafana/dskit/flagext"
+	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/weaveworks/common/user"
-
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
-	"github.com/grafana/dskit/flagext"
 
 	"github.com/grafana/loki/pkg/iter"
 	"github.com/grafana/loki/pkg/logproto"

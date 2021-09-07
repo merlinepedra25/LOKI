@@ -16,7 +16,7 @@ import (
 	"github.com/cortexproject/cortex/pkg/frontend/transport"
 	"github.com/cortexproject/cortex/pkg/frontend/v1/frontendv1pb"
 	"github.com/cortexproject/cortex/pkg/frontend/v2/frontendv2pb"
-	cortex_querier_worker "github.com/cortexproject/cortex/pkg/querier/worker"
+	cortex_querier_worker "github.com/grafana/dskit/querier/worker"
 	"github.com/cortexproject/cortex/pkg/scheduler"
 	"github.com/cortexproject/cortex/pkg/scheduler/schedulerpb"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"

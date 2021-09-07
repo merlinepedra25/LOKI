@@ -18,7 +18,7 @@ import (
 	"github.com/prometheus/prometheus/pkg/labels"
 
 	"github.com/grafana/dskit/dskitpb"
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
+	"github.com/grafana/dskit/querier/astmapper"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
 )

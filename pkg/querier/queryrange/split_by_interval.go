@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/grafana/dskit/tenant"
 	"github.com/opentracing/opentracing-go"
 	otlog "github.com/opentracing/opentracing-go/log"

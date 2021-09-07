@@ -5,8 +5,8 @@ package queryrange
 
 import (
 	fmt "fmt"
-	github_com_cortexproject_cortex_pkg_querier_queryrange "github.com/cortexproject/cortex/pkg/querier/queryrange"
-	queryrange "github.com/cortexproject/cortex/pkg/querier/queryrange"
+	github_com_cortexproject_cortex_pkg_querier_queryrange "github.com/grafana/dskit/querier/queryrange"
+	queryrange "github.com/grafana/dskit/querier/queryrange"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	_ "github.com/gogo/protobuf/types"
@@ -225,7 +225,7 @@ type LokiResponse struct {
 	Limit      uint32                                                                            `protobuf:"varint,6,opt,name=limit,proto3" json:"limit,omitempty"`
 	Version    uint32                                                                            `protobuf:"varint,7,opt,name=version,proto3" json:"version,omitempty"`
 	Statistics stats.Result                                                                      `protobuf:"bytes,8,opt,name=statistics,proto3" json:"statistics"`
-	Headers    []github_com_cortexproject_cortex_pkg_querier_queryrange.PrometheusResponseHeader `protobuf:"bytes,9,rep,name=Headers,proto3,customtype=github.com/cortexproject/cortex/pkg/querier/queryrange.PrometheusResponseHeader" json:"-"`
+	Headers    []github_com_cortexproject_cortex_pkg_querier_queryrange.PrometheusResponseHeader `protobuf:"bytes,9,rep,name=Headers,proto3,customtype=github.com/grafana/dskit/querier/queryrange.PrometheusResponseHeader" json:"-"`
 }
 
 func (m *LokiResponse) Reset()      { *m = LokiResponse{} }
@@ -395,7 +395,7 @@ type LokiSeriesResponse struct {
 	Status  string                                                                            `protobuf:"bytes,1,opt,name=Status,proto3" json:"status"`
 	Data    []logproto.SeriesIdentifier                                                       `protobuf:"bytes,2,rep,name=Data,proto3" json:"data,omitempty"`
 	Version uint32                                                                            `protobuf:"varint,3,opt,name=version,proto3" json:"version,omitempty"`
-	Headers []github_com_cortexproject_cortex_pkg_querier_queryrange.PrometheusResponseHeader `protobuf:"bytes,4,rep,name=Headers,proto3,customtype=github.com/cortexproject/cortex/pkg/querier/queryrange.PrometheusResponseHeader" json:"-"`
+	Headers []github_com_cortexproject_cortex_pkg_querier_queryrange.PrometheusResponseHeader `protobuf:"bytes,4,rep,name=Headers,proto3,customtype=github.com/grafana/dskit/querier/queryrange.PrometheusResponseHeader" json:"-"`
 }
 
 func (m *LokiSeriesResponse) Reset()      { *m = LokiSeriesResponse{} }
@@ -514,7 +514,7 @@ type LokiLabelNamesResponse struct {
 	Status  string                                                                            `protobuf:"bytes,1,opt,name=Status,proto3" json:"status"`
 	Data    []string                                                                          `protobuf:"bytes,2,rep,name=Data,proto3" json:"data,omitempty"`
 	Version uint32                                                                            `protobuf:"varint,3,opt,name=version,proto3" json:"version,omitempty"`
-	Headers []github_com_cortexproject_cortex_pkg_querier_queryrange.PrometheusResponseHeader `protobuf:"bytes,4,rep,name=Headers,proto3,customtype=github.com/cortexproject/cortex/pkg/querier/queryrange.PrometheusResponseHeader" json:"-"`
+	Headers []github_com_cortexproject_cortex_pkg_querier_queryrange.PrometheusResponseHeader `protobuf:"bytes,4,rep,name=Headers,proto3,customtype=github.com/grafana/dskit/querier/queryrange.PrometheusResponseHeader" json:"-"`
 }
 
 func (m *LokiLabelNamesResponse) Reset()      { *m = LokiLabelNamesResponse{} }

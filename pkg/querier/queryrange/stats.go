@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	promql_parser "github.com/prometheus/prometheus/promql/parser"

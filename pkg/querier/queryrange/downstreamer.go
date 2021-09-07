@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/prometheus/pkg/labels"

@@ -3,7 +3,7 @@ package logql
 import (
 	"fmt"
 
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
+	"github.com/grafana/dskit/querier/astmapper"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"

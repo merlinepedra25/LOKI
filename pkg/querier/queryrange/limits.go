@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/grafana/dskit/dskitpb"
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/grafana/dskit/tenant"
 	"github.com/opentracing/opentracing-go"
 	"github.com/weaveworks/common/httpgrpc"

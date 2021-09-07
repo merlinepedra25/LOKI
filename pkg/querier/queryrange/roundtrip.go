@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/grafana/dskit/tenant"
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus"

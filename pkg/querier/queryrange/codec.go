@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/grafana/dskit/dskitpb"
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	json "github.com/json-iterator/go"
 	"github.com/opentracing/opentracing-go"
 	otlog "github.com/opentracing/opentracing-go/log"

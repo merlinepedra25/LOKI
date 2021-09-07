@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/series"
+	"github.com/grafana/dskit/querier/series"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"

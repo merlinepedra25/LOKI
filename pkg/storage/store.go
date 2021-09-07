@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
+	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/grafana/dskit/tenant"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"

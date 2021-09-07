@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
-	cortex_tripper "github.com/cortexproject/cortex/pkg/querier/queryrange"
-	"github.com/cortexproject/cortex/pkg/querier/worker"
+	cortex_tripper "github.com/grafana/dskit/querier/queryrange"
+	"github.com/grafana/dskit/querier/worker"
 	"github.com/cortexproject/cortex/pkg/scheduler"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/fakeauth"

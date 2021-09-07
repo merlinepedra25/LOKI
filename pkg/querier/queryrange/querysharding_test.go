@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/grafana/dskit/dskitpb"
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log"
 	"github.com/stretchr/testify/require"

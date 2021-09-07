@@ -13,7 +13,7 @@ import (
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
+	"github.com/grafana/dskit/querier/astmapper"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 )
 

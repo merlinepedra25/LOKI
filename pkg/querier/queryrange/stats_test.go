@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/stretchr/testify/require"
 
 	"github.com/grafana/loki/pkg/logproto"

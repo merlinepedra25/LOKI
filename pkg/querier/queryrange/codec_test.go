@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/grafana/dskit/dskitpb"
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/stretchr/testify/require"
 
 	"github.com/grafana/loki/pkg/loghttp"

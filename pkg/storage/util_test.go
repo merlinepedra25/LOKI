@@ -9,7 +9,7 @@ import (
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 
 	"github.com/cortexproject/cortex/pkg/ingester/client"
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
+	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"

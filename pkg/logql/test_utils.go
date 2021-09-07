@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/cespare/xxhash/v2"
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
+	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/prometheus/prometheus/pkg/labels"
 	promql_parser "github.com/prometheus/prometheus/promql/parser"
 

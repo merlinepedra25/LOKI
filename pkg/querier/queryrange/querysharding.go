@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/querier/astmapper"
-	"github.com/cortexproject/cortex/pkg/querier/queryrange"
+	"github.com/grafana/dskit/querier/astmapper"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/grafana/dskit/tenant"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"

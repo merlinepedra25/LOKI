@@ -2,7 +2,7 @@
 
 package queryrange
 
-import "github.com/cortexproject/cortex/pkg/querier/queryrange"
+import "github.com/grafana/dskit/querier/queryrange"
 
 // To satisfy queryrange.Response interface(https://github.com/cortexproject/cortex/blob/21bad57b346c730d684d6d0205efef133422ab28/pkg/querier/queryrange/query_range.go#L88)
 // we need to have following method as well on response types:
