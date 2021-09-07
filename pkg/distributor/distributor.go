@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/tenant"
+	"github.com/grafana/dskit/tenant"
 	"github.com/cortexproject/cortex/pkg/util/limiter"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/grafana/dskit/distributor"

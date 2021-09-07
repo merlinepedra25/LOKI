@@ -8,7 +8,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/tenant"
+	"github.com/grafana/dskit/tenant"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
