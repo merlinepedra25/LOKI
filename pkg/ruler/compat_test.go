@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/ruler"
+	"github.com/grafana/dskit/ruler"
 	"github.com/prometheus/prometheus/config"
 	"github.com/stretchr/testify/require"
 
