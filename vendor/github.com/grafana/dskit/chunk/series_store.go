@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
@@ -70,8 +71,8 @@ type seriesStore struct {
 	writeDedupeCache cache.Cache
 }
 
-func newSeriesStore(cfg StoreConfig, schema SeriesStoreSchema, index IndexClient, chunks Client, limits StoreLimits, chunksCache, writeDedupeCache cache.Cache) (Store, error) {
-	rs, err := newBaseStore(cfg, schema, index, chunks, limits, chunksCache)
+func newSeriesStore(cfg StoreConfig, schema SeriesStoreSchema, index IndexClient, chunks Client, limits StoreLimits, chunksCache, writeDedupeCache cache.Cache, logger log.Logger) (Store, error) {
+	rs, err := newBaseStore(cfg, schema, index, chunks, limits, chunksCache, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -432,8 +433,9 @@ func (c *seriesStore) PutOne(ctx context.Context, from, through model.Time, chun
 	/* TODO
 	log, ctx := spanlogger.New(ctx, "SeriesStore.PutOne")
 	defer log.Finish()
-	writeChunk := true
 	*/
+
+	writeChunk := true
 
 	// If this chunk is in cache it must already be in the database so we don't need to write it again
 	found, _, _ := c.fetcher.cache.Fetch(ctx, []string{chunk.ExternalKey()})

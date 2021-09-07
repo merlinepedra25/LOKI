@@ -88,6 +88,7 @@ func (cfg *StoreConfig) Validate(logger log.Logger) error {
 type baseStore struct {
 	cfg StoreConfig
 
+	logger  log.Logger
 	index   IndexClient
 	chunks  Client
 	schema  BaseSchema
@@ -95,13 +96,14 @@ type baseStore struct {
 	fetcher *Fetcher
 }
 
-func newBaseStore(cfg StoreConfig, schema BaseSchema, index IndexClient, chunks Client, limits StoreLimits, chunksCache cache.Cache) (baseStore, error) {
+func newBaseStore(cfg StoreConfig, schema BaseSchema, index IndexClient, chunks Client, limits StoreLimits, chunksCache cache.Cache, logger log.Logger) (baseStore, error) {
 	fetcher, err := NewChunkFetcher(chunksCache, cfg.chunkCacheStubs, chunks)
 	if err != nil {
 		return baseStore{}, err
 	}
 
 	return baseStore{
+		logger:  logger,
 		cfg:     cfg,
 		index:   index,
 		chunks:  chunks,
@@ -124,8 +126,8 @@ type store struct {
 	schema StoreSchema
 }
 
-func newStore(cfg StoreConfig, schema StoreSchema, index IndexClient, chunks Client, limits StoreLimits, chunksCache cache.Cache) (Store, error) {
-	rs, err := newBaseStore(cfg, schema, index, chunks, limits, chunksCache)
+func newStore(cfg StoreConfig, schema StoreSchema, index IndexClient, chunks Client, limits StoreLimits, chunksCache cache.Cache, logger log.Logger) (Store, error) {
+	rs, err := newBaseStore(cfg, schema, index, chunks, limits, chunksCache, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -454,8 +456,8 @@ func (c *store) lookupChunksByMetricName(ctx context.Context, userID string, fro
 }
 
 func (c *baseStore) lookupIdsByMetricNameMatcher(ctx context.Context, from, through model.Time, userID, metricName string, matcher *labels.Matcher, filter func([]IndexQuery) []IndexQuery) ([]string, error) {
-	formattedMatcher := formatMatcher(matcher)
 	/* TODO
+	formattedMatcher := formatMatcher(matcher)
 	log, ctx := spanlogger.New(ctx, "Store.lookupIdsByMetricNameMatcher", "metricName", metricName, "matcher", formattedMatcher)
 	defer log.Span.Finish()
 	*/
@@ -539,7 +541,7 @@ func (c *baseStore) lookupEntriesByQueries(ctx context.Context, queries []IndexQ
 		return true
 	})
 	if err != nil {
-		level.Error(dslog.WithContext(ctx, logger)).Log("msg", "error querying storage", "err", err)
+		level.Error(dslog.WithContext(ctx, c.logger)).Log("msg", "error querying storage", "err", err)
 	}
 	return entries, err
 }

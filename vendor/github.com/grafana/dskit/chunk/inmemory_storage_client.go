@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/dslog"
 )
@@ -27,6 +28,7 @@ const (
 
 // MockStorage is a fake in-memory StorageClient.
 type MockStorage struct {
+	logger  log.Logger
 	mtx     sync.RWMutex
 	tables  map[string]*mockTable
 	objects map[string][]byte
@@ -47,8 +49,9 @@ type mockItem struct {
 }
 
 // NewMockStorage creates a new MockStorage.
-func NewMockStorage() *MockStorage {
+func NewMockStorage(logger log.Logger) *MockStorage {
 	return &MockStorage{
+		logger:  logger,
 		tables:  map[string]*mockTable{},
 		objects: map[string][]byte{},
 	}
@@ -192,7 +195,7 @@ func (m *MockStorage) BatchWrite(ctx context.Context, batch WriteBatch) error {
 		}
 		seenWrites[key] = true
 
-		level.Debug(dslog.WithContext(ctx, logger)).Log("msg", "write", "hash", req.hashValue, "range", req.rangeValue)
+		level.Debug(dslog.WithContext(ctx, m.logger)).Log("msg", "write", "hash", req.hashValue, "range", req.rangeValue)
 
 		items := table.items[req.hashValue]
 
@@ -265,7 +268,7 @@ func (m *MockStorage) QueryPages(ctx context.Context, queries []IndexQuery, call
 }
 
 func (m *MockStorage) query(ctx context.Context, query IndexQuery, callback func(ReadBatch) (shouldContinue bool)) error {
-	logger := dslog.WithContext(ctx, logger)
+	logger := dslog.WithContext(ctx, m.logger)
 	level.Debug(logger).Log("msg", "QueryPages", "query", query.HashValue)
 
 	table, ok := m.tables[query.TableName]
@@ -275,12 +278,12 @@ func (m *MockStorage) query(ctx context.Context, query IndexQuery, callback func
 
 	items, ok := table.items[query.HashValue]
 	if !ok {
-		level.Debug(logger).Log("msg", "not found")
+		level.Debug(m.logger).Log("msg", "not found")
 		return nil
 	}
 
 	if query.RangeValuePrefix != nil {
-		level.Debug(logger).Log("msg", "lookup prefix", "hash", query.HashValue, "range_prefix", query.RangeValuePrefix, "num_items", len(items))
+		level.Debug(m.logger).Log("msg", "lookup prefix", "hash", query.HashValue, "range_prefix", query.RangeValuePrefix, "num_items", len(items))
 
 		// the smallest index i in [0, n) at which f(i) is true
 		i := sort.Search(len(items), func(i int) bool {
@@ -296,33 +299,33 @@ func (m *MockStorage) query(ctx context.Context, query IndexQuery, callback func
 			return !bytes.HasPrefix(items[i+j].rangeValue, query.RangeValuePrefix)
 		})
 
-		level.Debug(logger).Log("msg", "found range", "from_inclusive", i, "to_exclusive", i+j)
+		level.Debug(m.logger).Log("msg", "found range", "from_inclusive", i, "to_exclusive", i+j)
 		if i > len(items) || j == 0 {
 			return nil
 		}
 		items = items[i : i+j]
 
 	} else if query.RangeValueStart != nil {
-		level.Debug(logger).Log("msg", "lookup range", "hash", query.HashValue, "range_start", query.RangeValueStart, "num_items", len(items))
+		level.Debug(m.logger).Log("msg", "lookup range", "hash", query.HashValue, "range_start", query.RangeValueStart, "num_items", len(items))
 
 		// the smallest index i in [0, n) at which f(i) is true
 		i := sort.Search(len(items), func(i int) bool {
 			return bytes.Compare(items[i].rangeValue, query.RangeValueStart) >= 0
 		})
 
-		level.Debug(logger).Log("msg", "found range [%d)", "index", i)
+		level.Debug(m.logger).Log("msg", "found range [%d)", "index", i)
 		if i > len(items) {
 			return nil
 		}
 		items = items[i:]
 
 	} else {
-		level.Debug(logger).Log("msg", "lookup", "hash", query.HashValue, "num_items", len(items))
+		level.Debug(m.logger).Log("msg", "lookup", "hash", query.HashValue, "num_items", len(items))
 	}
 
 	// Filters
 	if query.ValueEqual != nil {
-		level.Debug(logger).Log("msg", "filter by equality", "value_equal", query.ValueEqual)
+		level.Debug(m.logger).Log("msg", "filter by equality", "value_equal", query.ValueEqual)
 
 		filtered := make([]mockItem, 0)
 		for _, v := range items {

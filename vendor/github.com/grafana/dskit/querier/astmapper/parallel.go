@@ -2,8 +2,8 @@ package astmapper
 
 import (
 	"fmt"
-	"log"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/prometheus/promql/parser"
 )
@@ -33,7 +33,7 @@ func CanParallelize(node parser.Node, logger log.Logger) bool {
 
 	case parser.Expressions:
 		for _, e := range n {
-			if !CanParallelize(e) {
+			if !CanParallelize(e, logger) {
 				return false
 			}
 		}
@@ -51,7 +51,7 @@ func CanParallelize(node parser.Node, logger log.Logger) bool {
 			return ok, nil
 		})
 
-		return err == nil && !nestedAggs && CanParallelize(n.Expr)
+		return err == nil && !nestedAggs && CanParallelize(n.Expr, logger)
 
 	case *parser.BinaryExpr:
 		// since binary exprs use each side for merging, they cannot be parallelized
@@ -66,24 +66,24 @@ func CanParallelize(node parser.Node, logger log.Logger) bool {
 		}
 
 		for _, e := range n.Args {
-			if !CanParallelize(e) {
+			if !CanParallelize(e, logger) {
 				return false
 			}
 		}
 		return true
 
 	case *parser.SubqueryExpr:
-		return CanParallelize(n.Expr)
+		return CanParallelize(n.Expr, logger)
 
 	case *parser.ParenExpr:
-		return CanParallelize(n.Expr)
+		return CanParallelize(n.Expr, logger)
 
 	case *parser.UnaryExpr:
 		// Since these are only currently supported for Scalars, should be parallel-compatible
 		return true
 
 	case *parser.EvalStmt:
-		return CanParallelize(n.Expr)
+		return CanParallelize(n.Expr, logger)
 
 	case *parser.MatrixSelector, *parser.NumberLiteral, *parser.StringLiteral, *parser.VectorSelector:
 		return true

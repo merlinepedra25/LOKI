@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/services"
 	"github.com/prometheus/client_golang/prometheus"
@@ -151,6 +152,7 @@ func (cfg *TableManagerConfig) RegisterFlags(f *flag.FlagSet) {
 type TableManager struct {
 	services.Service
 
+	logger       log.Logger
 	client       TableClient
 	cfg          TableManagerConfig
 	schemaCfg    SchemaConfig
@@ -164,7 +166,8 @@ type TableManager struct {
 
 // NewTableManager makes a new TableManager
 func NewTableManager(cfg TableManagerConfig, schemaCfg SchemaConfig, maxChunkAge time.Duration, tableClient TableClient,
-	objectClient BucketClient, extraTables []ExtraTables, registerer prometheus.Registerer) (*TableManager, error) {
+	objectClient BucketClient, extraTables []ExtraTables, registerer prometheus.Registerer,
+	logger log.Logger) (*TableManager, error) {
 
 	if cfg.RetentionPeriod != 0 {
 		// Assume the newest config is the one to use for validation of retention
@@ -175,6 +178,7 @@ func NewTableManager(cfg TableManagerConfig, schemaCfg SchemaConfig, maxChunkAge
 	}
 
 	tm := &TableManager{
+		logger:       logger,
 		cfg:          cfg,
 		schemaCfg:    schemaCfg,
 		maxChunkAge:  maxChunkAge,
@@ -213,7 +217,7 @@ func (m *TableManager) loop(ctx context.Context) error {
 	if err := instrument.CollectedRequest(context.Background(), "TableManager.SyncTables", instrument.NewHistogramCollector(m.metrics.syncTableDuration), instrument.ErrorCode, func(ctx context.Context) error {
 		return m.SyncTables(ctx)
 	}); err != nil {
-		level.Error(logger).Log("msg", "error syncing tables", "err", err)
+		level.Error(m.logger).Log("msg", "error syncing tables", "err", err)
 	}
 
 	// Sleep for a bit to spread the sync load across different times if the tablemanagers are all started at once.
@@ -229,7 +233,7 @@ func (m *TableManager) loop(ctx context.Context) error {
 			if err := instrument.CollectedRequest(context.Background(), "TableManager.SyncTables", instrument.NewHistogramCollector(m.metrics.syncTableDuration), instrument.ErrorCode, func(ctx context.Context) error {
 				return m.SyncTables(ctx)
 			}); err != nil {
-				level.Error(logger).Log("msg", "error syncing tables", "err", err)
+				level.Error(m.logger).Log("msg", "error syncing tables", "err", err)
 			}
 		case <-ctx.Done():
 			return nil
@@ -252,7 +256,7 @@ func (m *TableManager) checkAndCreateExtraTables() error {
 		for _, tableDesc := range extraTables.Tables {
 			if _, ok := existingTablesMap[tableDesc.Name]; !ok {
 				// creating table
-				level.Info(logger).Log("msg", "creating extra table",
+				level.Info(m.logger).Log("msg", "creating extra table",
 					"tableName", tableDesc.Name,
 					"provisionedRead", tableDesc.ProvisionedRead,
 					"provisionedWrite", tableDesc.ProvisionedWrite,
@@ -270,7 +274,7 @@ func (m *TableManager) checkAndCreateExtraTables() error {
 				continue
 			}
 
-			level.Info(logger).Log("msg", "checking throughput of extra table", "table", tableDesc.Name)
+			level.Info(m.logger).Log("msg", "checking throughput of extra table", "table", tableDesc.Name)
 			// table already exists, lets check actual throughput for tables is same as what is in configurations, if not let us update it
 			current, _, err := extraTables.TableClient.DescribeTable(context.Background(), tableDesc.Name)
 			if err != nil {
@@ -278,7 +282,7 @@ func (m *TableManager) checkAndCreateExtraTables() error {
 			}
 
 			if !current.Equals(tableDesc) {
-				level.Info(logger).Log("msg", "updating throughput of extra table",
+				level.Info(m.logger).Log("msg", "updating throughput of extra table",
 					"table", tableDesc.Name,
 					"tableName", tableDesc.Name,
 					"provisionedRead", tableDesc.ProvisionedRead,
@@ -303,7 +307,7 @@ func (m *TableManager) bucketRetentionIteration(ctx context.Context) error {
 	err := m.bucketClient.DeleteChunksBefore(ctx, mtime.Now().Add(-m.cfg.RetentionPeriod))
 
 	if err != nil {
-		level.Error(logger).Log("msg", "error enforcing filesystem retention", "err", err)
+		level.Error(m.logger).Log("msg", "error enforcing filesystem retention", "err", err)
 	}
 
 	// don't return error, otherwise timer service would stop.
@@ -319,7 +323,7 @@ func (m *TableManager) SyncTables(ctx context.Context) error {
 	}
 
 	expected := m.calculateExpectedTables()
-	level.Info(logger).Log("msg", "synching tables", "expected_tables", len(expected))
+	level.Info(m.logger).Log("msg", "synching tables", "expected_tables", len(expected))
 
 	toCreate, toCheckThroughput, toDelete, err := m.partitionTables(ctx, expected)
 	if err != nil {
@@ -400,10 +404,12 @@ func (m *TableManager) calculateExpectedTables() []TableDesc {
 			endModelTime := model.TimeFromUnix(endTime.Unix())
 			result = append(result, config.IndexTables.periodicTables(
 				config.From.Time, endModelTime, m.cfg.IndexTables, m.cfg.CreationGracePeriod, m.maxChunkAge, m.cfg.RetentionPeriod,
+				m.logger,
 			)...)
 			if config.ChunkTables.Prefix != "" {
 				result = append(result, config.ChunkTables.periodicTables(
 					config.From.Time, endModelTime, m.cfg.ChunkTables, m.cfg.CreationGracePeriod, m.maxChunkAge, m.cfg.RetentionPeriod,
+					m.logger,
 				)...)
 			}
 		}
@@ -471,7 +477,7 @@ func (m *TableManager) createTables(ctx context.Context, descriptions []TableDes
 	merr := tsdb_errors.NewMulti()
 
 	for _, desc := range descriptions {
-		level.Info(logger).Log("msg", "creating table", "table", desc.Name)
+		level.Info(m.logger).Log("msg", "creating table", "table", desc.Name)
 		err := m.client.CreateTable(ctx, desc)
 		if err != nil {
 			numFailures++
@@ -488,12 +494,12 @@ func (m *TableManager) deleteTables(ctx context.Context, descriptions []TableDes
 	merr := tsdb_errors.NewMulti()
 
 	for _, desc := range descriptions {
-		level.Info(logger).Log("msg", "table has exceeded the retention period", "table", desc.Name)
+		level.Info(m.logger).Log("msg", "table has exceeded the retention period", "table", desc.Name)
 		if !m.cfg.RetentionDeletesEnabled {
 			continue
 		}
 
-		level.Info(logger).Log("msg", "deleting table", "table", desc.Name)
+		level.Info(m.logger).Log("msg", "deleting table", "table", desc.Name)
 		err := m.client.DeleteTable(ctx, desc.Name)
 		if err != nil {
 			numFailures++
@@ -507,7 +513,7 @@ func (m *TableManager) deleteTables(ctx context.Context, descriptions []TableDes
 
 func (m *TableManager) updateTables(ctx context.Context, descriptions []TableDesc) error {
 	for _, expected := range descriptions {
-		level.Debug(logger).Log("msg", "checking provisioned throughput on table", "table", expected.Name)
+		level.Debug(m.logger).Log("msg", "checking provisioned throughput on table", "table", expected.Name)
 		current, isActive, err := m.client.DescribeTable(ctx, expected.Name)
 		if err != nil {
 			return err
@@ -521,12 +527,12 @@ func (m *TableManager) updateTables(ctx context.Context, descriptions []TableDes
 		}
 
 		if !isActive {
-			level.Info(logger).Log("msg", "skipping update on table, not yet ACTIVE", "table", expected.Name)
+			level.Info(m.logger).Log("msg", "skipping update on table, not yet ACTIVE", "table", expected.Name)
 			continue
 		}
 
 		if expected.Equals(current) {
-			level.Info(logger).Log("msg", "provisioned throughput on table, skipping", "table", current.Name, "read", current.ProvisionedRead, "write", current.ProvisionedWrite)
+			level.Info(m.logger).Log("msg", "provisioned throughput on table, skipping", "table", current.Name, "read", current.ProvisionedRead, "write", current.ProvisionedWrite)
 			continue
 		}
 

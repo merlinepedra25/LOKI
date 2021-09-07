@@ -169,7 +169,7 @@ func NewLifecycler(cfg LifecyclerConfig, flushTransferer FlushTransferer, ringNa
 	zone := cfg.Zone
 	if zone != "" {
 		// TODO
-		// logger.WarnExperimentalUse("Zone aware replication")
+		// logger.WarnExperimentalUse("Zone aware replication", logger)
 	}
 
 	// We do allow a nil FlushTransferer, but to keep the ring logic easier we assume
