@@ -13,9 +13,9 @@ func mergeNSampleSets(sampleSets ...[]model.SamplePair) []model.SamplePair {
 	}
 
 	n := l / 2
-	left := MergeNSampleSets(sampleSets[:n]...)
-	right := MergeNSampleSets(sampleSets[n:]...)
-	return MergeSampleSets(left, right)
+	left := mergeNSampleSets(sampleSets[:n]...)
+	right := mergeNSampleSets(sampleSets[n:]...)
+	return mergeSampleSets(left, right)
 }
 
 // mergeSampleSets merges and dedupes two sets of already sorted sample pairs.

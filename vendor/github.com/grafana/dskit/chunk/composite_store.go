@@ -6,6 +6,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 
@@ -46,6 +47,8 @@ type Store interface {
 // on when they were activated.
 type CompositeStore struct {
 	compositeStore
+
+	logger log.Logger
 }
 
 type compositeStore struct {
@@ -60,21 +63,21 @@ type compositeStoreEntry struct {
 
 // NewCompositeStore creates a new Store which delegates to different stores depending
 // on time.
-func NewCompositeStore(cacheGenNumLoader CacheGenNumLoader) CompositeStore {
-	return CompositeStore{compositeStore{cacheGenNumLoader: cacheGenNumLoader}}
+func NewCompositeStore(cacheGenNumLoader CacheGenNumLoader, logger log.Logger) CompositeStore {
+	return CompositeStore{compositeStore{cacheGenNumLoader: cacheGenNumLoader}, logger}
 }
 
 // AddPeriod adds the configuration for a period of time to the CompositeStore
 func (c *CompositeStore) AddPeriod(storeCfg StoreConfig, cfg PeriodConfig, index IndexClient, chunks Client, limits StoreLimits, chunksCache, writeDedupeCache cache.Cache) error {
-	schema, err := cfg.CreateSchema()
+	schema, err := cfg.CreateSchema(c.logger)
 	if err != nil {
 		return err
 	}
 
-	return c.addSchema(storeCfg, schema, cfg.From.Time, index, chunks, limits, chunksCache, writeDedupeCache)
+	return c.addSchema(storeCfg, schema, cfg.From.Time, index, chunks, limits, chunksCache, writeDedupeCache, c.logger)
 }
 
-func (c *CompositeStore) addSchema(storeCfg StoreConfig, schema BaseSchema, start model.Time, index IndexClient, chunks Client, limits StoreLimits, chunksCache, writeDedupeCache cache.Cache) error {
+func (c *CompositeStore) addSchema(storeCfg StoreConfig, schema BaseSchema, start model.Time, index IndexClient, chunks Client, limits StoreLimits, chunksCache, writeDedupeCache cache.Cache, logger log.Logger) error {
 	var (
 		err   error
 		store Store
@@ -82,9 +85,9 @@ func (c *CompositeStore) addSchema(storeCfg StoreConfig, schema BaseSchema, star
 
 	switch s := schema.(type) {
 	case SeriesStoreSchema:
-		store, err = newSeriesStore(storeCfg, s, index, chunks, limits, chunksCache, writeDedupeCache)
+		store, err = newSeriesStore(storeCfg, s, index, chunks, limits, chunksCache, writeDedupeCache, logger)
 	case StoreSchema:
-		store, err = newStore(storeCfg, s, index, chunks, limits, chunksCache)
+		store, err = newStore(storeCfg, s, index, chunks, limits, chunksCache, c.logger)
 	default:
 		err = errors.New("invalid schema type")
 	}

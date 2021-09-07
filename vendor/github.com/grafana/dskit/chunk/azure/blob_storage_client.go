@@ -12,6 +12,7 @@ import (
 
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/grafana/dskit/dslog"
 	"github.com/grafana/dskit/flagext"
 	"github.com/grafana/dskit/stringutil"
 
@@ -93,7 +94,7 @@ type BlobStorage struct {
 
 // NewBlobStorage creates a new instance of the BlobStorage struct.
 func NewBlobStorage(cfg *BlobStorageConfig) (*BlobStorage, error) {
-	dslog.WarnExperimentalUse("Azure Blob Storage")
+	dslog.WarnExperimentalUse("Azure Blob Storage", logger)
 	blobStorage := &BlobStorage{
 		cfg: cfg,
 	}

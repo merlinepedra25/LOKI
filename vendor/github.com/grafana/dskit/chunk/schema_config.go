@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/common/model"
 	"github.com/weaveworks/common/mtime"
@@ -101,11 +102,11 @@ func (cfg *SchemaConfig) loadFromFile() error {
 
 // Validate the schema config and returns an error if the validation
 // doesn't pass
-func (cfg *SchemaConfig) Validate() error {
+func (cfg *SchemaConfig) Validate(logger log.Logger) error {
 	for i := range cfg.Configs {
 		periodCfg := &cfg.Configs[i]
 		periodCfg.applyDefaults()
-		if err := periodCfg.validate(); err != nil {
+		if err := periodCfg.validate(logger); err != nil {
 			return err
 		}
 
@@ -160,7 +161,7 @@ func validateChunks(cfg PeriodConfig) error {
 }
 
 // CreateSchema returns the schema defined by the PeriodConfig
-func (cfg PeriodConfig) CreateSchema() (BaseSchema, error) {
+func (cfg PeriodConfig) CreateSchema(logger log.Logger) (BaseSchema, error) {
 	buckets, bucketsPeriod := cfg.createBucketsFunc()
 
 	// Ensure the tables period is a multiple of the bucket period
@@ -192,7 +193,7 @@ func (cfg PeriodConfig) CreateSchema() (BaseSchema, error) {
 			return nil, fmt.Errorf("Must have row_shards > 0 (current: %d) for schema (%s)", cfg.RowShards, cfg.Schema)
 		}
 
-		v10 := v10Entries{rowShards: cfg.RowShards}
+		v10 := v10Entries{rowShards: cfg.RowShards, logger: logger}
 		if cfg.Schema == "v10" {
 			return newSeriesStoreSchema(buckets, v10), nil
 		}
@@ -219,18 +220,18 @@ func (cfg *PeriodConfig) applyDefaults() {
 }
 
 // Validate the period config.
-func (cfg PeriodConfig) validate() error {
+func (cfg PeriodConfig) validate(logger log.Logger) error {
 	validateError := validateChunks(cfg)
 	if validateError != nil {
 		return validateError
 	}
 
-	_, err := cfg.CreateSchema()
+	_, err := cfg.CreateSchema(logger)
 	return err
 }
 
 // Load the yaml file, or build the config from legacy command-line flags
-func (cfg *SchemaConfig) Load() error {
+func (cfg *SchemaConfig) Load(logger log.Logger) error {
 	if len(cfg.Configs) > 0 {
 		return nil
 	}
@@ -240,7 +241,7 @@ func (cfg *SchemaConfig) Load() error {
 		return err
 	}
 
-	return cfg.Validate()
+	return cfg.Validate(logger)
 }
 
 // Bucket describes a range of time with a tableName and hashKey
@@ -366,7 +367,7 @@ func (cfg *AutoScalingConfig) RegisterFlags(argPrefix string, f *flag.FlagSet) {
 	f.Float64Var(&cfg.TargetValue, argPrefix+".target-value", 80, "DynamoDB target ratio of consumed capacity to provisioned capacity.")
 }
 
-func (cfg *PeriodicTableConfig) periodicTables(from, through model.Time, pCfg ProvisionConfig, beginGrace, endGrace time.Duration, retention time.Duration) []TableDesc {
+func (cfg *PeriodicTableConfig) periodicTables(from, through model.Time, pCfg ProvisionConfig, beginGrace, endGrace time.Duration, retention time.Duration, logger log.Logger) []TableDesc {
 	var (
 		periodSecs     = int64(cfg.Period / time.Second)
 		beginGraceSecs = int64(beginGrace / time.Second)

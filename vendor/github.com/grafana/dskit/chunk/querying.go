@@ -2,14 +2,17 @@ package chunk
 
 import (
 	"context"
-	"math"
+
+	"github.com/opentracing/opentracing-go"
+
+	"github.com/grafana/dskit/math"
 )
 
 // QueryCallback from an IndexQuery.
 type QueryCallback func(IndexQuery, ReadBatch) bool
 
 // DoSingleQuery is the interface for indexes that don't support batching yet.
-type DoSingleQuery func(context.Context, IndexQuery, Callback) error
+type DoSingleQuery func(context.Context, IndexQuery, QueryCallback) error
 
 // QueryParallelism is the maximum number of subqueries run in
 // parallel per higher-level query.
@@ -19,7 +22,7 @@ var QueryParallelism = 100
 // and indexes that don't yet support batching.
 func DoParallelQueries(
 	ctx context.Context, doSingleQuery DoSingleQuery, queries []IndexQuery,
-	callback Callback,
+	callback QueryCallback,
 ) error {
 	if len(queries) == 1 {
 		return doSingleQuery(ctx, queries[0], callback)
@@ -31,7 +34,7 @@ func DoParallelQueries(
 	// Run n parallel goroutines fetching queries from the queue
 	for i := 0; i < n; i++ {
 		go func() {
-			sp, ctx := ot.StartSpanFromContext(ctx, "DoParallelQueries-worker")
+			sp, ctx := opentracing.StartSpanFromContext(ctx, "DoParallelQueries-worker")
 			defer sp.Finish()
 			for {
 				query, ok := <-queue

@@ -2,6 +2,7 @@ package labels
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
+	dto "github.com/prometheus/client_model/go"
 	"github.com/prometheus/prometheus/pkg/labels"
 	tsdberrors "github.com/prometheus/prometheus/tsdb/errors"
 )
@@ -60,4 +61,11 @@ nextMetric:
 	}
 
 	return result, errs.Err()
+}
+
+// CollectorVec is a collector that can delete metrics by labels.
+// Implemented by *prometheus.MetricVec (used by CounterVec, GaugeVec, SummaryVec, and HistogramVec).
+type CollectorVec interface {
+	prometheus.Collector
+	Delete(labels prometheus.Labels) bool
 }

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/go-kit/kit/log"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -27,6 +28,7 @@ var (
 type squasher = func(...parser.Node) (parser.Expr, error)
 
 type shardSummer struct {
+	logger       log.Logger
 	shards       int
 	currentShard *int
 	squash       squasher
@@ -36,12 +38,13 @@ type shardSummer struct {
 }
 
 // NewShardSummer instantiates an ASTMapper which will fan out sum queries by shard
-func NewShardSummer(shards int, squasher squasher, shardedQueries prometheus.Counter) (ASTMapper, error) {
+func NewShardSummer(shards int, squasher squasher, shardedQueries prometheus.Counter, logger log.Logger) (ASTMapper, error) {
 	if squasher == nil {
 		return nil, errors.Errorf("squasher required and not passed")
 	}
 
 	return NewASTNodeMapper(&shardSummer{
+		logger:         logger,
 		shards:         shards,
 		squash:         squasher,
 		currentShard:   nil,
@@ -58,10 +61,9 @@ func (summer *shardSummer) CopyWithCurShard(curshard int) *shardSummer {
 
 // shardSummer expands a query AST by sharding and re-summing when possible
 func (summer *shardSummer) MapNode(node parser.Node) (parser.Node, bool, error) {
-
 	switch n := node.(type) {
 	case *parser.AggregateExpr:
-		if CanParallelize(n) && n.Op == parser.SUM {
+		if CanParallelize(n, summer.logger) && n.Op == parser.SUM {
 			result, err := summer.shardSum(n)
 			return result, true, err
 		}

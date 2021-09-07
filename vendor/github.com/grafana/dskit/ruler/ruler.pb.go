@@ -5,7 +5,6 @@ package ruler
 
 import (
 	context "context"
-	_ "dskitpb"
 	encoding_binary "encoding/binary"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
@@ -13,7 +12,9 @@ import (
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
 	_ "github.com/golang/protobuf/ptypes/duration"
 	_ "github.com/golang/protobuf/ptypes/timestamp"
+	_ "github.com/grafana/dskit/dskitpb"
 	github_com_grafana_dskit_dskitpb "github.com/grafana/dskit/dskitpb"
+	rulespb "github.com/grafana/dskit/ruler/rulespb"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,7 +22,6 @@ import (
 	math "math"
 	math_bits "math/bits"
 	reflect "reflect"
-	rulespb "rulespb"
 	strings "strings"
 	time "time"
 )

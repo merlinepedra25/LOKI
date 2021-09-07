@@ -11,6 +11,7 @@ import (
 	"github.com/ncw/swift"
 
 	"github.com/grafana/dskit/chunk"
+	"github.com/grafana/dskit/dslog"
 	cortex_swift "github.com/grafana/dskit/storage/bucket/swift"
 )
 
@@ -41,7 +42,7 @@ func (cfg *SwiftConfig) RegisterFlagsWithPrefix(prefix string, f *flag.FlagSet) 
 
 // NewSwiftObjectClient makes a new chunk.Client that writes chunks to OpenStack Swift.
 func NewSwiftObjectClient(cfg SwiftConfig) (*SwiftObjectClient, error) {
-	dslog.WarnExperimentalUse("OpenStack Swift Storage")
+	dslog.WarnExperimentalUse("OpenStack Swift Storage", logger)
 
 	// Create a connection
 	c := &swift.Connection{

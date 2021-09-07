@@ -6,6 +6,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 
@@ -34,7 +35,7 @@ var BenchmarkLabels = labels.Labels{
 }
 
 // DefaultSchemaConfig creates a simple schema config for testing
-func DefaultSchemaConfig(store, schema string, from model.Time) SchemaConfig {
+func DefaultSchemaConfig(store, schema string, from model.Time, logger log.Logger) SchemaConfig {
 	s := SchemaConfig{
 		Configs: []PeriodConfig{{
 			IndexType: store,
@@ -50,7 +51,7 @@ func DefaultSchemaConfig(store, schema string, from model.Time) SchemaConfig {
 			},
 		}},
 	}
-	if err := s.Validate(); err != nil {
+	if err := s.Validate(logger); err != nil {
 		panic(err)
 	}
 	return s

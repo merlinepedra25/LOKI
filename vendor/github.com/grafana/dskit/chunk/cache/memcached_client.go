@@ -13,6 +13,7 @@ import (
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -143,7 +144,7 @@ func NewMemcachedClient(cfg MemcachedClientConfig, name string, r prometheus.Reg
 	}
 
 	if len(cfg.Addresses) > 0 {
-		dslog.WarnExperimentalUse("DNS-based memcached service discovery")
+		dslog.WarnExperimentalUse("DNS-based memcached service discovery", logger)
 		newClient.addresses = strings.Split(cfg.Addresses, ",")
 	}
 

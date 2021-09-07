@@ -767,6 +767,7 @@ func (v9Entries) FilterReadQueries(queries []IndexQuery, shard *astmapper.ShardA
 
 // v10Entries builds on v9 by sharding index rows to reduce their size.
 type v10Entries struct {
+	logger    log.Logger
 	rowShards uint32
 }
 
@@ -873,16 +874,15 @@ func (v10Entries) GetLabelNamesForSeries(_ Bucket, _ []byte) ([]IndexQuery, erro
 }
 
 // FilterReadQueries will return only queries that match a certain shard
-func (v10Entries) FilterReadQueries(queries []IndexQuery, shard *astmapper.ShardAnnotation, logger log.Logger) (matches []IndexQuery) {
+func (s v10Entries) FilterReadQueries(queries []IndexQuery, shard *astmapper.ShardAnnotation) (matches []IndexQuery) {
 	if shard == nil {
 		return queries
 	}
 
 	for _, query := range queries {
-		s := strings.Split(query.HashValue, ":")[0]
-		n, err := strconv.Atoi(s)
+		n, err := strconv.Atoi(strings.Split(query.HashValue, ":")[0])
 		if err != nil {
-			level.Error(logger).Log(
+			level.Error(s.logger).Log(
 				"msg",
 				"Unable to determine shard from IndexQuery",
 				"HashValue",
