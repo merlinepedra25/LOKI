@@ -1,6 +1,6 @@
 package math
 
-// Max returns the maximum of two ints
+// Max returns the maximum of two ints.
 func Max(a, b int) int {
 	if a > b {
 		return a
@@ -16,7 +16,7 @@ func Min(a, b int) int {
 	return b
 }
 
-// Max64 returns the maximum of two int64s
+// Max64 returns the maximum of two int64s.
 func Max64(a, b int64) int64 {
 	if a > b {
 		return a
@@ -24,7 +24,7 @@ func Max64(a, b int64) int64 {
 	return b
 }
 
-// Min64 returns the minimum of two int64s
+// Min64 returns the minimum of two int64s.
 func Min64(a, b int64) int64 {
 	if a < b {
 		return a
