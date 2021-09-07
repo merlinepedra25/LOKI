@@ -1,4 +1,4 @@
-package util
+package tenant
 
 // AllowedTenants that can answer whether tenant is allowed or not based on configuration.
 // Default value (nil) allows all tenants.
