@@ -234,12 +234,12 @@ func (c RulesConfig) Equal(o RulesConfig) bool {
 
 // Parse parses and validates the content of the rule files in a RulesConfig
 // according to the passed rule format version.
-func (c RulesConfig) Parse() (map[string][]rules.Rule, error) {
+func (c RulesConfig) Parse(logger log.Logger) (map[string][]rules.Rule, error) {
 	switch c.FormatVersion {
 	case RuleFormatV1:
-		return c.parseV1()
+		return c.parseV1(logger)
 	case RuleFormatV2:
-		return c.parseV2()
+		return c.parseV2(logger)
 	default:
 		return nil, fmt.Errorf("unknown rule format version %v", c.FormatVersion)
 	}
@@ -344,7 +344,7 @@ func (c RulesConfig) parseV1Formatted() (map[string]rulefmt.RuleGroups, error) {
 // would otherwise have to ensure to convert the rulefmt.RuleGroup only exactly
 // once, not for every evaluation (or risk losing alert pending states). So
 // it's probably better to just return a set of rules.Rule here.
-func (c RulesConfig) parseV2() (map[string][]rules.Rule, error) {
+func (c RulesConfig) parseV2(logger log.Logger) (map[string][]rules.Rule, error) {
 	groups := map[string][]rules.Rule{}
 
 	for fn, content := range c.Files {
@@ -371,7 +371,7 @@ func (c RulesConfig) parseV2() (map[string][]rules.Rule, error) {
 						nil,
 						"",
 						true,
-						log.With(c.Logger, "alert", rl.Alert.Value),
+						log.With(logger, "alert", rl.Alert.Value),
 					))
 					continue
 				}
@@ -394,7 +394,7 @@ func (c RulesConfig) parseV2() (map[string][]rules.Rule, error) {
 // according to the Prometheus 1.x rule format.
 //
 // The same comment about rule groups as on ParseV2() applies here.
-func (c RulesConfig) parseV1() (map[string][]rules.Rule, error) {
+func (c RulesConfig) parseV1(logger log.Logger) (map[string][]rules.Rule, error) {
 	result := map[string][]rules.Rule{}
 	for fn, content := range c.Files {
 		stmts, err := legacy_promql.ParseStmts(content)
@@ -426,7 +426,7 @@ func (c RulesConfig) parseV1() (map[string][]rules.Rule, error) {
 					nil,
 					"",
 					true,
-					log.With(c.Logger, "alert", r.Name),
+					log.With(logger, "alert", r.Name),
 				)
 			case *legacy_promql.RecordStmt:
 				expr, err := parser.ParseExpr(r.Expr.String())

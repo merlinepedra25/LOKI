@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
 	promApi "github.com/prometheus/client_golang/api"
@@ -65,6 +66,7 @@ func (cfg *MetricsAutoScalingConfig) RegisterFlags(f *flag.FlagSet) {
 }
 
 type metricsData struct {
+	logger               log.Logger
 	cfg                  MetricsAutoScalingConfig
 	promAPI              promV1.API
 	promLastQuery        time.Time
@@ -77,12 +79,13 @@ type metricsData struct {
 	readErrorRates       map[string]float64
 }
 
-func newMetricsAutoScaling(cfg DynamoDBConfig) (*metricsData, error) {
+func newMetricsAutoScaling(cfg DynamoDBConfig, logger log.Logger) (*metricsData, error) {
 	client, err := promApi.NewClient(promApi.Config{Address: cfg.Metrics.URL})
 	if err != nil {
 		return nil, err
 	}
 	return &metricsData{
+		logger:               logger,
 		promAPI:              promV1.NewAPI(client),
 		cfg:                  cfg.Metrics,
 		tableLastUpdated:     make(map[string]time.Time),
@@ -111,7 +114,7 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 		throttleRate := m.throttleRates[expected.Name]
 		usageRate := m.usageRates[expected.Name]
 
-		level.Info(logger).Log("msg", "checking write metrics", "table", current.Name, "queueLengths", fmt.Sprint(m.queueLengths), "throttleRate", throttleRate, "usageRate", usageRate)
+		level.Info(m.logger).Log("msg", "checking write metrics", "table", current.Name, "queueLengths", fmt.Sprint(m.queueLengths), "throttleRate", throttleRate, "usageRate", usageRate)
 
 		switch {
 		case throttleRate < throttleFractionScaledown*float64(current.ProvisionedWrite) &&
@@ -125,7 +128,8 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				expected.WriteScale.InCooldown,
 				"metrics scale-down",
 				"write",
-				m.usageRates)
+				m.usageRates,
+				m.logger)
 		case throttleRate == 0 &&
 			m.queueLengths[2] < m.queueLengths[1] && m.queueLengths[1] < m.queueLengths[0]:
 			// zero errors and falling queue -> scale down to current usage
@@ -137,7 +141,9 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				expected.WriteScale.InCooldown,
 				"zero errors scale-down",
 				"write",
-				m.usageRates)
+				m.usageRates,
+				m.logger,
+			)
 		case throttleRate > 0 && m.queueLengths[2] > float64(m.cfg.TargetQueueLen)*targetMax:
 			// Too big queue, some throttling -> scale up (note we don't apply MinThrottling in this case)
 			expected.ProvisionedWrite = scaleUp(current.Name,
@@ -147,7 +153,9 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				m.tableLastUpdated,
 				expected.WriteScale.OutCooldown,
 				"metrics max queue scale-up",
-				"write")
+				"write",
+				m.logger,
+			)
 		case throttleRate > m.cfg.MinThrottling &&
 			m.queueLengths[2] > float64(m.cfg.TargetQueueLen) &&
 			m.queueLengths[2] > m.queueLengths[1] && m.queueLengths[1] > m.queueLengths[0]:
@@ -159,7 +167,9 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				m.tableLastUpdated,
 				expected.WriteScale.OutCooldown,
 				"metrics queue growing scale-up",
-				"write")
+				"write",
+				m.logger,
+			)
 		}
 	}
 
@@ -169,7 +179,7 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 		readUsageRate := m.usageReadRates[expected.Name]
 		readErrorRate := m.readErrorRates[expected.Name]
 
-		level.Info(logger).Log("msg", "checking read metrics", "table", current.Name, "errorRate", readErrorRate, "readUsageRate", readUsageRate)
+		level.Info(m.logger).Log("msg", "checking read metrics", "table", current.Name, "errorRate", readErrorRate, "readUsageRate", readUsageRate)
 		// Read Scaling
 		switch {
 		// the table is at low/minimum capacity and it is being used -> scale up
@@ -181,7 +191,9 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				computeScaleUp(current.ProvisionedRead, expected.ReadScale.MaxCapacity, m.cfg.ScaleUpFactor),
 				m.tableReadLastUpdated, expected.ReadScale.OutCooldown,
 				"table is being used. scale up",
-				"read")
+				"read",
+				m.logger,
+			)
 		case readErrorRate > 0 && readUsageRate > 0:
 			// Queries are causing read throttling on the table -> scale up
 			expected.ProvisionedRead = scaleUp(
@@ -191,7 +203,9 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				computeScaleUp(current.ProvisionedRead, expected.ReadScale.MaxCapacity, m.cfg.ScaleUpFactor),
 				m.tableReadLastUpdated, expected.ReadScale.OutCooldown,
 				"table is in use and there are read throttle errors, scale up",
-				"read")
+				"read",
+				m.logger,
+			)
 		case readErrorRate == 0 && readUsageRate == 0:
 			// this table is not being used. -> scale down
 			expected.ProvisionedRead = scaleDown(current.Name,
@@ -201,7 +215,9 @@ func (m *metricsData) UpdateTable(ctx context.Context, current chunk.TableDesc, 
 				m.tableReadLastUpdated,
 				expected.ReadScale.InCooldown,
 				"table is not in use. scale down", "read",
-				nil)
+				nil,
+				m.logger,
+			)
 		}
 	}
 
@@ -223,7 +239,7 @@ func computeScaleDown(currentName string, usageRates map[string]float64, targetV
 	return int64(usageRate * 100.0 / targetValue)
 }
 
-func scaleDown(tableName string, currentValue, minValue int64, newValue int64, lastUpdated map[string]time.Time, coolDown int64, msg, operation string, usageRates map[string]float64) int64 {
+func scaleDown(tableName string, currentValue, minValue int64, newValue int64, lastUpdated map[string]time.Time, coolDown int64, msg, operation string, usageRates map[string]float64, logger log.Logger) int64 {
 	if newValue < minValue {
 		newValue = minValue
 	}
@@ -263,7 +279,7 @@ func scaleDown(tableName string, currentValue, minValue int64, newValue int64, l
 	return newValue
 }
 
-func scaleUp(tableName string, currentValue, maxValue int64, newValue int64, lastUpdated map[string]time.Time, coolDown int64, msg, operation string) int64 {
+func scaleUp(tableName string, currentValue, maxValue int64, newValue int64, lastUpdated map[string]time.Time, coolDown int64, msg, operation string, logger log.Logger) int64 {
 	if newValue > maxValue {
 		newValue = maxValue
 	}
@@ -284,7 +300,7 @@ func (m *metricsData) update(ctx context.Context) error {
 	}
 
 	m.promLastQuery = mtime.Now()
-	qlMatrix, err := promQuery(ctx, m.promAPI, m.cfg.QueueLengthQuery, queueObservationPeriod, queueObservationPeriod/2)
+	qlMatrix, err := promQuery(ctx, m.promAPI, m.cfg.QueueLengthQuery, queueObservationPeriod, queueObservationPeriod/2, m.logger)
 	if err != nil {
 		return err
 	}
@@ -299,7 +315,7 @@ func (m *metricsData) update(ctx context.Context) error {
 		m.queueLengths[i] = float64(v.Value)
 	}
 
-	deMatrix, err := promQuery(ctx, m.promAPI, m.cfg.ThrottleQuery, 0, time.Second)
+	deMatrix, err := promQuery(ctx, m.promAPI, m.cfg.ThrottleQuery, 0, time.Second, m.logger)
 	if err != nil {
 		return err
 	}
@@ -307,7 +323,7 @@ func (m *metricsData) update(ctx context.Context) error {
 		return err
 	}
 
-	usageMatrix, err := promQuery(ctx, m.promAPI, m.cfg.UsageQuery, 0, time.Second)
+	usageMatrix, err := promQuery(ctx, m.promAPI, m.cfg.UsageQuery, 0, time.Second, m.logger)
 	if err != nil {
 		return err
 	}
@@ -315,7 +331,7 @@ func (m *metricsData) update(ctx context.Context) error {
 		return err
 	}
 
-	readUsageMatrix, err := promQuery(ctx, m.promAPI, m.cfg.ReadUsageQuery, 0, time.Second)
+	readUsageMatrix, err := promQuery(ctx, m.promAPI, m.cfg.ReadUsageQuery, 0, time.Second, m.logger)
 	if err != nil {
 		return err
 	}
@@ -323,7 +339,7 @@ func (m *metricsData) update(ctx context.Context) error {
 		return err
 	}
 
-	readErrorMatrix, err := promQuery(ctx, m.promAPI, m.cfg.ReadErrorQuery, 0, time.Second)
+	readErrorMatrix, err := promQuery(ctx, m.promAPI, m.cfg.ReadErrorQuery, 0, time.Second, m.logger)
 	if err != nil {
 		return err
 	}
@@ -349,7 +365,7 @@ func extractRates(matrix model.Matrix) (map[string]float64, error) {
 	return ret, nil
 }
 
-func promQuery(ctx context.Context, promAPI promV1.API, query string, duration, step time.Duration) (model.Matrix, error) {
+func promQuery(ctx context.Context, promAPI promV1.API, query string, duration, step time.Duration, logger log.Logger) (model.Matrix, error) {
 	queryRange := promV1.Range{
 		Start: mtime.Now().Add(-duration),
 		End:   mtime.Now(),

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-kit/log"
 	"github.com/grafana/dskit/flagext"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -37,7 +38,7 @@ func (f CloserFunc) Close() error {
 
 // DefaultSchemaConfig returns default schema for use in test fixtures
 func DefaultSchemaConfig(kind string) chunk.SchemaConfig {
-	schemaConfig := chunk.DefaultSchemaConfig(kind, "v1", model.Now().Add(-time.Hour*2))
+	schemaConfig := chunk.DefaultSchemaConfig(kind, "v1", model.Now().Add(-time.Hour*2), log.NewNopLogger())
 	return schemaConfig
 }
 
@@ -50,7 +51,7 @@ func Setup(fixture Fixture, tableName string) (chunk.IndexClient, chunk.Client, 
 		return nil, nil, nil, err
 	}
 
-	tableManager, err := chunk.NewTableManager(tbmConfig, schemaConfig, 12*time.Hour, tableClient, nil, nil, nil)
+	tableManager, err := chunk.NewTableManager(tbmConfig, schemaConfig, 12*time.Hour, tableClient, nil, nil, nil, log.NewNopLogger())
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -111,10 +112,10 @@ func dummyChunkFor(from, through model.Time, metric labels.Labels) chunk.Chunk {
 func SetupTestChunkStoreWithClients(indexClient chunk.IndexClient, chunksClient chunk.Client, tableClient chunk.TableClient) (chunk.Store, error) {
 	var (
 		tbmConfig chunk.TableManagerConfig
-		schemaCfg = chunk.DefaultSchemaConfig("", "v10", 0)
+		schemaCfg = chunk.DefaultSchemaConfig("", "v10", 0, log.NewNopLogger())
 	)
 	flagext.DefaultValues(&tbmConfig)
-	tableManager, err := chunk.NewTableManager(tbmConfig, schemaCfg, 12*time.Hour, tableClient, nil, nil, nil)
+	tableManager, err := chunk.NewTableManager(tbmConfig, schemaCfg, 12*time.Hour, tableClient, nil, nil, nil, log.NewNopLogger())
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +136,7 @@ func SetupTestChunkStoreWithClients(indexClient chunk.IndexClient, chunksClient 
 	var storeCfg chunk.StoreConfig
 	flagext.DefaultValues(&storeCfg)
 
-	store := chunk.NewCompositeStore(nil)
+	store := chunk.NewCompositeStore(nil, log.NewNopLogger())
 	err = store.AddPeriod(storeCfg, schemaCfg.Configs[0], indexClient, chunksClient, overrides, cache.NewNoopCache(), cache.NewNoopCache())
 	if err != nil {
 		return nil, err
@@ -145,10 +146,10 @@ func SetupTestChunkStoreWithClients(indexClient chunk.IndexClient, chunksClient 
 }
 
 func SetupTestChunkStore() (chunk.Store, error) {
-	storage := chunk.NewMockStorage()
+	storage := chunk.NewMockStorage(log.NewNopLogger())
 	return SetupTestChunkStoreWithClients(storage, storage, storage)
 }
 
 func SetupTestObjectStore() (chunk.ObjectClient, error) {
-	return chunk.NewMockStorage(), nil
+	return chunk.NewMockStorage(log.NewNopLogger()), nil
 }

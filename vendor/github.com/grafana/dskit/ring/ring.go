@@ -18,6 +18,7 @@ import (
 
 	"github.com/grafana/dskit/kv"
 	"github.com/grafana/dskit/services"
+	"github.com/grafana/dskit/sharding"
 	"github.com/grafana/dskit/stringutil"
 )
 

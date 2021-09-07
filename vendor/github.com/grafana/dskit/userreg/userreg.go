@@ -1,10 +1,13 @@
 package userreg
 
 import (
+	"bytes"
 	"sync"
 
+	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
+	dto "github.com/prometheus/client_model/go"
 )
 
 // UserRegistry holds a Prometheus registry associated with a specific user.
@@ -19,13 +22,14 @@ type UserRegistry struct {
 // UserRegistries holds Prometheus registries for multiple users, guaranteeing
 // multi-thread safety and stable ordering.
 type UserRegistries struct {
+	logger log.Logger
 	regsMu sync.Mutex
 	regs   []UserRegistry
 }
 
 // NewUserRegistries makes new UserRegistries.
-func NewUserRegistries() *UserRegistries {
-	return &UserRegistries{}
+func NewUserRegistries(logger log.Logger) *UserRegistries {
+	return &UserRegistries{logger: logger}
 }
 
 // AddUserRegistry adds an user registry. If user already has a registry,
@@ -84,7 +88,7 @@ func (r *UserRegistries) RemoveUserRegistry(user string, hard bool) {
 func (r *UserRegistries) softRemoveUserRegistry(ur *UserRegistry) bool {
 	last, err := ur.reg.Gather()
 	if err != nil {
-		level.Warn(util_log.Logger).Log("msg", "failed to gather metrics from registry", "user", ur.user, "err", err)
+		level.Warn(r.logger).Log("msg", "failed to gather metrics from registry", "user", ur.user, "err", err)
 		return false
 	}
 
@@ -106,7 +110,7 @@ func (r *UserRegistries) softRemoveUserRegistry(ur *UserRegistry) bool {
 
 	ur.lastGather, err = NewMetricFamilyMap(last)
 	if err != nil {
-		level.Warn(util_log.Logger).Log("msg", "failed to gather metrics from registry", "user", ur.user, "err", err)
+		level.Warn(r.logger).Log("msg", "failed to gather metrics from registry", "user", ur.user, "err", err)
 		return false
 	}
 
@@ -157,9 +161,77 @@ func (r *UserRegistries) BuildMetricFamiliesPerUser() MetricFamiliesPerUser {
 		}
 
 		if err != nil {
-			level.Warn(util_log.Logger).Log("msg", "failed to gather metrics from registry", "user", entry.user, "err", err)
+			level.Warn(r.logger).Log("msg", "failed to gather metrics from registry", "user", entry.user, "err", err)
 			continue
 		}
 	}
 	return data
+}
+
+// struct for holding metrics with same label values
+type metricsWithLabels struct {
+	labelValues []string
+	metrics     []*dto.Metric
+}
+
+func getMetricsWithLabelNames(mf *dto.MetricFamily, labelNames []string) map[string]metricsWithLabels {
+	result := map[string]metricsWithLabels{}
+
+	for _, m := range mf.GetMetric() {
+		lbls, include := getLabelValues(m, labelNames)
+		if !include {
+			continue
+		}
+
+		key := getLabelsString(lbls)
+		r := result[key]
+		if r.labelValues == nil {
+			r.labelValues = lbls
+		}
+		r.metrics = append(r.metrics, m)
+		result[key] = r
+	}
+	return result
+}
+
+func getLabelValues(m *dto.Metric, labelNames []string) ([]string, bool) {
+	result := make([]string, 0, len(labelNames))
+
+	for _, ln := range labelNames {
+		found := false
+
+		// Look for the label among the metric ones. We re-iterate on each metric label
+		// which is algorithmically bad, but the main assumption is that the labelNames
+		// in input are typically very few units.
+		for _, lp := range m.GetLabel() {
+			if ln != lp.GetName() {
+				continue
+			}
+
+			result = append(result, lp.GetValue())
+			found = true
+			break
+		}
+
+		if !found {
+			// required labels not found
+			return nil, false
+		}
+	}
+
+	return result, true
+}
+
+func getLabelsString(labelValues []string) string {
+	// Get a buffer from the pool, reset it and release it at the
+	// end of the function.
+	buf := bytesBufferPool.Get().(*bytes.Buffer)
+	buf.Reset()
+	defer bytesBufferPool.Put(buf)
+
+	for _, v := range labelValues {
+		buf.WriteString(v)
+		buf.WriteByte(0) // separator, not used in prometheus labels
+	}
+	return buf.String()
 }

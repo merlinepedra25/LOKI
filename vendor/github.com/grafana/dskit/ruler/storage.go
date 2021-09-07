@@ -89,19 +89,19 @@ func NewLegacyRuleStore(cfg RuleStoreConfig, loader promRules.GroupLoader, logge
 
 	switch cfg.Type {
 	case "configdb":
-		c, err := configClient.New(cfg.ConfigDB)
+		c, err := configClient.New(cfg.ConfigDB, logger)
 		if err != nil {
 			return nil, err
 		}
 		return configdb.NewConfigRuleStore(c), nil
 	case "azure":
-		client, err = azure.NewBlobStorage(&cfg.Azure)
+		client, err = azure.NewBlobStorage(&cfg.Azure, logger)
 	case "gcs":
 		client, err = gcp.NewGCSObjectClient(context.Background(), cfg.GCS)
 	case "s3":
 		client, err = aws.NewS3ObjectClient(cfg.S3)
 	case "swift":
-		client, err = openstack.NewSwiftObjectClient(cfg.Swift)
+		client, err = openstack.NewSwiftObjectClient(cfg.Swift, logger)
 	case "local":
 		return local.NewLocalRulesClient(cfg.Local, loader)
 	default:
@@ -118,7 +118,7 @@ func NewLegacyRuleStore(cfg RuleStoreConfig, loader promRules.GroupLoader, logge
 // NewRuleStore returns a rule store backend client based on the provided cfg.
 func NewRuleStore(ctx context.Context, cfg rulestore.Config, cfgProvider bucket.TenantConfigProvider, loader promRules.GroupLoader, logger log.Logger, reg prometheus.Registerer) (rulestore.RuleStore, error) {
 	if cfg.Backend == configdb.Name {
-		c, err := client.New(cfg.ConfigDB)
+		c, err := client.New(cfg.ConfigDB, logger)
 		if err != nil {
 			return nil, err
 		}
