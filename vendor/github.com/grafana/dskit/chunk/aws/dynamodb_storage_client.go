@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/backoff"
 	ot "github.com/opentracing/opentracing-go"
@@ -97,6 +98,7 @@ func (cfg *StorageConfig) Validate() error {
 type dynamoDBStorageClient struct {
 	cfg       DynamoDBConfig
 	schemaCfg chunk.SchemaConfig
+	logger    log.Logger
 
 	DynamoDB dynamodbiface.DynamoDBAPI
 	// These rate-limiters let us slow down when DynamoDB signals provision limits.
@@ -111,23 +113,24 @@ type dynamoDBStorageClient struct {
 }
 
 // NewDynamoDBIndexClient makes a new DynamoDB-backed IndexClient.
-func NewDynamoDBIndexClient(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer) (chunk.IndexClient, error) {
-	return newDynamoDBStorageClient(cfg, schemaCfg, reg)
+func NewDynamoDBIndexClient(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer, logger log.Logger) (chunk.IndexClient, error) {
+	return newDynamoDBStorageClient(cfg, schemaCfg, reg, logger)
 }
 
 // NewDynamoDBChunkClient makes a new DynamoDB-backed chunk.Client.
-func NewDynamoDBChunkClient(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer) (chunk.Client, error) {
-	return newDynamoDBStorageClient(cfg, schemaCfg, reg)
+func NewDynamoDBChunkClient(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer, logger log.Logger) (chunk.Client, error) {
+	return newDynamoDBStorageClient(cfg, schemaCfg, reg, logger)
 }
 
 // newDynamoDBStorageClient makes a new DynamoDB-backed IndexClient and chunk.Client.
-func newDynamoDBStorageClient(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer) (*dynamoDBStorageClient, error) {
-	dynamoDB, err := dynamoClientFromURL(cfg.DynamoDB.URL)
+func newDynamoDBStorageClient(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer, logger log.Logger) (*dynamoDBStorageClient, error) {
+	dynamoDB, err := dynamoClientFromURL(cfg.DynamoDB.URL, logger)
 	if err != nil {
 		return nil, err
 	}
 
 	client := &dynamoDBStorageClient{
+		logger:        logger,
 		cfg:           cfg,
 		schemaCfg:     schemaCfg,
 		DynamoDB:      dynamoDB,
@@ -151,20 +154,22 @@ func (a dynamoDBStorageClient) NewWriteBatch() chunk.WriteBatch {
 func logWriteRetry(unprocessed dynamoDBWriteBatch, metrics *dynamoDBMetrics) {
 	for table, reqs := range unprocessed {
 		metrics.dynamoThrottled.WithLabelValues("DynamoDB.BatchWriteItem", table).Add(float64(len(reqs)))
-		for _, req := range reqs {
-			item := req.PutRequest.Item
-			var hash, rnge string
-			if hashAttr, ok := item[hashKey]; ok {
-				if hashAttr.S != nil {
-					hash = *hashAttr.S
+		/*
+			for _, req := range reqs {
+				item := req.PutRequest.Item
+				var hash, rnge string
+				if hashAttr, ok := item[hashKey]; ok {
+					if hashAttr.S != nil {
+						hash = *hashAttr.S
+					}
 				}
+				if rangeAttr, ok := item[rangeKey]; ok {
+					rnge = string(rangeAttr.B)
+				}
+				// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
+				// event().Log("msg", "store retry", "table", table, "hashKey", hash, "rangeKey", rnge)
 			}
-			if rangeAttr, ok := item[rangeKey]; ok {
-				rnge = string(rangeAttr.B)
-			}
-			// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
-			// event().Log("msg", "store retry", "table", table, "hashKey", hash, "rangeKey", rnge)
-		}
+		*/
 	}
 }
 
@@ -212,8 +217,8 @@ func (a dynamoDBStorageClient) BatchWrite(ctx context.Context, input chunk.Write
 				continue
 			} else if ok && awsErr.Code() == validationException {
 				// this write will never work, so the only option is to drop the offending items and continue.
-				level.Warn(logger).Log("msg", "Data lost while flushing to DynamoDB", "err", awsErr)
-				level.Debug(logger).Log("msg", "Dropped request details", "requests", requests)
+				level.Warn(a.logger).Log("msg", "Data lost while flushing to DynamoDB", "err", awsErr)
+				level.Debug(a.logger).Log("msg", "Dropped request details", "requests", requests)
 				// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
 				// event().Log("msg", "ValidationException", "requests", requests)
 				// recording the drop counter separately from recordDynamoError(), as the error code alone may not provide enough context
@@ -783,8 +788,8 @@ func recordDynamoError(tableName string, err error, operation string, metrics *d
 }
 
 // dynamoClientFromURL creates a new DynamoDB client from a URL.
-func dynamoClientFromURL(awsURL *url.URL) (dynamodbiface.DynamoDBAPI, error) {
-	dynamoDBSession, err := awsSessionFromURL(awsURL)
+func dynamoClientFromURL(awsURL *url.URL, logger log.Logger) (dynamodbiface.DynamoDBAPI, error) {
+	dynamoDBSession, err := awsSessionFromURL(awsURL, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -792,7 +797,7 @@ func dynamoClientFromURL(awsURL *url.URL) (dynamodbiface.DynamoDBAPI, error) {
 }
 
 // awsSessionFromURL creates a new aws session from a URL.
-func awsSessionFromURL(awsURL *url.URL) (client.ConfigProvider, error) {
+func awsSessionFromURL(awsURL *url.URL, logger log.Logger) (client.ConfigProvider, error) {
 	if awsURL == nil {
 		return nil, fmt.Errorf("no URL specified for DynamoDB")
 	}

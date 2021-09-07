@@ -605,21 +605,18 @@ func (t *Loki) initRuler() (_ services.Service, err error) {
 }
 
 func (t *Loki) initMemberlistKV() (services.Service, error) {
-	t.Cfg.MemberlistKV.MetricsRegisterer = prometheus.DefaultRegisterer
+	reg := prometheus.WrapRegistererWithPrefix("cortex_", prometheus.DefaultRegisterer)
+	t.Cfg.MemberlistKV.MetricsRegisterer = reg
 	t.Cfg.MemberlistKV.Codecs = []codec.Codec{
 		ring.GetCodec(),
 	}
 
-	dnsProviderReg := prometheus.WrapRegistererWithPrefix(
-		"cortex_",
-		prometheus.WrapRegistererWith(
-			prometheus.Labels{"name": "memberlist"},
-			prometheus.DefaultRegisterer,
-		),
+	dnsProviderReg := prometheus.WrapRegistererWith(
+		prometheus.Labels{"name": "memberlist"},
+		reg,
 	)
 	dnsProvider := dns.NewProvider(util_log.Logger, dnsProviderReg, dns.GolangResolverType)
-
-	t.MemberlistKV = memberlist.NewKVInitService(&t.Cfg.MemberlistKV, util_log.Logger, dnsProvider)
+	t.MemberlistKV = memberlist.NewKVInitService(&t.Cfg.MemberlistKV, util_log.Logger, dnsProvider, reg)
 	return t.MemberlistKV, nil
 }
 

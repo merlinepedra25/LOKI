@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -58,13 +59,13 @@ type Client interface {
 }
 
 // New creates a new ConfigClient.
-func New(cfg Config) (*ConfigDBClient, error) {
-
+func New(cfg Config, logger log.Logger) (*ConfigDBClient, error) {
 	if cfg.ConfigsAPIURL.URL == nil {
 		return nil, errBadURL
 	}
 
 	client := &ConfigDBClient{
+		logger:  logger,
 		URL:     cfg.ConfigsAPIURL.URL,
 		Timeout: cfg.ClientTimeout,
 	}
@@ -85,6 +86,8 @@ type ConfigDBClient struct {
 	URL       *url.URL
 	Timeout   time.Duration
 	TLSConfig *tls.Config
+
+	logger log.Logger
 }
 
 // GetRules implements Client
@@ -97,7 +100,7 @@ func (c ConfigDBClient) GetRules(ctx context.Context, since userconfig.ID) (map[
 	var response *ConfigsResponse
 	err := instrument.CollectedRequest(ctx, "GetRules", configsRequestDuration, instrument.ErrorCode, func(ctx context.Context) error {
 		var err error
-		response, err = doRequest(endpoint, c.Timeout, c.TLSConfig, since)
+		response, err = doRequest(endpoint, c.Timeout, c.TLSConfig, since, c.logger)
 		return err
 	})
 	if err != nil {
@@ -123,13 +126,13 @@ func (c ConfigDBClient) GetAlerts(ctx context.Context, since userconfig.ID) (*Co
 	var response *ConfigsResponse
 	err := instrument.CollectedRequest(ctx, "GetAlerts", configsRequestDuration, instrument.ErrorCode, func(ctx context.Context) error {
 		var err error
-		response, err = doRequest(endpoint, c.Timeout, c.TLSConfig, since)
+		response, err = doRequest(endpoint, c.Timeout, c.TLSConfig, since, c.logger)
 		return err
 	})
 	return response, err
 }
 
-func doRequest(endpoint string, timeout time.Duration, tlsConfig *tls.Config, since userconfig.ID) (*ConfigsResponse, error) {
+func doRequest(endpoint string, timeout time.Duration, tlsConfig *tls.Config, since userconfig.ID, logger log.Logger) (*ConfigsResponse, error) {
 	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err

@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 )
 
@@ -24,6 +25,7 @@ const arnPrefix = "arn:"
 type mockDynamoDBClient struct {
 	dynamodbiface.DynamoDBAPI
 
+	logger         log.Logger
 	mtx            sync.RWMutex
 	unprocessed    int
 	provisionedErr int
@@ -39,8 +41,9 @@ type mockDynamoDBTable struct {
 
 type mockDynamoDBItem map[string]*dynamodb.AttributeValue
 
-func newMockDynamoDB(unprocessed int, provisionedErr int) *mockDynamoDBClient {
+func newMockDynamoDB(unprocessed int, provisionedErr int, logger log.Logger) *mockDynamoDBClient {
 	return &mockDynamoDBClient{
+		logger:         logger,
 		tables:         map[string]*mockDynamoDBTable{},
 		unprocessed:    unprocessed,
 		provisionedErr: provisionedErr,
@@ -232,7 +235,7 @@ func (m *mockDynamoDBClient) QueryPagesWithContext(ctx aws.Context, input *dynam
 						continue
 					}
 				} else {
-					level.Warn(logger).Log("msg", "unsupported FilterExpression", "expression", *input.FilterExpression)
+					level.Warn(m.logger).Log("msg", "unsupported FilterExpression", "expression", *input.FilterExpression)
 				}
 			}
 		}

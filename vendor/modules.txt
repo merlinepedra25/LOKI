@@ -30,7 +30,7 @@ github.com/Azure/azure-pipeline-go/pipeline
 github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute
 github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-10-01/network
 github.com/Azure/azure-sdk-for-go/version
-# github.com/Azure/azure-storage-blob-go v0.14.0
+# github.com/Azure/azure-storage-blob-go v0.8.0
 ## explicit
 github.com/Azure/azure-storage-blob-go/azblob
 # github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78
@@ -566,7 +566,7 @@ github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/grafana/dskit v0.0.0-20210907132129-cf1623b7c17e
+# github.com/grafana/dskit v0.0.0-20210907150518-9c91c3838270
 ## explicit
 github.com/grafana/dskit/backoff
 github.com/grafana/dskit/chunk

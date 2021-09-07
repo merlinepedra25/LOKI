@@ -31,7 +31,7 @@ type dynamodbIndexReader struct {
 
 // NewDynamoDBIndexReader returns an object that can scan an entire index table
 func NewDynamoDBIndexReader(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, reg prometheus.Registerer, l gklog.Logger, rowsRead prometheus.Counter) (chunk.IndexReader, error) {
-	client, err := newDynamoDBStorageClient(cfg, schemaCfg, reg)
+	client, err := newDynamoDBStorageClient(cfg, schemaCfg, reg, l)
 	if err != nil {
 		return nil, err
 	}
@@ -48,6 +48,7 @@ func NewDynamoDBIndexReader(cfg DynamoDBConfig, schemaCfg chunk.SchemaConfig, re
 func (r *dynamodbIndexReader) IndexTableNames(ctx context.Context) ([]string, error) {
 	// fake up a table client - if we call NewDynamoDBTableClient() it will double-register metrics
 	tableClient := dynamoTableClient{
+		logger:   r.log,
 		DynamoDB: r.DynamoDB,
 		metrics:  r.metrics,
 	}

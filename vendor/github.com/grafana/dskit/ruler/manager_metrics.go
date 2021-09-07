@@ -1,6 +1,7 @@
 package ruler
 
 import (
+	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/grafana/dskit/userreg"
@@ -27,7 +28,7 @@ type ManagerMetrics struct {
 // NewManagerMetrics returns a ManagerMetrics struct
 func NewManagerMetrics() *ManagerMetrics {
 	return &ManagerMetrics{
-		regs: userreg.NewUserRegistries(),
+		regs: userreg.NewUserRegistries(log.NewNopLogger()),
 
 		EvalDuration: prometheus.NewDesc(
 			"cortex_prometheus_rule_evaluation_duration_seconds",

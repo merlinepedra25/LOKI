@@ -8,11 +8,12 @@ import (
 	"io"
 	"io/ioutil"
 
+	"github.com/go-kit/kit/log"
 	"github.com/ncw/swift"
 
 	"github.com/grafana/dskit/chunk"
 	"github.com/grafana/dskit/dslog"
-	cortex_swift "github.com/grafana/dskit/storage/bucket/swift"
+	dsswift "github.com/grafana/dskit/storage/bucket/swift"
 )
 
 type SwiftObjectClient struct {
@@ -22,7 +23,7 @@ type SwiftObjectClient struct {
 
 // SwiftConfig is config for the Swift Chunk Client.
 type SwiftConfig struct {
-	cortex_swift.Config `yaml:",inline"`
+	dsswift.Config `yaml:",inline"`
 }
 
 // RegisterFlags registers flags.
@@ -41,7 +42,7 @@ func (cfg *SwiftConfig) RegisterFlagsWithPrefix(prefix string, f *flag.FlagSet) 
 }
 
 // NewSwiftObjectClient makes a new chunk.Client that writes chunks to OpenStack Swift.
-func NewSwiftObjectClient(cfg SwiftConfig) (*SwiftObjectClient, error) {
+func NewSwiftObjectClient(cfg SwiftConfig, logger log.Logger) (*SwiftObjectClient, error) {
 	dslog.WarnExperimentalUse("OpenStack Swift Storage", logger)
 
 	// Create a connection

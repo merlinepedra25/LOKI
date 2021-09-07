@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/pubsub v1.3.1
 	cloud.google.com/go/storage v1.16.0
 	github.com/Azure/azure-pipeline-go v0.2.3
-	github.com/Azure/azure-storage-blob-go v0.14.0
+	github.com/Azure/azure-storage-blob-go v0.8.0
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/NYTimes/gziphandler v1.1.1
 	github.com/Workiva/go-datastructures v1.0.53
@@ -45,7 +45,7 @@ require (
 	github.com/google/go-cmp v0.5.6
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
-	github.com/grafana/dskit v0.0.0-20210907132129-cf1623b7c17e
+	github.com/grafana/dskit v0.0.0-20210907150518-9c91c3838270
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.1-0.20191002090509-6af20e3a5340 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645

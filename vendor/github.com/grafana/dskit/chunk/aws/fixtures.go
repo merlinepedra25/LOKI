@@ -5,6 +5,7 @@ import (
 	"io"
 	"time"
 
+	"github.com/go-kit/log"
 	"github.com/grafana/dskit/backoff"
 	"golang.org/x/time/rate"
 
@@ -32,8 +33,9 @@ var Fixtures = []testutils.Fixture{
 		name: "S3 chunks",
 		clients: func() (chunk.IndexClient, chunk.Client, chunk.TableClient, chunk.SchemaConfig, io.Closer, error) {
 			schemaConfig := testutils.DefaultSchemaConfig("s3")
-			dynamoDB := newMockDynamoDB(0, 0)
+			dynamoDB := newMockDynamoDB(0, 0, log.NewNopLogger())
 			table := &dynamoTableClient{
+				logger:   log.NewNopLogger(),
 				DynamoDB: dynamoDB,
 				metrics:  newMetrics(nil),
 			}
@@ -63,9 +65,10 @@ func dynamoDBFixture(provisionedErr, gangsize, maxParallelism int) testutils.Fix
 		name: fmt.Sprintf("DynamoDB chunks provisionedErr=%d, ChunkGangSize=%d, ChunkGetMaxParallelism=%d",
 			provisionedErr, gangsize, maxParallelism),
 		clients: func() (chunk.IndexClient, chunk.Client, chunk.TableClient, chunk.SchemaConfig, io.Closer, error) {
-			dynamoDB := newMockDynamoDB(0, provisionedErr)
+			dynamoDB := newMockDynamoDB(0, provisionedErr, log.NewNopLogger())
 			schemaCfg := testutils.DefaultSchemaConfig("aws")
 			table := &dynamoTableClient{
+				logger:   log.NewNopLogger(),
 				DynamoDB: dynamoDB,
 				metrics:  newMetrics(nil),
 			}

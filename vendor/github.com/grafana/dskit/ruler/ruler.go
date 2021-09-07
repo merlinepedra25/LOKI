@@ -294,7 +294,7 @@ func NewRuler(cfg Config, manager MultiTenantManager, reg prometheus.Registerer,
 			return nil, errors.Wrap(err, "create KV store client")
 		}
 
-		if err = enableSharding(ruler, ringStore); err != nil {
+		if err = enableSharding(ruler, ringStore, logger); err != nil {
 			return nil, errors.Wrap(err, "setup ruler sharding ring")
 		}
 
@@ -307,8 +307,8 @@ func NewRuler(cfg Config, manager MultiTenantManager, reg prometheus.Registerer,
 	return ruler, nil
 }
 
-func enableSharding(r *Ruler, ringStore kv.Client) error {
-	lifecyclerCfg, err := r.cfg.Ring.ToLifecyclerConfig()
+func enableSharding(r *Ruler, ringStore kv.Client, logger log.Logger) error {
+	lifecyclerCfg, err := r.cfg.Ring.ToLifecyclerConfig(r.logger)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize ruler's lifecycler config")
 	}
@@ -325,7 +325,7 @@ func enableSharding(r *Ruler, ringStore kv.Client) error {
 		return errors.Wrap(err, "failed to initialize ruler's lifecycler")
 	}
 
-	r.ring, err = ring.NewWithStoreClientAndStrategy(r.cfg.Ring.ToRingConfig(), rulerRingName, ring.RulerRingKey, ringStore, ring.NewIgnoreUnhealthyInstancesReplicationStrategy())
+	r.ring, err = ring.NewWithStoreClientAndStrategy(r.cfg.Ring.ToRingConfig(), rulerRingName, ring.RulerRingKey, ringStore, ring.NewIgnoreUnhealthyInstancesReplicationStrategy(), logger)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize ruler's ring")
 	}
