@@ -12,13 +12,12 @@ import (
 
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"github.com/Azure/azure-storage-blob-go/azblob"
-
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/dskit/flagext"
+	"github.com/grafana/dskit/stringutil"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
 	chunk_util "github.com/grafana/loki/pkg/storage/chunk/util"
+	"github.com/grafana/loki/pkg/util/log"
 )
 
 const (
@@ -252,7 +251,7 @@ func (b *BlobStorage) DeleteObject(ctx context.Context, blobID string) error {
 
 // Validate the config.
 func (c *BlobStorageConfig) Validate() error {
-	if !util.StringsContain(supportedEnvironments, c.Environment) {
+	if !stringutil.StringsContain(supportedEnvironments, c.Environment) {
 		return fmt.Errorf("unsupported Azure blob storage environment: %s, please select one of: %s ", c.Environment, strings.Join(supportedEnvironments, ", "))
 	}
 	return nil

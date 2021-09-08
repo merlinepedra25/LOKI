@@ -11,7 +11,7 @@ import (
 	"github.com/ncw/swift"
 	"github.com/pkg/errors"
 
-	cortex_swift "github.com/cortexproject/cortex/pkg/storage/bucket/swift"
+	cortex_swift "github.com/grafana/dskit/storage/bucket/swift"
 	"github.com/grafana/loki/pkg/util/log"
 
 	"github.com/grafana/loki/pkg/storage/chunk"

@@ -11,7 +11,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/cortexproject/cortex/pkg/prom1/storage/metric"
+	"github.com/grafana/dskit/prom1/storage/metric"
 	"github.com/golang/snappy"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/pkg/errors"

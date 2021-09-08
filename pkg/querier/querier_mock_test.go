@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util/grpcclient"
 	"github.com/grafana/dskit/distributor"
+	"github.com/grafana/dskit/grpcclient"
 	"github.com/grafana/dskit/ring"
 	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/prometheus/client_golang/prometheus"

@@ -9,9 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/grafana/dskit/querier/queryrange"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/querier/queryrange"
 	promql_parser "github.com/prometheus/prometheus/promql/parser"
 	"github.com/weaveworks/common/middleware"
 
@@ -80,7 +79,10 @@ func statsHTTPMiddleware(recorder metricRecorder) middleware.Interface {
 func StatsCollectorMiddleware() queryrange.Middleware {
 	return queryrange.MiddlewareFunc(func(next queryrange.Handler) queryrange.Handler {
 		return queryrange.HandlerFunc(func(ctx context.Context, req queryrange.Request) (queryrange.Response, error) {
+			/* TODO
 			logger := spanlogger.FromContext(ctx)
+			*/
+			logger := util_log.Logger
 			start := time.Now()
 
 			// execute the request

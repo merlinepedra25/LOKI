@@ -6,10 +6,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/grafana/dskit/promext"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
-
-	"github.com/cortexproject/cortex/pkg/util"
 )
 
 // BenchmarkLabels is a real example from Kubernetes' embedded cAdvisor metrics, lightly obfuscated
@@ -67,7 +66,7 @@ func ChunksToMatrix(ctx context.Context, chunks []Chunk, from, through model.Tim
 			return nil, err
 		}
 
-		metrics[c.Fingerprint] = util.LabelsToMetric(c.Metric)
+		metrics[c.Fingerprint] = promext.LabelsToMetric(c.Metric)
 		samplesBySeries[c.Fingerprint] = append(samplesBySeries[c.Fingerprint], ss)
 	}
 
@@ -75,7 +74,7 @@ func ChunksToMatrix(ctx context.Context, chunks []Chunk, from, through model.Tim
 	for fp, ss := range samplesBySeries {
 		matrix = append(matrix, &model.SampleStream{
 			Metric: metrics[fp],
-			Values: util.MergeNSampleSets(ss...),
+			Values: promext.MergeNSampleSets(ss...),
 		})
 	}
 

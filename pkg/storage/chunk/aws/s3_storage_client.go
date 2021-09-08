@@ -28,7 +28,7 @@ import (
 	awscommon "github.com/weaveworks/common/aws"
 	"github.com/weaveworks/common/instrument"
 
-	cortex_s3 "github.com/cortexproject/cortex/pkg/storage/bucket/s3"
+	cortex_s3 "github.com/grafana/dskit/storage/bucket/s3"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/grafana/dskit/flagext"
 

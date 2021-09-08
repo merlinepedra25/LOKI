@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 
@@ -37,7 +36,10 @@ func NewAsyncStore(store chunk.Store, querier IngesterQuerier, queryIngestersWit
 }
 
 func (a *AsyncStore) GetChunkRefs(ctx context.Context, userID string, from, through model.Time, matchers ...*labels.Matcher) ([][]chunk.Chunk, []*chunk.Fetcher, error) {
+	/* TODO
 	spanLogger := spanlogger.FromContext(ctx)
+	*/
+	spanLogger := util_log.Logger
 
 	errs := make(chan error)
 

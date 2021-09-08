@@ -8,7 +8,7 @@ import (
 
 	util_log "github.com/grafana/loki/pkg/util/log"
 
-	"github.com/cortexproject/cortex/pkg/ingester/client"
+	"github.com/grafana/dskit/ingester/client"
 	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/prometheus/common/model"

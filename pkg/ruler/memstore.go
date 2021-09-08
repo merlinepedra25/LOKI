@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/grafana/dskit/querier/series"
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/querier/series"
+	"github.com/grafana/dskit/timeutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/common/model"
@@ -166,7 +166,7 @@ func (m *MemStore) run() {
 func (m *MemStore) Querier(ctx context.Context, mint, maxt int64) (storage.Querier, error) {
 	<-m.initiated
 	return &memStoreQuerier{
-		ts:       util.TimeFromMillis(maxt),
+		ts:       timeutil.TimeFromMillis(maxt),
 		MemStore: m,
 		ctx:      ctx,
 	}, nil
@@ -240,7 +240,7 @@ func (m *memStoreQuerier) Select(sortSeries bool, params *storage.SelectHints, m
 		return series.NewConcreteSeriesSet(
 			[]storage.Series{
 				series.NewConcreteSeries(smpl.Metric, []model.SamplePair{
-					{Timestamp: model.Time(util.TimeToMillis(m.ts)), Value: model.SampleValue(smpl.V)},
+					{Timestamp: model.Time(timeutil.TimeToMillis(m.ts)), Value: model.SampleValue(smpl.V)},
 				}),
 			},
 		)
@@ -262,7 +262,7 @@ func (m *memStoreQuerier) Select(sortSeries bool, params *storage.SelectHints, m
 	forStateVec := make(promql.Vector, 0, len(vec))
 	for _, smpl := range vec {
 
-		ts := util.TimeToMillis(m.ts)
+		ts := timeutil.TimeToMillis(m.ts)
 
 		forStateVec = append(forStateVec, promql.Sample{
 			Metric: ForStateMetric(smpl.Metric, rule.Name()),
@@ -287,7 +287,7 @@ func (m *memStoreQuerier) Select(sortSeries bool, params *storage.SelectHints, m
 	return series.NewConcreteSeriesSet(
 		[]storage.Series{
 			series.NewConcreteSeries(smpl.Metric, []model.SamplePair{
-				{Timestamp: model.Time(util.TimeToMillis(m.ts)), Value: model.SampleValue(smpl.V)},
+				{Timestamp: model.Time(timeutil.TimeToMillis(m.ts)), Value: model.SampleValue(smpl.V)},
 			}),
 		},
 	)

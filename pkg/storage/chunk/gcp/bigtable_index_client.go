@@ -15,7 +15,7 @@ import (
 	ot "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 
-	"github.com/cortexproject/cortex/pkg/util/grpcclient"
+	"github.com/grafana/dskit/grpcclient"
 	"github.com/grafana/dskit/math"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 

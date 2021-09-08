@@ -314,7 +314,6 @@ github.com/cortexproject/cortex/pkg/util/net
 github.com/cortexproject/cortex/pkg/util/process
 github.com/cortexproject/cortex/pkg/util/push
 github.com/cortexproject/cortex/pkg/util/spanlogger
-github.com/cortexproject/cortex/pkg/util/test
 github.com/cortexproject/cortex/pkg/util/tls
 github.com/cortexproject/cortex/pkg/util/validation
 github.com/cortexproject/cortex/tools/querytee
@@ -566,7 +565,7 @@ github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/grafana/dskit v0.0.0-20210908080627-bc85e9b5399c
+# github.com/grafana/dskit v0.0.0-20210908091514-05ecb9380747
 ## explicit
 github.com/grafana/dskit/backoff
 github.com/grafana/dskit/chunk
@@ -591,7 +590,10 @@ github.com/grafana/dskit/dskitpb
 github.com/grafana/dskit/dslog
 github.com/grafana/dskit/extract
 github.com/grafana/dskit/flagext
+github.com/grafana/dskit/frontend/transport
+github.com/grafana/dskit/frontend/v1
 github.com/grafana/dskit/frontend/v1/frontendv1pb
+github.com/grafana/dskit/frontend/v2
 github.com/grafana/dskit/frontend/v2/frontendv2pb
 github.com/grafana/dskit/grpcclient
 github.com/grafana/dskit/grpcencoding/snappy
@@ -629,6 +631,7 @@ github.com/grafana/dskit/ruler/rulestore/configdb
 github.com/grafana/dskit/ruler/rulestore/local
 github.com/grafana/dskit/ruler/rulestore/objectclient
 github.com/grafana/dskit/runtimeconfig
+github.com/grafana/dskit/scheduler/queue
 github.com/grafana/dskit/scheduler/schedulerpb
 github.com/grafana/dskit/services
 github.com/grafana/dskit/sharding
@@ -641,6 +644,7 @@ github.com/grafana/dskit/storage/bucket/swift
 github.com/grafana/dskit/storage/tsdb
 github.com/grafana/dskit/stringutil
 github.com/grafana/dskit/tenant
+github.com/grafana/dskit/testutil
 github.com/grafana/dskit/timeutil
 github.com/grafana/dskit/userreg
 github.com/grafana/dskit/validation

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util/validation"
+	"github.com/grafana/dskit/validation"
 	"github.com/go-kit/kit/log"
 	"github.com/grafana/dskit/flagext"
 	"github.com/prometheus/common/model"

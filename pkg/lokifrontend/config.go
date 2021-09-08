@@ -3,9 +3,9 @@ package lokifrontend
 import (
 	"flag"
 
-	"github.com/cortexproject/cortex/pkg/frontend/transport"
-	v1 "github.com/cortexproject/cortex/pkg/frontend/v1"
-	v2 "github.com/cortexproject/cortex/pkg/frontend/v2"
+	"github.com/grafana/dskit/frontend/transport"
+	v1 "github.com/grafana/dskit/frontend/v1"
+	v2 "github.com/grafana/dskit/frontend/v2"
 )
 
 type Config struct {

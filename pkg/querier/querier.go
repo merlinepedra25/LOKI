@@ -10,10 +10,9 @@ import (
 	"github.com/weaveworks/common/httpgrpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
-	cortex_validation "github.com/cortexproject/cortex/pkg/util/validation"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/tenant"
+	dsvalidation "github.com/grafana/dskit/validation"
 
 	"github.com/grafana/loki/pkg/iter"
 	"github.com/grafana/loki/pkg/loghttp"
@@ -21,6 +20,7 @@ import (
 	"github.com/grafana/loki/pkg/logql"
 	"github.com/grafana/loki/pkg/storage"
 	listutil "github.com/grafana/loki/pkg/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/loki/pkg/validation"
 )
 
@@ -107,9 +107,13 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 		}
 		newParams.Start = ingesterQueryInterval.start
 		newParams.End = ingesterQueryInterval.end
-		level.Debug(spanlogger.FromContext(ctx)).Log(
+		/* TODO
+		logger := spanlogger.FromContext(ctx)).Log(
 			"msg", "querying ingester",
-			"params", newParams)
+			"params", newParams
+		*/
+		logger := util_log.Logger
+		level.Debug(logger)
 		ingesterIters, err := q.ingesterQuerier.SelectLogs(ctx, newParams)
 		if err != nil {
 			return nil, err
@@ -121,7 +125,10 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 	if storeQueryInterval != nil {
 		params.Start = storeQueryInterval.start
 		params.End = storeQueryInterval.end
-		level.Debug(spanlogger.FromContext(ctx)).Log(
+		/* TODO
+		logger := spanlogger.FromContext(ctx)
+		*/
+		level.Debug(logger).Log(
 			"msg", "querying store",
 			"params", params)
 		storeIter, err := q.store.SelectLogs(ctx, params)
@@ -516,14 +523,18 @@ func validateQueryTimeRangeLimits(ctx context.Context, userID string, limits tim
 		origStartTime := from
 		from = now.Add(-maxQueryLookback)
 
-		level.Debug(spanlogger.FromContext(ctx)).Log(
+		/* TODO
+		spanLogger := spanlogger.FromContext(ctx)
+		*/
+		spanLogger := util_log.Logger
+		level.Debug(spanLogger).Log(
 			"msg", "the start time of the query has been manipulated because of the 'max query lookback' setting",
 			"original", origStartTime,
 			"updated", from)
 
 	}
 	if maxQueryLength := limits.MaxQueryLength(userID); maxQueryLength > 0 && (through).Sub(from) > maxQueryLength {
-		return time.Time{}, time.Time{}, httpgrpc.Errorf(http.StatusBadRequest, cortex_validation.ErrQueryTooLong, (through).Sub(from), maxQueryLength)
+		return time.Time{}, time.Time{}, httpgrpc.Errorf(http.StatusBadRequest, dsvalidation.ErrQueryTooLong, (through).Sub(from), maxQueryLength)
 	}
 	if through.Before(from) {
 		return time.Time{}, time.Time{}, httpgrpc.Errorf(http.StatusBadRequest, "invalid query, through < from (%s < %s)", through, from)

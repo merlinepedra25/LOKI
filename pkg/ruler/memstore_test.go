@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log"
+	"github.com/grafana/dskit/timeutil"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/promql"
 	"github.com/prometheus/prometheus/promql/parser"
@@ -63,7 +63,7 @@ func TestSelectRestores(t *testing.T) {
 					"bazz":            "buzz", // an extra label
 				}),
 				Point: promql.Point{
-					T: util.TimeToMillis(t),
+					T: timeutil.TimeToMillis(t),
 					V: 1,
 				},
 			},
@@ -74,7 +74,7 @@ func TestSelectRestores(t *testing.T) {
 					"bazz":            "bork", // an extra label (second variant)
 				}),
 				Point: promql.Point{
-					T: util.TimeToMillis(t),
+					T: timeutil.TimeToMillis(t),
 					V: 1,
 				},
 			},
@@ -84,7 +84,7 @@ func TestSelectRestores(t *testing.T) {
 	store := testStore(fn)
 	store.Start(MockRuleIter(ars))
 
-	now := util.TimeToMillis(time.Now())
+	now := timeutil.TimeToMillis(time.Now())
 
 	q, err := store.Querier(context.Background(), 0, now)
 	require.Nil(t, err)

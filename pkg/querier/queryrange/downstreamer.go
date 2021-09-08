@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/grafana/dskit/querier/queryrange"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/querier/queryrange"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/promql"
 	"github.com/prometheus/prometheus/promql/parser"
@@ -71,8 +70,11 @@ type instance struct {
 func (in instance) Downstream(ctx context.Context, queries []logql.DownstreamQuery) ([]logqlmodel.Result, error) {
 	return in.For(ctx, queries, func(qry logql.DownstreamQuery) (logqlmodel.Result, error) {
 		req := ParamsToLokiRequest(qry.Params, qry.Shards).WithQuery(qry.Expr.String())
+		/* TODO
 		logger, ctx := spanlogger.New(ctx, "DownstreamHandler.instance")
 		defer logger.Finish()
+		*/
+		logger := util_log.Logger
 		level.Debug(logger).Log("shards", fmt.Sprintf("%+v", qry.Shards), "query", req.GetQuery(), "step", req.GetStep())
 
 		res, err := in.handler.Do(ctx, req)

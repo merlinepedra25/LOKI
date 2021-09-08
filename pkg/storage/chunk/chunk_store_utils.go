@@ -4,15 +4,14 @@ import (
 	"context"
 	"sync"
 
+	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/promql"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
-
 	"github.com/grafana/loki/pkg/storage/chunk/cache"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 const chunkDecodeParallelism = 16
@@ -142,15 +141,18 @@ func (c *Fetcher) worker() {
 // FetchChunks fetches a set of chunks from cache and store. Note that the keys passed in must be
 // lexicographically sorted, while the returned chunks are not in the same order as the passed in chunks.
 func (c *Fetcher) FetchChunks(ctx context.Context, chunks []Chunk, keys []string) ([]Chunk, error) {
-	log, ctx := spanlogger.New(ctx, "ChunkStore.FetchChunks")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "ChunkStore.FetchChunks")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	// Now fetch the actual chunk data from Memcache / S3
 	cacheHits, cacheBufs, _ := c.cache.Fetch(ctx, keys)
 
 	fromCache, missing, err := c.processCacheResponse(ctx, chunks, cacheHits, cacheBufs)
 	if err != nil {
-		level.Warn(log).Log("msg", "error fetching from cache", "err", err)
+		level.Warn(spanLogger).Log("msg", "error fetching from cache", "err", err)
 	}
 
 	var fromStorage []Chunk
@@ -160,7 +162,7 @@ func (c *Fetcher) FetchChunks(ctx context.Context, chunks []Chunk, keys []string
 
 	// Always cache any chunks we did get
 	if cacheErr := c.writeBackCache(ctx, fromStorage); cacheErr != nil {
-		level.Warn(log).Log("msg", "could not store chunks in chunk cache", "err", cacheErr)
+		level.Warn(spanLogger).Log("msg", "could not store chunks in chunk cache", "err", cacheErr)
 	}
 
 	if err != nil {

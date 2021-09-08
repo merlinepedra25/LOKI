@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/grafana/dskit/querier/astmapper"
-	"github.com/grafana/dskit/querier/queryrange"
-	"github.com/grafana/dskit/tenant"
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/querier/astmapper"
+	"github.com/grafana/dskit/querier/queryrange"
+	"github.com/grafana/dskit/tenant"
+	"github.com/grafana/dskit/timeutil"
 	"github.com/pkg/errors"
 	"github.com/prometheus/prometheus/promql/parser"
 	"github.com/weaveworks/common/httpgrpc"
@@ -204,7 +204,7 @@ func (splitter *shardSplitter) Do(ctx context.Context, r queryrange.Request) (qu
 	}
 	cutoff := splitter.now().Add(-minShardingLookback)
 	// Only attempt to shard queries which are older than the sharding lookback (the period for which ingesters are also queried).
-	if !cutoff.After(util.TimeFromMillis(r.GetEnd())) {
+	if !cutoff.After(timeutil.TimeFromMillis(r.GetEnd())) {
 		return splitter.next.Do(ctx, r)
 	}
 	return splitter.shardingware.Do(ctx, r)

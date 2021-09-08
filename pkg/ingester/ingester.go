@@ -9,12 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/grafana/dskit/tenant"
 	"github.com/cortexproject/cortex/pkg/util"
-	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/ring"
 	"github.com/grafana/dskit/services"
+	"github.com/grafana/dskit/tenant"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -35,6 +34,7 @@ import (
 	"github.com/grafana/loki/pkg/storage/stores/shipper"
 	errUtil "github.com/grafana/loki/pkg/util"
 	listutil "github.com/grafana/loki/pkg/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/loki/pkg/validation"
 )
 

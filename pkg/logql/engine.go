@@ -8,9 +8,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/grafana/dskit/tenant"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/tenant"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -22,6 +21,7 @@ import (
 	"github.com/grafana/loki/pkg/logqlmodel"
 	"github.com/grafana/loki/pkg/logqlmodel/stats"
 	"github.com/grafana/loki/pkg/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 var (
@@ -105,8 +105,11 @@ type query struct {
 
 // Exec Implements `Query`. It handles instrumentation & defers to Eval.
 func (q *query) Exec(ctx context.Context) (logqlmodel.Result, error) {
-	log, ctx := spanlogger.New(ctx, "query.Exec")
-	defer log.Finish()
+	/* TODO
+	logger, ctx := spanlogger.New(ctx, "query.Exec")
+	defer logger.Finish()
+	*/
+	logger := util_log.Logger
 
 	rangeType := GetRangeType(q.params)
 	timer := prometheus.NewTimer(queryTime.WithLabelValues(string(rangeType)))
@@ -120,7 +123,7 @@ func (q *query) Exec(ctx context.Context) (logqlmodel.Result, error) {
 	data, err := q.Eval(ctx)
 
 	statResult = stats.Snapshot(ctx, time.Since(start))
-	statResult.Log(level.Debug(log))
+	statResult.Log(level.Debug(logger))
 
 	status := "200"
 	if err != nil {

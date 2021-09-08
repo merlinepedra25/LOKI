@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-kit/kit/log"
 	"github.com/grafana/dskit/dskitpb"
 	"github.com/grafana/dskit/querier/queryrange"
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/go-kit/kit/log"
+	"github.com/grafana/dskit/timeutil"
 	"github.com/stretchr/testify/require"
 	"github.com/weaveworks/common/user"
 
@@ -76,8 +76,8 @@ var (
 
 func Test_shardSplitter(t *testing.T) {
 	req := defaultReq().WithStartEnd(
-		util.TimeToMillis(start),
-		util.TimeToMillis(end),
+		timeutil.TimeToMillis(start),
+		timeutil.TimeToMillis(end),
 	)
 
 	for _, tc := range []struct {
@@ -276,7 +276,7 @@ func Test_InstantSharding(t *testing.T) {
 		}}, nil
 	})).Do(ctx, &LokiInstantRequest{
 		Query:  `rate({app="foo"}[1m])`,
-		TimeTs: util.TimeFromMillis(10),
+		TimeTs: timeutil.TimeFromMillis(10),
 		Path:   "/v1/query",
 	})
 	require.NoError(t, err)

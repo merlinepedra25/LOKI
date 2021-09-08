@@ -5,10 +5,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/grafana/dskit/querier/astmapper"
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -23,6 +21,7 @@ import (
 	"github.com/grafana/loki/pkg/logql/log"
 	"github.com/grafana/loki/pkg/logqlmodel/stats"
 	"github.com/grafana/loki/pkg/storage/chunk"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 type ChunkMetrics struct {
@@ -648,8 +647,9 @@ outer:
 }
 
 func fetchLazyChunks(ctx context.Context, chunks []*LazyChunk) error {
-	log, ctx := spanlogger.New(ctx, "LokiStore.fetchLazyChunks")
-	defer log.Finish()
+	// TODO
+	// log, ctx := spanlogger.New(ctx, "LokiStore.fetchLazyChunks")
+	// defer log.Finish()
 	start := time.Now()
 	storeStats := stats.GetStoreData(ctx)
 	var totalChunks int64
@@ -668,7 +668,7 @@ func fetchLazyChunks(ctx context.Context, chunks []*LazyChunk) error {
 	if len(chksByFetcher) == 0 {
 		return nil
 	}
-	level.Debug(log).Log("msg", "loading lazy chunks", "chunks", totalChunks)
+	// level.Debug(log).Log("msg", "loading lazy chunks", "chunks", totalChunks)
 
 	errChan := make(chan error)
 	for fetcher, chunks := range chksByFetcher {

@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/ingester/client"
-	"github.com/cortexproject/cortex/pkg/util/validation"
+	"github.com/grafana/dskit/ingester/client"
+	"github.com/grafana/dskit/validation"
 	"github.com/grafana/dskit/flagext"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"

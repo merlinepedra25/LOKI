@@ -5,8 +5,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util/grpcclient"
-	cortex_middleware "github.com/cortexproject/cortex/pkg/util/middleware"
+	"github.com/grafana/dskit/grpcclient"
+	cortex_middleware "github.com/grafana/dskit/middleware"
 	"github.com/grafana/dskit/distributor"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	"github.com/opentracing/opentracing-go"

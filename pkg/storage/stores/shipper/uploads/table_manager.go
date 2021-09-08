@@ -11,8 +11,6 @@ import (
 	"sync"
 	"time"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -20,6 +18,7 @@ import (
 	"github.com/grafana/loki/pkg/storage/chunk/local"
 	chunk_util "github.com/grafana/loki/pkg/storage/chunk/util"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 type Config struct {
@@ -108,8 +107,10 @@ func (tm *TableManager) query(ctx context.Context, tableName string, queries []c
 	tm.tablesMtx.RLock()
 	defer tm.tablesMtx.RUnlock()
 
-	log, ctx := spanlogger.New(ctx, "Shipper.Uploads.Query")
-	defer log.Span.Finish()
+	/*
+		log, ctx := spanlogger.New(ctx, "Shipper.Uploads.Query")
+		defer log.Span.Finish()
+	*/
 
 	table, ok := tm.tables[tableName]
 	if !ok {

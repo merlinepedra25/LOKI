@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/chunk/cache"
+	"github.com/grafana/dskit/chunk/cache"
 	"github.com/grafana/dskit/querier/queryrange"
 	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/prometheus/prometheus/pkg/labels"

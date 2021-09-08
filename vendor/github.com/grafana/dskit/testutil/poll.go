@@ -1,4 +1,4 @@
-package test
+package testutil
 
 import (
 	"reflect"
@@ -9,6 +9,7 @@ import (
 // Poll repeatedly evaluates condition until we either timeout, or it succeeds.
 func Poll(t testing.TB, d time.Duration, want interface{}, have func() interface{}) {
 	t.Helper()
+
 	deadline := time.Now().Add(d)
 	for {
 		if time.Now().After(deadline) {

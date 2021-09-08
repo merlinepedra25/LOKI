@@ -7,13 +7,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/grafana/dskit/ingester/client"
+	"github.com/grafana/dskit/promext"
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/stretchr/testify/require"
-
-	"github.com/cortexproject/cortex/pkg/ingester/client"
-	"github.com/cortexproject/cortex/pkg/util"
 
 	"github.com/grafana/loki/pkg/storage/chunk/encoding"
 )
@@ -211,8 +210,8 @@ func TestChunksToMatrix(t *testing.T) {
 	require.NoError(t, err)
 
 	ss1 := &model.SampleStream{
-		Metric: util.LabelsToMetric(chunk1.Metric),
-		Values: util.MergeSampleSets(chunk1Samples, chunk2Samples),
+		Metric: promext.LabelsToMetric(chunk1.Metric),
+		Values: promext.MergeSampleSets(chunk1Samples, chunk2Samples),
 	}
 
 	// Create another chunk with a different metric
@@ -226,7 +225,7 @@ func TestChunksToMatrix(t *testing.T) {
 	require.NoError(t, err)
 
 	ss2 := &model.SampleStream{
-		Metric: util.LabelsToMetric(chunk3.Metric),
+		Metric: promext.LabelsToMetric(chunk3.Metric),
 		Values: chunk3Samples,
 	}
 

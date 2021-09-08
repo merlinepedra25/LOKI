@@ -4,10 +4,6 @@ import (
 	"context"
 	"sync"
 
-	otlog "github.com/opentracing/opentracing-go/log"
-
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
-
 	"github.com/grafana/loki/pkg/storage/chunk"
 )
 
@@ -21,9 +17,11 @@ var decodeContextPool = sync.Pool{
 
 // GetParallelChunks fetches chunks in parallel (up to maxParallel).
 func GetParallelChunks(ctx context.Context, chunks []chunk.Chunk, f func(context.Context, *chunk.DecodeContext, chunk.Chunk) (chunk.Chunk, error)) ([]chunk.Chunk, error) {
+	/* TODO
 	log, ctx := spanlogger.New(ctx, "GetParallelChunks")
 	defer log.Finish()
 	log.LogFields(otlog.Int("chunks requested", len(chunks)))
+	*/
 
 	queuedChunks := make(chan chunk.Chunk)
 
@@ -63,9 +61,9 @@ func GetParallelChunks(ctx context.Context, chunks []chunk.Chunk, f func(context
 		}
 	}
 
-	log.LogFields(otlog.Int("chunks fetched", len(result)))
+	// log.LogFields(otlog.Int("chunks fetched", len(result)))
 	if lastErr != nil {
-		log.Error(lastErr)
+		// log.Error(lastErr)
 	}
 
 	// Return any chunks we did receive: a partial result may be useful

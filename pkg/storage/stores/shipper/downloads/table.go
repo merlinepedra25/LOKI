@@ -11,11 +11,10 @@ import (
 	"sync"
 	"time"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	util_math "github.com/grafana/dskit/math"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	util_math "github.com/grafana/dskit/math"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"go.etcd.io/bbolt"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
@@ -82,8 +81,11 @@ func NewTable(spanCtx context.Context, name, cacheLocation string, storageClient
 		defer table.dbsMtx.Unlock()
 		defer close(table.ready)
 
-		log, _ := spanlogger.New(spanCtx, "Shipper.DownloadTable")
-		defer log.Span.Finish()
+		/*
+			log, _ := spanlogger.New(spanCtx, "Shipper.DownloadTable")
+			defer log.Span.Finish()
+		*/
+		log := util_log.Logger
 
 		ctx, cancel := context.WithTimeout(ctx, downloadTimeout)
 		defer cancel()
@@ -282,10 +284,13 @@ func (t *Table) MultiQueries(ctx context.Context, queries []chunk.IndexQuery, ca
 
 	t.lastUsedAt = time.Now()
 
-	log, ctx := spanlogger.New(ctx, "Shipper.Downloads.Table.MultiQueries")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "Shipper.Downloads.Table.MultiQueries")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
-	level.Debug(log).Log("table-name", t.name, "query-count", len(queries))
+	level.Debug(spanLogger).Log("table-name", t.name, "query-count", len(queries))
 
 	for name, db := range t.dbs {
 		err := db.View(func(tx *bbolt.Tx) error {
@@ -306,7 +311,7 @@ func (t *Table) MultiQueries(ctx context.Context, queries []chunk.IndexQuery, ca
 			return err
 		}
 
-		level.Debug(log).Log("queried-db", name)
+		level.Debug(spanLogger).Log("queried-db", name)
 	}
 
 	return nil

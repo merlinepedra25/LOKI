@@ -10,8 +10,6 @@ import (
 	"sync"
 	"time"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/weaveworks/common/instrument"
@@ -24,6 +22,7 @@ import (
 	"github.com/grafana/loki/pkg/storage/stores/shipper/storage"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/uploads"
 	shipper_util "github.com/grafana/loki/pkg/storage/stores/shipper/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 const (
@@ -222,7 +221,10 @@ func (s *Shipper) BatchWrite(ctx context.Context, batch chunk.WriteBatch) error 
 
 func (s *Shipper) QueryPages(ctx context.Context, queries []chunk.IndexQuery, callback func(chunk.IndexQuery, chunk.ReadBatch) (shouldContinue bool)) error {
 	return instrument.CollectedRequest(ctx, "QUERY", instrument.NewHistogramCollector(s.metrics.requestDurationSeconds), instrument.ErrorCode, func(ctx context.Context) error {
+		/* TODO
 		spanLogger := spanlogger.FromContext(ctx)
+		*/
+		spanLogger := util_log.Logger
 
 		if s.uploadsManager != nil {
 			err := s.uploadsManager.QueryPages(ctx, queries, callback)

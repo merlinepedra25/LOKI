@@ -11,14 +11,13 @@ import (
 	"sync"
 	"time"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
 	chunk_util "github.com/grafana/loki/pkg/storage/chunk/util"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 const (
@@ -142,10 +141,12 @@ func (tm *TableManager) QueryPages(ctx context.Context, queries []chunk.IndexQue
 }
 
 func (tm *TableManager) query(ctx context.Context, tableName string, queries []chunk.IndexQuery, callback chunk_util.Callback) error {
-	log, ctx := spanlogger.New(ctx, "Shipper.Downloads.Query")
-	defer log.Span.Finish()
+	/*
+		log, ctx := spanlogger.New(ctx, "Shipper.Downloads.Query")
+		defer log.Span.Finish()
 
-	level.Debug(log).Log("table-name", tableName)
+		level.Debug(log).Log("table-name", tableName)
+	*/
 
 	table := tm.getOrCreateTable(ctx, tableName)
 

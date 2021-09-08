@@ -9,7 +9,7 @@ import (
 	"time"
 
 	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/pkg/util/test"
+	"github.com/grafana/dskit/testutil"
 	"github.com/grafana/dskit/flagext"
 	"github.com/grafana/dskit/services"
 	"github.com/prometheus/client_golang/prometheus"

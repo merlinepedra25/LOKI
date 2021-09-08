@@ -6,13 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/grafana/dskit/tenant"
 	"github.com/cortexproject/cortex/pkg/util/limiter"
-	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/dskit/distributor"
 	"github.com/grafana/dskit/ring"
 	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/grafana/dskit/services"
+	"github.com/grafana/dskit/tenant"
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
@@ -29,6 +28,7 @@ import (
 	"github.com/grafana/loki/pkg/runtime"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/compactor/retention"
 	"github.com/grafana/loki/pkg/util"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/loki/pkg/validation"
 )
 
