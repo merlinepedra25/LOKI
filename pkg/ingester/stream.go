@@ -8,8 +8,9 @@ import (
 	"sync"
 	"time"
 
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/model"
@@ -358,7 +359,7 @@ func (s *stream) cutChunk(ctx context.Context) *chunkDesc {
 	if err != nil {
 		// This should be an unlikely situation, returning an error up the stack doesn't help much here
 		// so instead log this to help debug the issue if it ever arises.
-		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "failed to Close chunk", "err", err)
+		level.Error(dslog.WithContext(ctx, util_log.Logger)).Log("msg", "failed to Close chunk", "err", err)
 	}
 	chunk.closed = true
 

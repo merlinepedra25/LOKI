@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/grafana/dskit/tenant"
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gorilla/websocket"
+	"github.com/grafana/dskit/dslog"
+	"github.com/grafana/dskit/tenant"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/promql/parser"
 	"github.com/weaveworks/common/httpgrpc"
@@ -199,7 +200,7 @@ func (q *Querier) TailHandler(w http.ResponseWriter, r *http.Request) {
 	upgrader := websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool { return true },
 	}
-	logger := util_log.WithContext(r.Context(), util_log.Logger)
+	logger := dslog.WithContext(r.Context(), util_log.Logger)
 
 	req, err := loghttp.ParseTailQuery(r)
 	if err != nil {

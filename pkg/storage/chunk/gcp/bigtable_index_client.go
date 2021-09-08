@@ -16,7 +16,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/cortexproject/cortex/pkg/util/grpcclient"
-	"github.com/cortexproject/cortex/pkg/util/math"
+	"github.com/grafana/dskit/math"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 
 	"github.com/grafana/loki/pkg/storage/chunk"

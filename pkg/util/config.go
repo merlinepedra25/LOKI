@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/common/version"
 	"gopkg.in/yaml.v2"

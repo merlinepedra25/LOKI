@@ -13,7 +13,7 @@ import (
 
 	"github.com/grafana/dskit/tenant"
 	"github.com/cortexproject/cortex/pkg/util"
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 // DeleteRequestHandler provides handlers for delete requests

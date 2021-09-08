@@ -6,10 +6,11 @@ import (
 	"os"
 	"time"
 
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/backoff"
+	"github.com/grafana/dskit/dslog"
 	"github.com/grafana/dskit/ring"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -37,7 +38,7 @@ var (
 // TransferChunks receives all chunks from another ingester. The Ingester
 // must be in PENDING state or else the call will fail.
 func (i *Ingester) TransferChunks(stream logproto.Ingester_TransferChunksServer) error {
-	logger := util_log.WithContext(stream.Context(), util_log.Logger)
+	logger := dslog.WithContext(stream.Context(), util_log.Logger)
 	// Prevent a shutdown from happening until we've completely finished a handoff
 	// from a leaving ingester.
 	i.shutdownMtx.Lock()
@@ -198,7 +199,7 @@ func (i *Ingester) TransferOut(ctx context.Context) error {
 			return nil
 		}
 
-		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "transfer failed", "err", err)
+		level.Error(dslog.WithContext(ctx, util_log.Logger)).Log("msg", "transfer failed", "err", err)
 		backoff.Wait()
 	}
 
@@ -206,7 +207,7 @@ func (i *Ingester) TransferOut(ctx context.Context) error {
 }
 
 func (i *Ingester) transferOut(ctx context.Context) error {
-	logger := util_log.WithContext(ctx, util_log.Logger)
+	logger := dslog.WithContext(ctx, util_log.Logger)
 	targetIngester, err := i.findTransferTarget(ctx)
 	if err != nil {
 		return fmt.Errorf("cannot find ingester to transfer chunks to: %v", err)

@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/cespare/xxhash/v2"
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/dskit/flagext"
 	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/prometheus/common/model"

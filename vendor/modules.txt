@@ -566,7 +566,7 @@ github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/grafana/dskit v0.0.0-20210907150518-9c91c3838270
+# github.com/grafana/dskit v0.0.0-20210908080627-bc85e9b5399c
 ## explicit
 github.com/grafana/dskit/backoff
 github.com/grafana/dskit/chunk
@@ -577,7 +577,9 @@ github.com/grafana/dskit/chunk/encoding
 github.com/grafana/dskit/chunk/gcp
 github.com/grafana/dskit/chunk/objectclient
 github.com/grafana/dskit/chunk/openstack
+github.com/grafana/dskit/chunk/purger
 github.com/grafana/dskit/chunk/testutils
+github.com/grafana/dskit/cleanupusers
 github.com/grafana/dskit/closer
 github.com/grafana/dskit/concurrency
 github.com/grafana/dskit/configs/client
@@ -589,8 +591,12 @@ github.com/grafana/dskit/dskitpb
 github.com/grafana/dskit/dslog
 github.com/grafana/dskit/extract
 github.com/grafana/dskit/flagext
+github.com/grafana/dskit/frontend/v1/frontendv1pb
+github.com/grafana/dskit/frontend/v2/frontendv2pb
 github.com/grafana/dskit/grpcclient
 github.com/grafana/dskit/grpcencoding/snappy
+github.com/grafana/dskit/grpcutil
+github.com/grafana/dskit/grpcutil/naming
 github.com/grafana/dskit/ingester/client
 github.com/grafana/dskit/kv
 github.com/grafana/dskit/kv/codec
@@ -607,6 +613,12 @@ github.com/grafana/dskit/prom1/storage/metric
 github.com/grafana/dskit/promext
 github.com/grafana/dskit/querier
 github.com/grafana/dskit/querier/astmapper
+github.com/grafana/dskit/querier/chunkstore
+github.com/grafana/dskit/querier/lazyquery
+github.com/grafana/dskit/querier/queryrange
+github.com/grafana/dskit/querier/series
+github.com/grafana/dskit/querier/stats
+github.com/grafana/dskit/querier/worker
 github.com/grafana/dskit/ring
 github.com/grafana/dskit/ring/client
 github.com/grafana/dskit/ruler
@@ -617,6 +629,7 @@ github.com/grafana/dskit/ruler/rulestore/configdb
 github.com/grafana/dskit/ruler/rulestore/local
 github.com/grafana/dskit/ruler/rulestore/objectclient
 github.com/grafana/dskit/runtimeconfig
+github.com/grafana/dskit/scheduler/schedulerpb
 github.com/grafana/dskit/services
 github.com/grafana/dskit/sharding
 github.com/grafana/dskit/storage/bucket
@@ -625,6 +638,7 @@ github.com/grafana/dskit/storage/bucket/filesystem
 github.com/grafana/dskit/storage/bucket/gcs
 github.com/grafana/dskit/storage/bucket/s3
 github.com/grafana/dskit/storage/bucket/swift
+github.com/grafana/dskit/storage/tsdb
 github.com/grafana/dskit/stringutil
 github.com/grafana/dskit/tenant
 github.com/grafana/dskit/timeutil

@@ -6,8 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
+	"github.com/grafana/loki/pkg/util/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -22,7 +23,7 @@ func LogError(message string, f func() error) {
 // LogError logs any error returned by f; useful when deferring Close etc.
 func LogErrorWithContext(ctx context.Context, message string, f func() error) {
 	if err := f(); err != nil {
-		level.Error(log.WithContext(ctx, log.Logger)).Log("message", message, "error", err)
+		level.Error(dslog.WithContext(ctx, log.Logger)).Log("message", message, "error", err)
 	}
 }
 

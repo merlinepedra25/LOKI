@@ -6,8 +6,9 @@ import (
 	"sync"
 	"time"
 
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"golang.org/x/net/context"
 
@@ -101,7 +102,7 @@ func (t *tailer) loop() {
 			if err != nil {
 				// Don't log any error due to tail client closing the connection
 				if !util.IsConnCanceled(err) {
-					level.Error(util_log.WithContext(t.conn.Context(), util_log.Logger)).Log("msg", "Error writing to tail client", "err", err)
+					level.Error(dslog.WithContext(t.conn.Context(), util_log.Logger)).Log("msg", "Error writing to tail client", "err", err)
 				}
 				t.close()
 				return

@@ -7,8 +7,8 @@ import (
 	"io"
 
 	"github.com/cortexproject/cortex/pkg/util/grpcclient"
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
-	util_math "github.com/cortexproject/cortex/pkg/util/math"
+	util_log "github.com/grafana/loki/pkg/util/log"
+	util_math "github.com/grafana/dskit/math"
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
