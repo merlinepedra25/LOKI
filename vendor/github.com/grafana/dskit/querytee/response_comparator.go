@@ -5,15 +5,14 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
-
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 )
 
 // SamplesComparatorFunc helps with comparing different types of samples coming from /api/v1/query and /api/v1/query_range routes.
-type SamplesComparatorFunc func(expected, actual json.RawMessage, tolerance float64) error
+type SamplesComparatorFunc func(expected, actual json.RawMessage, tolerance float64, logger log.Logger) error
 
 type SamplesResponse struct {
 	Status string
@@ -23,8 +22,9 @@ type SamplesResponse struct {
 	}
 }
 
-func NewSamplesComparator(tolerance float64) *SamplesComparator {
+func NewSamplesComparator(tolerance float64, logger log.Logger) *SamplesComparator {
 	return &SamplesComparator{
+		logger:    logger,
 		tolerance: tolerance,
 		sampleTypesComparator: map[string]SamplesComparatorFunc{
 			"matrix": compareMatrix,
@@ -35,6 +35,7 @@ func NewSamplesComparator(tolerance float64) *SamplesComparator {
 }
 
 type SamplesComparator struct {
+	logger                log.Logger
 	tolerance             float64
 	sampleTypesComparator map[string]SamplesComparatorFunc
 }
@@ -70,10 +71,10 @@ func (s *SamplesComparator) Compare(expectedResponse, actualResponse []byte) err
 		return fmt.Errorf("resultType %s not registered for comparison", expected.Data.ResultType)
 	}
 
-	return comparator(expected.Data.Result, actual.Data.Result, s.tolerance)
+	return comparator(expected.Data.Result, actual.Data.Result, s.tolerance, s.logger)
 }
 
-func compareMatrix(expectedRaw, actualRaw json.RawMessage, tolerance float64) error {
+func compareMatrix(expectedRaw, actualRaw json.RawMessage, tolerance float64, logger log.Logger) error {
 	var expected, actual model.Matrix
 
 	err := json.Unmarshal(expectedRaw, &expected)
@@ -109,7 +110,7 @@ func compareMatrix(expectedRaw, actualRaw json.RawMessage, tolerance float64) er
 			err := fmt.Errorf("expected %d samples for metric %s but got %d", expectedMetricLen,
 				expectedMetric.Metric, actualMetricLen)
 			if expectedMetricLen > 0 && actualMetricLen > 0 {
-				level.Error(util_log.Logger).Log("msg", err.Error(), "oldest-expected-ts", expectedMetric.Values[0].Timestamp,
+				level.Error(logger).Log("msg", err.Error(), "oldest-expected-ts", expectedMetric.Values[0].Timestamp,
 					"newest-expected-ts", expectedMetric.Values[expectedMetricLen-1].Timestamp,
 					"oldest-actual-ts", actualMetric.Values[0].Timestamp, "newest-actual-ts", actualMetric.Values[actualMetricLen-1].Timestamp)
 			}
@@ -128,7 +129,7 @@ func compareMatrix(expectedRaw, actualRaw json.RawMessage, tolerance float64) er
 	return nil
 }
 
-func compareVector(expectedRaw, actualRaw json.RawMessage, tolerance float64) error {
+func compareVector(expectedRaw, actualRaw json.RawMessage, tolerance float64, logger log.Logger) error {
 	var expected, actual model.Vector
 
 	err := json.Unmarshal(expectedRaw, &expected)
@@ -173,7 +174,7 @@ func compareVector(expectedRaw, actualRaw json.RawMessage, tolerance float64) er
 	return nil
 }
 
-func compareScalar(expectedRaw, actualRaw json.RawMessage, tolerance float64) error {
+func compareScalar(expectedRaw, actualRaw json.RawMessage, tolerance float64, logger log.Logger) error {
 	var expected, actual model.Scalar
 	err := json.Unmarshal(expectedRaw, &expected)
 	if err != nil {

@@ -16,14 +16,14 @@ import (
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/grafana/dskit/extract"
 	"github.com/grafana/dskit/dslog"
+	"github.com/grafana/dskit/extract"
+	dslabels "github.com/grafana/dskit/labels"
 	"github.com/grafana/dskit/validation"
-	util_log "github.com/grafana/loki/pkg/util/log"
 
 	"github.com/grafana/loki/pkg/storage/chunk/cache"
 	"github.com/grafana/loki/pkg/storage/chunk/encoding"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 var (
@@ -362,7 +362,7 @@ func (c *store) getMetricNameChunks(ctx context.Context, userID string, from, th
 	*/
 	level.Debug(spanLogger).Log("from", from, "through", through, "metricName", metricName, "matchers", len(allMatchers))
 
-	filters, matchers := util.SplitFiltersAndMatchers(allMatchers)
+	filters, matchers := dslabels.SplitFiltersAndMatchers(allMatchers)
 	chunks, err := c.lookupChunksByMetricName(ctx, userID, from, through, matchers, metricName)
 	if err != nil {
 		return nil, err

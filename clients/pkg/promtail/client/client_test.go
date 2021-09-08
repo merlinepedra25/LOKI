@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log"
 	"github.com/grafana/dskit/backoff"
 	"github.com/grafana/dskit/flagext"
+	"github.com/grafana/dskit/grpcutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/prometheus/common/config"
@@ -448,7 +448,7 @@ func createServerHandler(receivedReqsChan chan receivedReq, status int) http.Han
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// Parse the request
 		var pushReq logproto.PushRequest
-		if err := util.ParseProtoReader(req.Context(), req.Body, int(req.ContentLength), math.MaxInt32, &pushReq, util.RawSnappy); err != nil {
+		if err := grpcutil.ParseProtoReader(req.Context(), req.Body, int(req.ContentLength), math.MaxInt32, &pushReq, grpcutil.RawSnappy); err != nil {
 			rw.WriteHeader(500)
 			return
 		}

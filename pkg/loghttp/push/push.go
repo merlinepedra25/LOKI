@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/dustin/go-humanize"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/grpcutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -97,7 +97,7 @@ func ParseRequest(logger log.Logger, userID string, r *http.Request, tenantsRete
 	default:
 		// When no content-type header is set or when it is set to
 		// `application/x-protobuf`: expect snappy compression.
-		if err := util.ParseProtoReader(r.Context(), body, int(r.ContentLength), math.MaxInt32, &req, util.RawSnappy); err != nil {
+		if err := grpcutil.ParseProtoReader(r.Context(), body, int(r.ContentLength), math.MaxInt32, &req, grpcutil.RawSnappy); err != nil {
 			return nil, err
 		}
 	}

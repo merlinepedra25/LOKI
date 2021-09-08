@@ -15,11 +15,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util"
-	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/flagext"
+	"github.com/grafana/dskit/grpcutil"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/model"
@@ -39,8 +38,8 @@ import (
 	"github.com/grafana/loki/clients/pkg/promtail/scrapeconfig"
 	"github.com/grafana/loki/clients/pkg/promtail/server"
 	file2 "github.com/grafana/loki/clients/pkg/promtail/targets/file"
-
 	"github.com/grafana/loki/pkg/logproto"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 const httpTestPort = 9080
@@ -460,7 +459,7 @@ type testServerHandler struct {
 
 func (h *testServerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var req logproto.PushRequest
-	if err := util.ParseProtoReader(r.Context(), r.Body, int(r.ContentLength), math.MaxInt32, &req, util.RawSnappy); err != nil {
+	if err := grpcutil.ParseProtoReader(r.Context(), r.Body, int(r.ContentLength), math.MaxInt32, &req, grpcutil.RawSnappy); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}

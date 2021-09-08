@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util/limiter"
 	"github.com/grafana/dskit/distributor"
+	"github.com/grafana/dskit/limiter"
 	"github.com/grafana/dskit/ring"
 	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/grafana/dskit/services"

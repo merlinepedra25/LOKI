@@ -207,22 +207,6 @@ github.com/coreos/go-systemd/v22/journal
 github.com/coreos/pkg/capnslog
 # github.com/cortexproject/cortex v1.10.1-0.20210906152552-028c4b3c9e71
 ## explicit
-github.com/cortexproject/cortex/pkg/cortexpb
-github.com/cortexproject/cortex/pkg/ingester/client
-github.com/cortexproject/cortex/pkg/prom1/storage/metric
-github.com/cortexproject/cortex/pkg/tenant
-github.com/cortexproject/cortex/pkg/util
-github.com/cortexproject/cortex/pkg/util/fakeauth
-github.com/cortexproject/cortex/pkg/util/grpc/encoding/snappy
-github.com/cortexproject/cortex/pkg/util/grpc/healthcheck
-github.com/cortexproject/cortex/pkg/util/grpc/naming
-github.com/cortexproject/cortex/pkg/util/grpcclient
-github.com/cortexproject/cortex/pkg/util/limiter
-github.com/cortexproject/cortex/pkg/util/log
-github.com/cortexproject/cortex/pkg/util/middleware
-github.com/cortexproject/cortex/pkg/util/spanlogger
-github.com/cortexproject/cortex/pkg/util/tls
-github.com/cortexproject/cortex/tools/querytee
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -457,7 +441,7 @@ github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/grafana/dskit v0.0.0-20210908101410-8f5821d8c1d7
+# github.com/grafana/dskit v0.0.0-20210908114031-e89c90adf170
 ## explicit
 github.com/grafana/dskit/backoff
 github.com/grafana/dskit/chunk
@@ -477,10 +461,12 @@ github.com/grafana/dskit/configs/client
 github.com/grafana/dskit/configs/legacy_promql
 github.com/grafana/dskit/configs/userconfig
 github.com/grafana/dskit/distributor
+github.com/grafana/dskit/dscontainer
 github.com/grafana/dskit/dshttp
 github.com/grafana/dskit/dskitpb
 github.com/grafana/dskit/dslog
 github.com/grafana/dskit/extract
+github.com/grafana/dskit/fakeauth
 github.com/grafana/dskit/flagext
 github.com/grafana/dskit/frontend
 github.com/grafana/dskit/frontend/transport
@@ -491,6 +477,7 @@ github.com/grafana/dskit/frontend/v2/frontendv2pb
 github.com/grafana/dskit/grpcclient
 github.com/grafana/dskit/grpcencoding/snappy
 github.com/grafana/dskit/grpcutil
+github.com/grafana/dskit/grpcutil/healthcheck
 github.com/grafana/dskit/grpcutil/naming
 github.com/grafana/dskit/ingester/client
 github.com/grafana/dskit/kv
@@ -500,6 +487,7 @@ github.com/grafana/dskit/kv/etcd
 github.com/grafana/dskit/kv/kvtls
 github.com/grafana/dskit/kv/memberlist
 github.com/grafana/dskit/labels
+github.com/grafana/dskit/limiter
 github.com/grafana/dskit/math
 github.com/grafana/dskit/middleware
 github.com/grafana/dskit/modules
@@ -514,6 +502,7 @@ github.com/grafana/dskit/querier/queryrange
 github.com/grafana/dskit/querier/series
 github.com/grafana/dskit/querier/stats
 github.com/grafana/dskit/querier/worker
+github.com/grafana/dskit/querytee
 github.com/grafana/dskit/ring
 github.com/grafana/dskit/ring/client
 github.com/grafana/dskit/ruler

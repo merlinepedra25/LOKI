@@ -13,9 +13,9 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/gogo/protobuf/proto"
 	"github.com/golang/snappy"
+	"github.com/grafana/dskit/timeutil"
 	"github.com/prometheus/common/model"
 
 	"github.com/grafana/loki/pkg/logproto"
@@ -62,7 +62,7 @@ func handler(ctx context.Context, ev events.CloudwatchLogsEvent) error {
 		stream.Entries = append(stream.Entries, logproto.Entry{
 			Line: entry.Message,
 			// It's best practice to ignore timestamps from cloudwatch as promtail is responsible for adding those.
-			Timestamp: util.TimeFromMillis(entry.Timestamp),
+			Timestamp: timeutil.TimeFromMillis(entry.Timestamp),
 		})
 	}
 

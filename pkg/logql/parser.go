@@ -9,7 +9,7 @@ import (
 	"sync"
 	"text/scanner"
 
-	"github.com/cortexproject/cortex/pkg/util"
+	dslabels "github.com/grafana/dskit/labels"
 	errors2 "github.com/pkg/errors"
 	"github.com/prometheus/prometheus/pkg/labels"
 	promql_parser "github.com/prometheus/prometheus/promql/parser"
@@ -123,7 +123,7 @@ func validateMatchers(matchers []*labels.Matcher) error {
 	if len(matchers) == 0 {
 		return nil
 	}
-	_, matchers = util.SplitFiltersAndMatchers(matchers)
+	_, matchers = dslabels.SplitFiltersAndMatchers(matchers)
 	if len(matchers) == 0 {
 		return logqlmodel.NewParseError(errAtleastOneEqualityMatcherRequired, 0, 0)
 	}

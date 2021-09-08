@@ -14,11 +14,10 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/prometheus/common/model"
-	"github.com/prometheus/prometheus/pkg/labels"
-
 	"github.com/grafana/dskit/dskitpb"
 	"github.com/grafana/dskit/querier/astmapper"
+	"github.com/prometheus/common/model"
+	"github.com/prometheus/prometheus/pkg/labels"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
 )

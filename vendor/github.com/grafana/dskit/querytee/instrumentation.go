@@ -5,23 +5,24 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-
-	util_log "github.com/cortexproject/cortex/pkg/util/log"
 )
 
 type InstrumentationServer struct {
+	logger   log.Logger
 	port     int
 	registry *prometheus.Registry
 	srv      *http.Server
 }
 
 // NewInstrumentationServer returns a server exposing Prometheus metrics.
-func NewInstrumentationServer(port int, registry *prometheus.Registry) *InstrumentationServer {
+func NewInstrumentationServer(port int, registry *prometheus.Registry, logger log.Logger) *InstrumentationServer {
 	return &InstrumentationServer{
+		logger:   logger,
 		port:     port,
 		registry: registry,
 	}
@@ -44,7 +45,7 @@ func (s *InstrumentationServer) Start() error {
 
 	go func() {
 		if err := s.srv.Serve(listener); err != nil {
-			level.Error(util_log.Logger).Log("msg", "metrics server terminated", "err", err)
+			level.Error(s.logger).Log("msg", "metrics server terminated", "err", err)
 		}
 	}()
 

@@ -9,8 +9,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dscontainer"
 	"github.com/grafana/dskit/tenant"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -113,7 +113,7 @@ const (
 func (i *Ingester) InitFlushQueues() {
 	i.flushQueuesDone.Add(i.cfg.ConcurrentFlushes)
 	for j := 0; j < i.cfg.ConcurrentFlushes; j++ {
-		i.flushQueues[j] = util.NewPriorityQueue(flushQueueLength)
+		i.flushQueues[j] = dscontainer.NewPriorityQueue(flushQueueLength)
 		go i.flushLoop(j)
 	}
 }

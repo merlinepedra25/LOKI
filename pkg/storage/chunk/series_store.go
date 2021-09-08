@@ -6,16 +6,14 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/log/level"
+	dslabels "github.com/grafana/dskit/labels"
+	"github.com/grafana/dskit/querier/astmapper"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
-
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
-	"github.com/grafana/dskit/querier/astmapper"
 
 	"github.com/grafana/loki/pkg/storage/chunk/cache"
 	util_log "github.com/grafana/loki/pkg/util/log"
@@ -97,9 +95,12 @@ func newSeriesStore(cfg StoreConfig, schema SeriesStoreSchema, index IndexClient
 
 // Get implements Store
 func (c *seriesStore) Get(ctx context.Context, userID string, from, through model.Time, allMatchers ...*labels.Matcher) ([]Chunk, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.Get")
-	defer log.Span.Finish()
-	level.Debug(log).Log("from", from, "through", through, "matchers", len(allMatchers))
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.Get")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
+	level.Debug(spanLogger).Log("from", from, "through", through, "matchers", len(allMatchers))
 
 	chks, fetchers, err := c.GetChunkRefs(ctx, userID, from, through, allMatchers...)
 	if err != nil {
@@ -117,7 +118,7 @@ func (c *seriesStore) Get(ctx context.Context, userID string, from, through mode
 	maxChunksPerQuery := c.limits.MaxChunksPerQueryFromStore(userID)
 	if maxChunksPerQuery > 0 && len(chunks) > maxChunksPerQuery {
 		err := QueryError(fmt.Sprintf("Query %v fetched too many chunks (%d > %d)", allMatchers, len(chunks), maxChunksPerQuery))
-		level.Error(log).Log("err", err)
+		level.Error(spanLogger).Log("err", err)
 		return nil, err
 	}
 
@@ -125,7 +126,7 @@ func (c *seriesStore) Get(ctx context.Context, userID string, from, through mode
 	keys := keysFromChunks(chunks)
 	allChunks, err := fetcher.FetchChunks(ctx, chunks, keys)
 	if err != nil {
-		level.Error(log).Log("msg", "FetchChunks", "err", err)
+		level.Error(spanLogger).Log("msg", "FetchChunks", "err", err)
 		return nil, err
 	}
 
@@ -144,8 +145,11 @@ func (c *seriesStore) Get(ctx context.Context, userID string, from, through mode
 }
 
 func (c *seriesStore) GetChunkRefs(ctx context.Context, userID string, from, through model.Time, allMatchers ...*labels.Matcher) ([][]Chunk, []*Fetcher, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.GetChunkRefs")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.GetChunkRefs")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	// Validate the query is within reasonable bounds.
 	metricName, matchers, shortcut, err := c.validateQuery(ctx, userID, &from, &through, allMatchers)
@@ -155,33 +159,33 @@ func (c *seriesStore) GetChunkRefs(ctx context.Context, userID string, from, thr
 		return nil, nil, nil
 	}
 
-	level.Debug(log).Log("metric", metricName)
+	level.Debug(spanLogger).Log("metric", metricName)
 
 	// Fetch the series IDs from the index, based on non-empty matchers from
 	// the query.
-	_, matchers = util.SplitFiltersAndMatchers(matchers)
+	_, matchers = dslabels.SplitFiltersAndMatchers(matchers)
 	seriesIDs, err := c.lookupSeriesByMetricNameMatchers(ctx, from, through, userID, metricName, matchers)
 	if err != nil {
 		return nil, nil, err
 	}
-	level.Debug(log).Log("series-ids", len(seriesIDs))
+	level.Debug(spanLogger).Log("series-ids", len(seriesIDs))
 
 	// Lookup the series in the index to get the chunks.
 	chunkIDs, err := c.lookupChunksBySeries(ctx, from, through, userID, seriesIDs)
 	if err != nil {
-		level.Error(log).Log("msg", "lookupChunksBySeries", "err", err)
+		level.Error(spanLogger).Log("msg", "lookupChunksBySeries", "err", err)
 		return nil, nil, err
 	}
-	level.Debug(log).Log("chunk-ids", len(chunkIDs))
+	level.Debug(spanLogger).Log("chunk-ids", len(chunkIDs))
 
 	chunks, err := c.convertChunkIDsToChunks(ctx, userID, chunkIDs)
 	if err != nil {
-		level.Error(log).Log("op", "convertChunkIDsToChunks", "err", err)
+		level.Error(spanLogger).Log("op", "convertChunkIDsToChunks", "err", err)
 		return nil, nil, err
 	}
 
 	chunks = filterChunksByTime(from, through, chunks)
-	level.Debug(log).Log("chunks-post-filtering", len(chunks))
+	level.Debug(spanLogger).Log("chunks-post-filtering", len(chunks))
 	chunksPerQuery.Observe(float64(len(chunks)))
 
 	// We should return an empty chunks slice if there are no chunks.

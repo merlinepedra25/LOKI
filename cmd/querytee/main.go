@@ -5,15 +5,14 @@ import (
 	"os"
 
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/querytee"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/weaveworks/common/logging"
 	"github.com/weaveworks/common/server"
 
-	util_log "github.com/grafana/loki/pkg/util/log"
-	"github.com/cortexproject/cortex/tools/querytee"
-
 	"github.com/grafana/loki/pkg/loghttp"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 type Config struct {

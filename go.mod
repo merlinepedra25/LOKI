@@ -21,7 +21,7 @@ require (
 	github.com/cespare/xxhash v1.1.0
 	github.com/cespare/xxhash/v2 v2.1.1
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
-	github.com/cortexproject/cortex v1.10.1-0.20210906152552-028c4b3c9e71
+	github.com/cortexproject/cortex v1.10.1-0.20210906152552-028c4b3c9e71 // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/docker v20.10.7+incompatible
 	github.com/docker/go-plugins-helpers v0.0.0-20181025120712-1e6269c305b8
@@ -45,7 +45,7 @@ require (
 	github.com/google/go-cmp v0.5.6
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
-	github.com/grafana/dskit v0.0.0-20210908101410-8f5821d8c1d7
+	github.com/grafana/dskit v0.0.0-20210908114031-e89c90adf170
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.1-0.20191002090509-6af20e3a5340 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645

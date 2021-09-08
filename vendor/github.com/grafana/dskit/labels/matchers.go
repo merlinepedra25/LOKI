@@ -1,4 +1,4 @@
-package util
+package labels
 
 import (
 	"github.com/prometheus/prometheus/pkg/labels"

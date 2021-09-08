@@ -7,23 +7,23 @@ import (
 	"fmt"
 	"net/http"
 
-	cortex_tripper "github.com/grafana/dskit/querier/queryrange"
-	"github.com/grafana/dskit/querier/worker"
-	"github.com/grafana/dskit/scheduler"
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/cortexproject/cortex/pkg/util/fakeauth"
-	"github.com/cortexproject/cortex/pkg/util/grpc/healthcheck"
-	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/felixge/fgprof"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/fakeauth"
 	"github.com/grafana/dskit/flagext"
+	"github.com/grafana/dskit/grpcutil/healthcheck"
 	"github.com/grafana/dskit/kv/memberlist"
 	"github.com/grafana/dskit/modules"
+	cortex_tripper "github.com/grafana/dskit/querier/queryrange"
+	"github.com/grafana/dskit/querier/worker"
 	"github.com/grafana/dskit/ring"
 	dsruler "github.com/grafana/dskit/ruler"
 	"github.com/grafana/dskit/ruler/rulestore"
 	"github.com/grafana/dskit/runtimeconfig"
+	"github.com/grafana/dskit/scheduler"
 	"github.com/grafana/dskit/services"
+	"github.com/grafana/dskit/stringutil"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/weaveworks/common/middleware"
@@ -165,7 +165,7 @@ func (c *Config) Validate() error {
 }
 
 func (c *Config) isModuleEnabled(m string) bool {
-	return util.StringsContain(c.Target, m)
+	return stringutil.StringsContain(c.Target, m)
 }
 
 type Frontend interface {

@@ -7,7 +7,6 @@ import (
 
 	"github.com/grafana/dskit/dskitpb"
 	"github.com/grafana/dskit/querier/astmapper"
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/stretchr/testify/require"
@@ -65,7 +64,7 @@ func BenchmarkHash(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			var fp uint64
 			fp, buf = dskitpb.FromLabelAdaptersToLabels(lbs).HashWithoutLabels(buf, []string(nil)...)
-			result = util.HashFP(model.Fingerprint(fp)) % 16
+			result = dscrypto.HashFP(model.Fingerprint(fp)) % 16
 		}
 	})
 }

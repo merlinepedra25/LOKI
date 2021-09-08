@@ -7,9 +7,9 @@ import (
 	"sync"
 	"syscall"
 
-	cutil "github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/dskitpb"
+	dslabels "github.com/grafana/dskit/labels"
 	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
@@ -506,7 +506,7 @@ func (i *instance) forMatchingStreams(
 	i.streamsMtx.RLock()
 	defer i.streamsMtx.RUnlock()
 
-	filters, matchers := cutil.SplitFiltersAndMatchers(matchers)
+	filters, matchers := dslabels.SplitFiltersAndMatchers(matchers)
 	ids, err := i.index.Lookup(matchers, shards)
 	if err != nil {
 		return err

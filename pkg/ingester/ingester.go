@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/ring"
 	"github.com/grafana/dskit/services"
@@ -155,7 +154,7 @@ type Ingester struct {
 
 	// One queue per flush thread.  Fingerprint is used to
 	// pick a queue.
-	flushQueues     []*util.PriorityQueue
+	flushQueues     []*dscontainer.PriorityQueue
 	flushQueuesDone sync.WaitGroup
 
 	limiter *Limiter
@@ -199,7 +198,7 @@ func New(cfg Config, clientConfig client.Config, store ChunkStore, limits *valid
 		store:                 store,
 		periodicConfigs:       store.GetSchemaConfigs(),
 		loopQuit:              make(chan struct{}),
-		flushQueues:           make([]*util.PriorityQueue, cfg.ConcurrentFlushes),
+		flushQueues:           make([]*dscontainer.PriorityQueue, cfg.ConcurrentFlushes),
 		tailersQuit:           make(chan struct{}),
 		metrics:               metrics,
 		flushOnShutdownSwitch: &OnceSwitch{},
