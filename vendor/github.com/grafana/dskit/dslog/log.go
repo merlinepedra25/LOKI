@@ -2,8 +2,11 @@ package dslog
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/weaveworks/common/tracing"
 
 	"github.com/grafana/dskit/tenant"
@@ -43,4 +46,17 @@ func WithContext(ctx context.Context, l log.Logger) log.Logger {
 	}
 
 	return WithTraceID(traceID, l)
+}
+
+// CheckFatal prints an error and exits with error code 1 if err is non-nil
+func CheckFatal(location string, err error, logger log.Logger) {
+	if err != nil {
+		logger := level.Error(logger)
+		if location != "" {
+			logger = log.With(logger, "msg", "error "+location)
+		}
+		// %+v gets the stack trace from errors using github.com/pkg/errors
+		logger.Log("err", fmt.Sprintf("%+v", err))
+		os.Exit(1)
+	}
 }

@@ -7,6 +7,7 @@ import (
 	"reflect"
 
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
 	"github.com/grafana/dskit/flagext"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/version"
@@ -124,10 +125,10 @@ func main() {
 
 	// Start Loki
 	t, err := loki.New(config.Config)
-	util_log.CheckFatal("initialising loki", err)
+	dslog.CheckFatal("initialising loki", err, util_log.Logger)
 
 	level.Info(util_log.Logger).Log("msg", "Starting Loki", "version", version.Info())
 
 	err = t.Run()
-	util_log.CheckFatal("running loki", err)
+	dslog.CheckFatal("running loki", err, util_log.Logger)
 }

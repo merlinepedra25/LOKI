@@ -126,9 +126,10 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 		params.Start = storeQueryInterval.start
 		params.End = storeQueryInterval.end
 		/* TODO
-		logger := spanlogger.FromContext(ctx)
+		spanLogger := spanlogger.FromContext(ctx)
 		*/
-		level.Debug(logger).Log(
+		spanLogger := util_log.Logger
+		level.Debug(spanLogger).Log(
 			"msg", "querying store",
 			"params", params)
 		storeIter, err := q.store.SelectLogs(ctx, params)

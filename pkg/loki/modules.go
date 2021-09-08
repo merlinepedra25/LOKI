@@ -12,6 +12,8 @@ import (
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
+	"github.com/grafana/dskit/dsserver"
 	"github.com/grafana/dskit/frontend"
 	"github.com/grafana/dskit/frontend/transport"
 	"github.com/grafana/dskit/frontend/v1/frontendv1pb"
@@ -103,7 +105,7 @@ func (t *Loki) initServer() (services.Service, error) {
 		return svs
 	}
 
-	s := dsserver.NewServerService(t.Server, servicesToWaitFor)
+	s := dsserver.NewServerService(t.Server, util_log.Logger, servicesToWaitFor)
 
 	// Best effort to propagate the org ID from the start.
 	t.Server.HTTPServer.Handler = func(next http.Handler) http.Handler {
@@ -284,7 +286,7 @@ func (t *Loki) initTableManager() (services.Service, error) {
 	}
 
 	bucketClient, err := storage.NewBucketClient(t.Cfg.StorageConfig.Config)
-	util_log.CheckFatal("initializing bucket client", err)
+	dslog.CheckFatal("initializing bucket client", err, util_log.Logger)
 
 	t.tableManager, err = chunk.NewTableManager(t.Cfg.TableManager, t.Cfg.SchemaConfig.SchemaConfig, maxChunkAgeForTableManager, tableClient, bucketClient, nil, prometheus.DefaultRegisterer)
 	if err != nil {

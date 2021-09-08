@@ -14,6 +14,7 @@ import (
 	"github.com/grafana/loki/pkg/loghttp"
 	"github.com/grafana/loki/pkg/logql"
 	"github.com/grafana/loki/pkg/logqlmodel"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 const (

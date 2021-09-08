@@ -282,7 +282,7 @@ func NewChunkClient(name string, cfg Config, schemaCfg chunk.SchemaConfig, regis
 		}
 		return aws.NewDynamoDBChunkClient(cfg.AWSStorageConfig.DynamoDBConfig, schemaCfg, registerer)
 	case StorageTypeAzure:
-		return newChunkClientFromStore(azure.NewBlobStorage(&cfg.AzureStorageConfig))
+		return newChunkClientFromStore(azure.NewBlobStorage(&cfg.AzureStorageConfig, util_log.Logger))
 	case StorageTypeGCP:
 		return gcp.NewBigtableObjectClient(context.Background(), cfg.GCPStorageConfig, schemaCfg)
 	case StorageTypeGCPColumnKey, StorageTypeBigTable, StorageTypeBigTableHashed:
@@ -363,7 +363,7 @@ func NewObjectClient(name string, cfg Config) (chunk.ObjectClient, error) {
 	case StorageTypeGCS:
 		return gcp.NewGCSObjectClient(context.Background(), cfg.GCSConfig)
 	case StorageTypeAzure:
-		return azure.NewBlobStorage(&cfg.AzureStorageConfig)
+		return azure.NewBlobStorage(&cfg.AzureStorageConfig, util_log.Logger)
 	case StorageTypeSwift:
 		return openstack.NewSwiftObjectClient(cfg.Swift)
 	case StorageTypeInMemory:

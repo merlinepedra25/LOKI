@@ -334,7 +334,6 @@ func (s *storageClientV1) query(ctx context.Context, query chunk.IndexQuery, cal
 	spanLogger, ctx := spanlogger.New(ctx, "QueryPages", ot.Tag{Key: "tableName", Value: query.TableName}, ot.Tag{Key: "hashValue", Value: query.HashValue})
 	defer spanLogger.Finish()
 	*/
-	spanLogger := util_log.Logger
 
 	table := s.client.Open(query.TableName)
 
@@ -367,7 +366,7 @@ func (s *storageClientV1) query(ctx context.Context, query chunk.IndexQuery, cal
 		return true
 	})
 	if err != nil {
-		spanLogger.Error(err)
+		// spanLogger.Error(err)
 		return errors.WithStack(err)
 	}
 	return nil

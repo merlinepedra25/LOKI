@@ -219,7 +219,7 @@ func (c *store) Get(ctx context.Context, userID string, from, through model.Time
 		return nil, nil
 	}
 
-	spanLogger.Span.SetTag("metric", metricName)
+	// spanLogger.Span.SetTag("metric", metricName)
 	return c.getMetricNameChunks(ctx, userID, from, through, matchers, metricName)
 }
 
@@ -306,6 +306,7 @@ func (c *baseStore) validateQueryTimeRange(ctx context.Context, userID string, f
 	spanLogger, ctx := spanlogger.New(ctx, "store.validateQueryTimeRange")
 	defer spanLogger.Span.Finish()
 	*/
+	spanLogger := util_log.Logger
 
 	if *through < *from {
 		return false, QueryError(fmt.Sprintf("invalid query, through < from (%s < %s)", through, from))
@@ -361,6 +362,7 @@ func (c *store) getMetricNameChunks(ctx context.Context, userID string, from, th
 	spanLogger, ctx := spanlogger.New(ctx, "ChunkStore.getMetricNameChunks")
 	defer spanLogger.Finish()
 	*/
+	spanLogger := util_log.Logger
 	level.Debug(spanLogger).Log("from", from, "through", through, "metricName", metricName, "matchers", len(allMatchers))
 
 	filters, matchers := dslabels.SplitFiltersAndMatchers(allMatchers)
@@ -419,7 +421,6 @@ func (c *store) lookupChunksByMetricName(ctx context.Context, userID string, fro
 			return nil, err
 		}
 		level.Debug(spanLogger).Log("chunkIDs", len(chunkIDs))
-		spanLogger := util_log.Logger
 
 		return c.convertChunkIDsToChunks(ctx, userID, chunkIDs)
 	}
@@ -458,7 +459,7 @@ func (c *store) lookupChunksByMetricName(ctx context.Context, userID string, fro
 	if lastErr != nil {
 		return nil, lastErr
 	}
-	level.Debug(log).Log("msg", "post intersection", "chunkIDs", len(chunkIDs))
+	level.Debug(spanLogger).Log("msg", "post intersection", "chunkIDs", len(chunkIDs))
 
 	// Convert IndexEntry's into chunks
 	return c.convertChunkIDsToChunks(ctx, userID, chunkIDs)
@@ -470,6 +471,7 @@ func (c *baseStore) lookupIdsByMetricNameMatcher(ctx context.Context, from, thro
 	spanLogger, ctx := spanlogger.New(ctx, "Store.lookupIdsByMetricNameMatcher", "metricName", metricName, "matcher", formattedMatcher)
 	defer spanLogger.Span.Finish()
 	*/
+	spanLogger := util_log.Logger
 
 	var err error
 	var queries []IndexQuery

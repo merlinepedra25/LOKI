@@ -1083,8 +1083,8 @@ github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0U
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/gotestyourself/gotestyourself v2.2.0+incompatible/go.mod h1:zZKM6oeNM8k+FRljX1mnzVYeS8wiGgQyvST1/GafPbY=
 github.com/grafana/dskit v0.0.0-20210827060659-9daca2f00327/go.mod h1:+T2iuDOzx/BSQJSvli9FUvLM5HnV8aDPmXM8KWuVj3M=
-github.com/grafana/dskit v0.0.0-20210908114031-e89c90adf170 h1:fd/jl2wf6CYWCSKz0Ft1yuZPvA2JEV3G623inaliA2Q=
-github.com/grafana/dskit v0.0.0-20210908114031-e89c90adf170/go.mod h1:poJ8To+U9IPVlYQSnUbN9zh5TvLVb4VGosw6P7pXtyM=
+github.com/grafana/dskit v0.0.0-20210908120743-224f88249d7f h1:L4lyEmC4AXbTWXYmFBjAlitGXZUp7CBFtPYRu3BpXdE=
+github.com/grafana/dskit v0.0.0-20210908120743-224f88249d7f/go.mod h1:poJ8To+U9IPVlYQSnUbN9zh5TvLVb4VGosw6P7pXtyM=
 github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85 h1:xLuzPoOzdfNb/RF/IENCw+oLVdZB4G21VPhkHBgwSHY=
 github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85/go.mod h1:crI9WX6p0IhrqB+DqIUHulRW853PaNFf7o4UprV//3I=
 github.com/grafana/tail v0.0.0-20201004203643-7aa4e4a91f03 h1:fGgFrAraMB0BaPfYumu+iulfDXwHm+GFyHA4xEtBqI8=
@@ -2020,7 +2020,7 @@ github.com/weaveworks/common v0.0.0-20200914083218-61ffdd448099/go.mod h1:hz10LO
 github.com/weaveworks/common v0.0.0-20201119133501-0619918236ec/go.mod h1:ykzWac1LtVfOxdCK+jD754at1Ws9dKCwFeUzkFBffPs=
 github.com/weaveworks/common v0.0.0-20210112142934-23c8d7fa6120/go.mod h1:ykzWac1LtVfOxdCK+jD754at1Ws9dKCwFeUzkFBffPs=
 github.com/weaveworks/common v0.0.0-20210419092856-009d1eebd624/go.mod h1:ykzWac1LtVfOxdCK+jD754at1Ws9dKCwFeUzkFBffPs=
-github.com/weaveworks/common v0.0.0-20210722103813-e649eff5ab4a h1:ALomSnvy/NPeVoc4a1o7keaHHgLS76r9ZYIlwWWF+KA=
+github.com/weaveworks/common v0.0.0-20210722103813-e649eff5ab4a/go.mod h1:YU9FvnS7kUnRt6HY10G+2qHkwzP3n3Vb1XsXDsJTSp8=
 github.com/weaveworks/common v0.0.0-20210901124008-1fa3f9fa874c h1:+yzwVr4/12cUgsdjbEHq6MsKB7jWBZpZccAP6xvqTzQ=
 github.com/weaveworks/common v0.0.0-20210901124008-1fa3f9fa874c/go.mod h1:YU9FvnS7kUnRt6HY10G+2qHkwzP3n3Vb1XsXDsJTSp8=
 github.com/weaveworks/promrus v1.2.0 h1:jOLf6pe6/vss4qGHjXmGz4oDJQA+AOCqEL3FvvZGz7M=

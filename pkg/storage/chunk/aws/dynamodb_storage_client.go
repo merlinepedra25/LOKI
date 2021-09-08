@@ -153,20 +153,22 @@ func (a dynamoDBStorageClient) NewWriteBatch() chunk.WriteBatch {
 func logWriteRetry(unprocessed dynamoDBWriteBatch, metrics *dynamoDBMetrics) {
 	for table, reqs := range unprocessed {
 		metrics.dynamoThrottled.WithLabelValues("DynamoDB.BatchWriteItem", table).Add(float64(len(reqs)))
-		for _, req := range reqs {
-			item := req.PutRequest.Item
-			var hash, rnge string
-			if hashAttr, ok := item[hashKey]; ok {
-				if hashAttr.S != nil {
-					hash = *hashAttr.S
+		/*
+			for _, req := range reqs {
+				item := req.PutRequest.Item
+				var hash, rnge string
+				if hashAttr, ok := item[hashKey]; ok {
+					if hashAttr.S != nil {
+						hash = *hashAttr.S
+					}
 				}
+				if rangeAttr, ok := item[rangeKey]; ok {
+					rnge = string(rangeAttr.B)
+				}
+				// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
+				// util.Event().Log("msg", "store retry", "table", table, "hashKey", hash, "rangeKey", rnge)
 			}
-			if rangeAttr, ok := item[rangeKey]; ok {
-				rnge = string(rangeAttr.B)
-			}
-			// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
-			// util.Event().Log("msg", "store retry", "table", table, "hashKey", hash, "rangeKey", rnge)
-		}
+		*/
 	}
 }
 
@@ -377,7 +379,6 @@ func (a dynamoDBStorageClient) GetChunks(ctx context.Context, chunks []chunk.Chu
 	level.Debug(spanLogger).Log("chunks requested", len(chunks))
 
 	dynamoDBChunks := chunks
-	var err error
 
 	gangSize := a.cfg.ChunkGangSize * dynamoDBMaxReadBatchSize
 	if gangSize == 0 { // zero means turn feature off
@@ -399,6 +400,8 @@ func (a dynamoDBStorageClient) GetChunks(ctx context.Context, chunks []chunk.Chu
 			results <- chunksPlusError{outChunks, err}
 		}(i)
 	}
+
+	var err error
 	finalChunks := []chunk.Chunk{}
 	for i := 0; i < len(dynamoDBChunks); i += gangSize {
 		in := <-results
@@ -410,7 +413,8 @@ func (a dynamoDBStorageClient) GetChunks(ctx context.Context, chunks []chunk.Chu
 	level.Debug(spanLogger).Log("chunks fetched", len(finalChunks))
 
 	// Return any chunks we did receive: a partial result may be useful
-	return finalChunks, spanLogger.Error(err)
+	// spanLogger.Error(err)
+	return finalChunks, err
 }
 
 // As we're re-using the DynamoDB schema from the index for the chunk tables,
@@ -434,7 +438,8 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 		chunksByKey[key] = chunk
 		tableName, err := a.schemaCfg.ChunkTableFor(chunk.From)
 		if err != nil {
-			return nil, spanLogger.Error(err)
+			// spanLogger.Error(err)
+			return nil, err
 		}
 		outstanding.Add(tableName, key, placeholder)
 	}
@@ -492,7 +497,8 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 
 		processedChunks, err := processChunkResponse(response, chunksByKey)
 		if err != nil {
-			return nil, spanLogger.Error(err)
+			// spanLogger.Error(err)
+			return nil, err
 		}
 		result = append(result, processedChunks...)
 
@@ -506,7 +512,9 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 
 	if valuesLeft := outstanding.Len() + unprocessed.Len(); valuesLeft > 0 {
 		// Return the chunks we did fetch, because partial results may be useful
-		return result, spanLogger.Error(fmt.Errorf("failed to query chunks, %d values remaining: %s", valuesLeft, backoff.Err()))
+		err := fmt.Errorf("failed to query chunks, %d values remaining: %s", valuesLeft, backoff.Err())
+		// spanLogger.Error(err)
+		return result, err
 	}
 	return result, nil
 }
