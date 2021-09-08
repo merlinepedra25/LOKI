@@ -261,7 +261,7 @@ func (s *mockStore) Put(ctx context.Context, chunks []chunk.Chunk) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
-	userid, err := tenant.TenantID(ctx)
+	userid, err := tenant.ID(ctx)
 	if err != nil {
 		return err
 	}

@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/cortexproject/cortex/pkg/tenant"
-	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/imdario/mergo"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -106,7 +106,7 @@ func (t *PushTarget) run() error {
 
 func (t *PushTarget) handle(w http.ResponseWriter, r *http.Request) {
 	logger := util_log.WithContext(r.Context(), util_log.Logger)
-	userID, _ := tenant.TenantID(r.Context())
+	userID, _ := tenant.ID(r.Context())
 	req, err := push.ParseRequest(logger, userID, r, nil)
 	if err != nil {
 		level.Warn(t.logger).Log("msg", "failed to parse incoming push request", "err", err.Error())

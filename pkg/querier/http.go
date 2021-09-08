@@ -348,7 +348,7 @@ func parseRegexQuery(httpRequest *http.Request) (string, error) {
 }
 
 func (q *Querier) validateEntriesLimits(ctx context.Context, query string, limit uint32) error {
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		return httpgrpc.Errorf(http.StatusBadRequest, err.Error())
 	}

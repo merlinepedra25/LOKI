@@ -197,7 +197,7 @@ func transformRegexQuery(req *http.Request, expr logql.LogSelectorExpr) (logql.L
 
 // validates log entries limits
 func validateLimits(req *http.Request, reqLimit uint32, limits Limits) error {
-	userID, err := tenant.TenantID(req.Context())
+	userID, err := tenant.ID(req.Context())
 	if err != nil {
 		return httpgrpc.Errorf(http.StatusBadRequest, err.Error())
 	}

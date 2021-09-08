@@ -205,7 +205,7 @@ func (rt limitedRoundTripper) RoundTrip(r *http.Request) (*http.Response, error)
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		request.LogToSpan(span)
 	}
-	userid, err := tenant.TenantID(ctx)
+	userid, err := tenant.ID(ctx)
 	if err != nil {
 		return nil, httpgrpc.Errorf(http.StatusBadRequest, err.Error())
 	}

@@ -177,7 +177,7 @@ func (q *query) evalSample(ctx context.Context, expr SampleExpr) (promql_parser.
 		return q.evalLiteral(ctx, lit)
 	}
 
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		return nil, err
 	}

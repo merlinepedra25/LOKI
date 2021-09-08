@@ -299,7 +299,7 @@ func (s *testStore) Put(ctx context.Context, chunks []chunk.Chunk) error {
 	if s.onPut != nil {
 		return s.onPut(ctx, chunks)
 	}
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		return err
 	}

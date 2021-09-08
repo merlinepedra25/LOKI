@@ -44,7 +44,7 @@ func newTenantDeletionAPI(bkt objstore.Bucket, cfgProvider bucket.TenantConfigPr
 
 func (api *TenantDeletionAPI) DeleteTenant(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		// When Cortex is running, it uses Auth Middleware for checking X-Scope-OrgID and injecting tenant into context.
 		// Auth Middleware sends http.StatusUnauthorized if X-Scope-OrgID is missing, so we do too here, for consistency.
@@ -72,7 +72,7 @@ type DeleteTenantStatusResponse struct {
 
 func (api *TenantDeletionAPI) DeleteTenantStatus(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

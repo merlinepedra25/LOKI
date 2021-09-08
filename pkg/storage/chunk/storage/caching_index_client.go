@@ -96,7 +96,7 @@ func (s *cachingIndexClient) queryPages(ctx context.Context, queries []chunk.Ind
 		return nil
 	}
 
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		return err
 	}

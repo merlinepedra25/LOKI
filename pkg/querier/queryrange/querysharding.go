@@ -194,7 +194,7 @@ type shardSplitter struct {
 }
 
 func (splitter *shardSplitter) Do(ctx context.Context, r queryrange.Request) (queryrange.Response, error) {
-	userid, err := tenant.TenantID(ctx)
+	userid, err := tenant.ID(ctx)
 	if err != nil {
 		return nil, httpgrpc.Errorf(http.StatusBadRequest, err.Error())
 	}

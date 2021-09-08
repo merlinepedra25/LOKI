@@ -332,7 +332,7 @@ func (i *Ingester) removeFlushedChunks(instance *instance, stream *stream, mayRe
 }
 
 func (i *Ingester) flushChunks(ctx context.Context, fp model.Fingerprint, labelPairs labels.Labels, cs []*chunkDesc, chunkMtx sync.Locker) error {
-	userID, err := tenant.TenantID(ctx)
+	userID, err := tenant.ID(ctx)
 	if err != nil {
 		return err
 	}
