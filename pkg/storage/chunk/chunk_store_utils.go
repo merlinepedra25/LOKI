@@ -4,7 +4,6 @@ import (
 	"context"
 	"sync"
 
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -204,8 +203,11 @@ func (c *Fetcher) processCacheResponse(ctx context.Context, chunks []Chunk, keys
 		responses = make(chan decodeResponse)
 		missing   []Chunk
 	)
-	log, _ := spanlogger.New(ctx, "Fetcher.processCacheResponse")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, _ := spanlogger.New(ctx, "Fetcher.processCacheResponse")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	i, j := 0, 0
 	for i < len(chunks) && j < len(keys) {
@@ -230,7 +232,7 @@ func (c *Fetcher) processCacheResponse(ctx context.Context, chunks []Chunk, keys
 	for ; i < len(chunks); i++ {
 		missing = append(missing, chunks[i])
 	}
-	level.Debug(log).Log("chunks", len(chunks), "decodeRequests", len(requests), "missing", len(missing))
+	level.Debug(spanLogger).Log("chunks", len(chunks), "decodeRequests", len(requests), "missing", len(missing))
 
 	go func() {
 		for _, request := range requests {

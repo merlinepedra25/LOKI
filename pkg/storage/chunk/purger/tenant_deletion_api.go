@@ -8,15 +8,14 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dshttp"
+	"github.com/grafana/dskit/storage/bucket"
+	"github.com/grafana/dskit/storage/tsdb"
+	"github.com/grafana/dskit/tenant"
 	"github.com/oklog/ulid"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/thanos-io/thanos/pkg/objstore"
-
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/grafana/dskit/storage/bucket"
-	"github.com/grafana/dskit/storage/tsdb"
-	"github.com/grafana/dskit/tenant"
 )
 
 type TenantDeletionAPI struct {
@@ -86,7 +85,7 @@ func (api *TenantDeletionAPI) DeleteTenantStatus(w http.ResponseWriter, r *http.
 		return
 	}
 
-	util.WriteJSONResponse(w, result)
+	dshttp.WriteJSONResponse(w, result)
 }
 
 func (api *TenantDeletionAPI) isBlocksForUserDeleted(ctx context.Context, userID string) (bool, error) {

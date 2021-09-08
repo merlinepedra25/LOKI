@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/querier/astmapper"
@@ -96,8 +95,11 @@ func (ast *astMapperware) Do(ctx context.Context, r queryrange.Request) (queryra
 		return ast.next.Do(ctx, r)
 	}
 
-	shardedLog, ctx := spanlogger.New(ctx, "shardedEngine")
-	defer shardedLog.Finish()
+	/*
+		shardedLog, ctx := spanlogger.New(ctx, "shardedEngine")
+		defer shardedLog.Finish()
+	*/
+	shardedLog := util_log.Logger
 
 	mapper, err := logql.NewShardMapper(int(conf.RowShards), ast.metrics)
 	if err != nil {

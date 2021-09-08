@@ -28,9 +28,9 @@ import (
 	awscommon "github.com/weaveworks/common/aws"
 	"github.com/weaveworks/common/instrument"
 
-	cortex_s3 "github.com/grafana/dskit/storage/bucket/s3"
-	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/grafana/dskit/flagext"
+	cortex_s3 "github.com/grafana/dskit/storage/bucket/s3"
+	"github.com/grafana/dskit/stringutil"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
 )
@@ -119,7 +119,7 @@ func (cfg *S3Config) RegisterFlagsWithPrefix(prefix string, f *flag.FlagSet) {
 
 // Validate config and returns error on failure
 func (cfg *S3Config) Validate() error {
-	if !util.StringsContain(supportedSignatureVersions, cfg.SignatureVersion) {
+	if !stringutil.StringsContain(supportedSignatureVersions, cfg.SignatureVersion) {
 		return errUnsupportedSignatureVersion
 	}
 	return nil

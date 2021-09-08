@@ -13,11 +13,12 @@ import (
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/pkg/labels"
 
-	"github.com/grafana/dskit/querier/astmapper"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
+	"github.com/grafana/dskit/querier/astmapper"
 
 	"github.com/grafana/loki/pkg/storage/chunk/cache"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
 // CardinalityExceededError is returned when the user reads a row that
@@ -193,8 +194,11 @@ func (c *seriesStore) GetChunkRefs(ctx context.Context, userID string, from, thr
 
 // LabelNamesForMetricName retrieves all label names for a metric name.
 func (c *seriesStore) LabelNamesForMetricName(ctx context.Context, userID string, from, through model.Time, metricName string) ([]string, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.LabelNamesForMetricName")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.LabelNamesForMetricName")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	shortcut, err := c.validateQueryTimeRange(ctx, userID, &from, &through)
 	if err != nil {
@@ -202,14 +206,14 @@ func (c *seriesStore) LabelNamesForMetricName(ctx context.Context, userID string
 	} else if shortcut {
 		return nil, nil
 	}
-	level.Debug(log).Log("metric", metricName)
+	level.Debug(spanLogger).Log("metric", metricName)
 
 	// Fetch the series IDs from the index
 	seriesIDs, err := c.lookupSeriesByMetricNameMatchers(ctx, from, through, userID, metricName, nil)
 	if err != nil {
 		return nil, err
 	}
-	level.Debug(log).Log("series-ids", len(seriesIDs))
+	level.Debug(spanLogger).Log("series-ids", len(seriesIDs))
 
 	// Lookup the series in the index to get label names.
 	labelNames, err := c.lookupLabelNamesBySeries(ctx, from, through, userID, seriesIDs)
@@ -218,51 +222,57 @@ func (c *seriesStore) LabelNamesForMetricName(ctx context.Context, userID string
 		if err == ErrNotSupported {
 			return c.lookupLabelNamesByChunks(ctx, from, through, userID, seriesIDs)
 		}
-		level.Error(log).Log("msg", "lookupLabelNamesBySeries", "err", err)
+		level.Error(spanLogger).Log("msg", "lookupLabelNamesBySeries", "err", err)
 		return nil, err
 	}
-	level.Debug(log).Log("labelNames", len(labelNames))
+	level.Debug(spanLogger).Log("labelNames", len(labelNames))
 
 	return labelNames, nil
 }
 
 func (c *seriesStore) lookupLabelNamesByChunks(ctx context.Context, from, through model.Time, userID string, seriesIDs []string) ([]string, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.lookupLabelNamesByChunks")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.lookupLabelNamesByChunks")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	// Lookup the series in the index to get the chunks.
 	chunkIDs, err := c.lookupChunksBySeries(ctx, from, through, userID, seriesIDs)
 	if err != nil {
-		level.Error(log).Log("msg", "lookupChunksBySeries", "err", err)
+		level.Error(spanLogger).Log("msg", "lookupChunksBySeries", "err", err)
 		return nil, err
 	}
-	level.Debug(log).Log("chunk-ids", len(chunkIDs))
+	level.Debug(spanLogger).Log("chunk-ids", len(chunkIDs))
 
 	chunks, err := c.convertChunkIDsToChunks(ctx, userID, chunkIDs)
 	if err != nil {
-		level.Error(log).Log("err", "convertChunkIDsToChunks", "err", err)
+		level.Error(spanLogger).Log("err", "convertChunkIDsToChunks", "err", err)
 		return nil, err
 	}
 
 	// Filter out chunks that are not in the selected time range and keep a single chunk per fingerprint
 	filtered := filterChunksByTime(from, through, chunks)
 	filtered, keys := filterChunksByUniqueFingerprint(filtered)
-	level.Debug(log).Log("Chunks post filtering", len(chunks))
+	level.Debug(spanLogger).Log("Chunks post filtering", len(chunks))
 
 	chunksPerQuery.Observe(float64(len(filtered)))
 
 	// Now fetch the actual chunk data from Memcache / S3
 	allChunks, err := c.fetcher.FetchChunks(ctx, filtered, keys)
 	if err != nil {
-		level.Error(log).Log("msg", "FetchChunks", "err", err)
+		level.Error(spanLogger).Log("msg", "FetchChunks", "err", err)
 		return nil, err
 	}
 	return labelNamesFromChunks(allChunks), nil
 }
 
 func (c *seriesStore) lookupSeriesByMetricNameMatchers(ctx context.Context, from, through model.Time, userID, metricName string, matchers []*labels.Matcher) ([]string, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.lookupSeriesByMetricNameMatchers", "metricName", metricName, "matchers", len(matchers))
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.lookupSeriesByMetricNameMatchers", "metricName", metricName, "matchers", len(matchers))
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	// Check if one of the labels is a shard annotation, pass that information to lookupSeriesByMetricNameMatcher,
 	// and remove the label.
@@ -341,7 +351,7 @@ func (c *seriesStore) lookupSeriesByMetricNameMatchers(ctx context.Context, from
 	preIntersectionPerQuery.Observe(float64(preIntersectionCount))
 	postIntersectionPerQuery.Observe(float64(len(ids)))
 
-	level.Debug(log).Log("msg", "post intersection", "ids", len(ids))
+	level.Debug(spanLogger).Log("msg", "post intersection", "ids", len(ids))
 	return ids, nil
 }
 
@@ -352,10 +362,13 @@ func (c *seriesStore) lookupSeriesByMetricNameMatcher(ctx context.Context, from,
 }
 
 func (c *seriesStore) lookupChunksBySeries(ctx context.Context, from, through model.Time, userID string, seriesIDs []string) ([]string, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.lookupChunksBySeries")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.lookupChunksBySeries")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
-	level.Debug(log).Log("seriesIDs", len(seriesIDs))
+	level.Debug(spanLogger).Log("seriesIDs", len(seriesIDs))
 
 	queries := make([]IndexQuery, 0, len(seriesIDs))
 	for _, seriesID := range seriesIDs {
@@ -365,23 +378,26 @@ func (c *seriesStore) lookupChunksBySeries(ctx context.Context, from, through mo
 		}
 		queries = append(queries, qs...)
 	}
-	level.Debug(log).Log("queries", len(queries))
+	level.Debug(spanLogger).Log("queries", len(queries))
 
 	entries, err := c.lookupEntriesByQueries(ctx, queries)
 	if err != nil {
 		return nil, err
 	}
-	level.Debug(log).Log("entries", len(entries))
+	level.Debug(spanLogger).Log("entries", len(entries))
 
 	result, err := c.parseIndexEntries(ctx, entries, nil)
 	return result, err
 }
 
 func (c *seriesStore) lookupLabelNamesBySeries(ctx context.Context, from, through model.Time, userID string, seriesIDs []string) ([]string, error) {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.lookupLabelNamesBySeries")
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.lookupLabelNamesBySeries")
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
 
-	level.Debug(log).Log("seriesIDs", len(seriesIDs))
+	level.Debug(spanLogger).Log("seriesIDs", len(seriesIDs))
 	queries := make([]IndexQuery, 0, len(seriesIDs))
 	for _, seriesID := range seriesIDs {
 		qs, err := c.schema.GetLabelNamesForSeries(from, through, userID, []byte(seriesID))
@@ -390,12 +406,12 @@ func (c *seriesStore) lookupLabelNamesBySeries(ctx context.Context, from, throug
 		}
 		queries = append(queries, qs...)
 	}
-	level.Debug(log).Log("queries", len(queries))
+	level.Debug(spanLogger).Log("queries", len(queries))
 	entries, err := c.lookupEntriesByQueries(ctx, queries)
 	if err != nil {
 		return nil, err
 	}
-	level.Debug(log).Log("entries", len(entries))
+	level.Debug(spanLogger).Log("entries", len(entries))
 
 	var result UniqueStrings
 	result.Add(model.MetricNameLabel)
@@ -422,8 +438,11 @@ func (c *seriesStore) Put(ctx context.Context, chunks []Chunk) error {
 
 // PutOne implements Store
 func (c *seriesStore) PutOne(ctx context.Context, from, through model.Time, chunk Chunk) error {
-	log, ctx := spanlogger.New(ctx, "SeriesStore.PutOne")
-	defer log.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "SeriesStore.PutOne")
+	defer spanLogger.Finish()
+	*/
+	spanLogger := util_log.Logger
 	writeChunk := true
 
 	// If this chunk is in cache it must already be in the database so we don't need to write it again
@@ -471,7 +490,7 @@ func (c *seriesStore) PutOne(ctx context.Context, from, through model.Time, chun
 	// we already have the chunk in the cache so don't write it back to the cache.
 	if writeChunk {
 		if cacheErr := c.fetcher.writeBackCache(ctx, chunks); cacheErr != nil {
-			level.Warn(log).Log("msg", "could not store chunks in chunk cache", "err", cacheErr)
+			level.Warn(spanLogger).Log("msg", "could not store chunks in chunk cache", "err", cacheErr)
 		}
 	}
 

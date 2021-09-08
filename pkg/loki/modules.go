@@ -11,21 +11,19 @@ import (
 	"time"
 
 	"github.com/NYTimes/gziphandler"
-	"github.com/cortexproject/cortex/pkg/cortex"
-	"github.com/cortexproject/cortex/pkg/frontend"
-	"github.com/cortexproject/cortex/pkg/frontend/transport"
-	"github.com/cortexproject/cortex/pkg/frontend/v1/frontendv1pb"
-	"github.com/cortexproject/cortex/pkg/frontend/v2/frontendv2pb"
-	cortex_querier_worker "github.com/grafana/dskit/querier/worker"
-	"github.com/cortexproject/cortex/pkg/scheduler"
-	"github.com/cortexproject/cortex/pkg/scheduler/schedulerpb"
-	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/frontend"
+	"github.com/grafana/dskit/frontend/transport"
+	"github.com/grafana/dskit/frontend/v1/frontendv1pb"
+	"github.com/grafana/dskit/frontend/v2/frontendv2pb"
 	"github.com/grafana/dskit/kv/codec"
 	"github.com/grafana/dskit/kv/memberlist"
+	dsworker "github.com/grafana/dskit/querier/worker"
 	"github.com/grafana/dskit/ring"
 	dsruler "github.com/grafana/dskit/ruler"
 	"github.com/grafana/dskit/runtimeconfig"
+	"github.com/grafana/dskit/scheduler"
+	"github.com/grafana/dskit/scheduler/schedulerpb"
 	"github.com/grafana/dskit/services"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/thanos-io/thanos/pkg/discovery/dns"
@@ -53,6 +51,7 @@ import (
 	"github.com/grafana/loki/pkg/storage/stores/shipper/indexgateway"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/indexgateway/indexgatewaypb"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/uploads"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	serverutil "github.com/grafana/loki/pkg/util/server"
 	"github.com/grafana/loki/pkg/validation"
 )
@@ -85,7 +84,7 @@ const (
 
 func (t *Loki) initServer() (services.Service, error) {
 	// Loki handles signals on its own.
-	cortex.DisableSignalHandling(&t.Cfg.Server)
+	dsserver.DisableSignalHandling(&t.Cfg.Server)
 	serv, err := server.New(t.Cfg.Server)
 	if err != nil {
 		return nil, err
@@ -104,7 +103,7 @@ func (t *Loki) initServer() (services.Service, error) {
 		return svs
 	}
 
-	s := cortex.NewServerService(t.Server, servicesToWaitFor)
+	s := dsserver.NewServerService(t.Server, servicesToWaitFor)
 
 	// Best effort to propagate the org ID from the start.
 	t.Server.HTTPServer.Handler = func(next http.Handler) http.Handler {
@@ -199,7 +198,7 @@ func (t *Loki) initQuerier() (services.Service, error) {
 	if t.Cfg.Worker.FrontendAddress != "" || t.Cfg.Worker.SchedulerAddress != "" {
 		t.Cfg.Worker.MaxConcurrentRequests = t.Cfg.Querier.MaxConcurrent
 		level.Debug(util_log.Logger).Log("msg", "initializing querier worker", "config", fmt.Sprintf("%+v", t.Cfg.Worker))
-		worker, err = cortex_querier_worker.NewQuerierWorker(t.Cfg.Worker, httpgrpc_server.NewServer(t.Server.HTTPServer.Handler), util_log.Logger, prometheus.DefaultRegisterer)
+		worker, err = dsworker.NewQuerierWorker(t.Cfg.Worker, httpgrpc_server.NewServer(t.Server.HTTPServer.Handler), util_log.Logger, prometheus.DefaultRegisterer)
 		if err != nil {
 			return nil, err
 		}

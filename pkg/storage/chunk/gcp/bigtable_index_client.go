@@ -17,7 +17,6 @@ import (
 
 	"github.com/grafana/dskit/grpcclient"
 	"github.com/grafana/dskit/math"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 
 	"github.com/grafana/loki/pkg/storage/chunk"
 	chunk_util "github.com/grafana/loki/pkg/storage/chunk/util"
@@ -331,8 +330,11 @@ func (s *storageClientV1) QueryPages(ctx context.Context, queries []chunk.IndexQ
 func (s *storageClientV1) query(ctx context.Context, query chunk.IndexQuery, callback chunk_util.Callback) error {
 	const null = string('\xff')
 
-	log, ctx := spanlogger.New(ctx, "QueryPages", ot.Tag{Key: "tableName", Value: query.TableName}, ot.Tag{Key: "hashValue", Value: query.HashValue})
-	defer log.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "QueryPages", ot.Tag{Key: "tableName", Value: query.TableName}, ot.Tag{Key: "hashValue", Value: query.HashValue})
+	defer spanLogger.Finish()
+	*/
+	spanLogger := util_log.Logger
 
 	table := s.client.Open(query.TableName)
 
@@ -365,7 +367,7 @@ func (s *storageClientV1) query(ctx context.Context, query chunk.IndexQuery, cal
 		return true
 	})
 	if err != nil {
-		log.Error(err)
+		spanLogger.Error(err)
 		return errors.WithStack(err)
 	}
 	return nil

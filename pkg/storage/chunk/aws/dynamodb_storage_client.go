@@ -17,13 +17,12 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
-	"github.com/cortexproject/cortex/pkg/util"
-	"github.com/grafana/loki/pkg/util/log"
-	"github.com/grafana/dskit/math"
-	"github.com/cortexproject/cortex/pkg/util/spanlogger"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grafana/dskit/backoff"
 	"github.com/grafana/dskit/flagext"
+	"github.com/grafana/dskit/math"
+	"github.com/grafana/loki/pkg/util/log"
+	util_log "github.com/grafana/loki/pkg/util/log"
 	ot "github.com/opentracing/opentracing-go"
 	otlog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -165,7 +164,8 @@ func logWriteRetry(unprocessed dynamoDBWriteBatch, metrics *dynamoDBMetrics) {
 			if rangeAttr, ok := item[rangeKey]; ok {
 				rnge = string(rangeAttr.B)
 			}
-			util.Event().Log("msg", "store retry", "table", table, "hashKey", hash, "rangeKey", rnge)
+			// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
+			// util.Event().Log("msg", "store retry", "table", table, "hashKey", hash, "rangeKey", rnge)
 		}
 	}
 }
@@ -216,7 +216,8 @@ func (a dynamoDBStorageClient) BatchWrite(ctx context.Context, input chunk.Write
 				// this write will never work, so the only option is to drop the offending items and continue.
 				level.Warn(log.Logger).Log("msg", "Data lost while flushing to DynamoDB", "err", awsErr)
 				level.Debug(log.Logger).Log("msg", "Dropped request details", "requests", requests)
-				util.Event().Log("msg", "ValidationException", "requests", requests)
+				// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
+				// util.Event().Log("msg", "ValidationException", "requests", requests)
 				// recording the drop counter separately from recordDynamoError(), as the error code alone may not provide enough context
 				// to determine if a request was dropped (or not)
 				for tableName := range requests {
@@ -368,9 +369,12 @@ type chunksPlusError struct {
 
 // GetChunks implements chunk.Client.
 func (a dynamoDBStorageClient) GetChunks(ctx context.Context, chunks []chunk.Chunk) ([]chunk.Chunk, error) {
-	log, ctx := spanlogger.New(ctx, "GetChunks.DynamoDB", ot.Tag{Key: "numChunks", Value: len(chunks)})
-	defer log.Span.Finish()
-	level.Debug(log).Log("chunks requested", len(chunks))
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "GetChunks.DynamoDB", ot.Tag{Key: "numChunks", Value: len(chunks)})
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
+	level.Debug(spanLogger).Log("chunks requested", len(chunks))
 
 	dynamoDBChunks := chunks
 	var err error
@@ -403,10 +407,10 @@ func (a dynamoDBStorageClient) GetChunks(ctx context.Context, chunks []chunk.Chu
 		}
 		finalChunks = append(finalChunks, in.chunks...)
 	}
-	level.Debug(log).Log("chunks fetched", len(finalChunks))
+	level.Debug(spanLogger).Log("chunks fetched", len(finalChunks))
 
 	// Return any chunks we did receive: a partial result may be useful
-	return finalChunks, log.Error(err)
+	return finalChunks, spanLogger.Error(err)
 }
 
 // As we're re-using the DynamoDB schema from the index for the chunk tables,
@@ -417,8 +421,12 @@ var placeholder = []byte{'c'}
 // Structure is identical to BatchWrite(), but operating on different datatypes
 // so cannot share implementation.  If you fix a bug here fix it there too.
 func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []chunk.Chunk) ([]chunk.Chunk, error) {
-	log, ctx := spanlogger.New(ctx, "getDynamoDBChunks", ot.Tag{Key: "numChunks", Value: len(chunks)})
-	defer log.Span.Finish()
+	/* TODO
+	spanLogger, ctx := spanlogger.New(ctx, "getDynamoDBChunks", ot.Tag{Key: "numChunks", Value: len(chunks)})
+	defer spanLogger.Span.Finish()
+	*/
+	spanLogger := util_log.Logger
+
 	outstanding := dynamoDBReadRequest{}
 	chunksByKey := map[string]chunk.Chunk{}
 	for _, chunk := range chunks {
@@ -426,7 +434,7 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 		chunksByKey[key] = chunk
 		tableName, err := a.schemaCfg.ChunkTableFor(chunk.From)
 		if err != nil {
-			return nil, log.Error(err)
+			return nil, spanLogger.Error(err)
 		}
 		outstanding.Add(tableName, key, placeholder)
 	}
@@ -468,8 +476,8 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 				continue
 			} else if ok && awsErr.Code() == validationException {
 				// this read will never work, so the only option is to drop the offending request and continue.
-				level.Warn(log).Log("msg", "Error while fetching data from Dynamo", "err", awsErr)
-				level.Debug(log).Log("msg", "Dropped request details", "requests", requests)
+				level.Warn(spanLogger).Log("msg", "Error while fetching data from Dynamo", "err", awsErr)
+				level.Debug(spanLogger).Log("msg", "Dropped request details", "requests", requests)
 				// recording the drop counter separately from recordDynamoError(), as the error code alone may not provide enough context
 				// to determine if a request was dropped (or not)
 				for tableName := range requests {
@@ -484,7 +492,7 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 
 		processedChunks, err := processChunkResponse(response, chunksByKey)
 		if err != nil {
-			return nil, log.Error(err)
+			return nil, spanLogger.Error(err)
 		}
 		result = append(result, processedChunks...)
 
@@ -498,7 +506,7 @@ func (a dynamoDBStorageClient) getDynamoDBChunks(ctx context.Context, chunks []c
 
 	if valuesLeft := outstanding.Len() + unprocessed.Len(); valuesLeft > 0 {
 		// Return the chunks we did fetch, because partial results may be useful
-		return result, log.Error(fmt.Errorf("failed to query chunks, %d values remaining: %s", valuesLeft, backoff.Err()))
+		return result, spanLogger.Error(fmt.Errorf("failed to query chunks, %d values remaining: %s", valuesLeft, backoff.Err()))
 	}
 	return result, nil
 }
@@ -792,7 +800,7 @@ func awsSessionFromURL(awsURL *url.URL) (client.ConfigProvider, error) {
 	}
 	path := strings.TrimPrefix(awsURL.Path, "/")
 	if len(path) > 0 {
-		level.Warn(log.Logger).Log("msg", "ignoring DynamoDB URL path", "path", path)
+		level.Warn(util_log.Logger).Log("msg", "ignoring DynamoDB URL path", "path", path)
 	}
 	config, err := awscommon.ConfigFromURL(awsURL)
 	if err != nil {

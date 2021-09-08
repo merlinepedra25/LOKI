@@ -14,7 +14,7 @@ import (
 	"github.com/prometheus/prometheus/promql/parser"
 
 	"github.com/grafana/dskit/tenant"
-	"github.com/cortexproject/cortex/pkg/util"
+	"github.com/grafana/dskit/timeutil"
 	util_log "github.com/grafana/loki/pkg/util/log"
 )
 
@@ -79,7 +79,7 @@ func (dm *DeleteRequestHandler) AddDeleteRequestHandler(w http.ResponseWriter, r
 	startParam := params.Get("start")
 	startTime := int64(0)
 	if startParam != "" {
-		startTime, err = util.ParseTime(startParam)
+		startTime, err = timeutil.ParseTime(startParam)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -90,7 +90,7 @@ func (dm *DeleteRequestHandler) AddDeleteRequestHandler(w http.ResponseWriter, r
 	endTime := int64(model.Now())
 
 	if endParam != "" {
-		endTime, err = util.ParseTime(endParam)
+		endTime, err = timeutil.ParseTime(endParam)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

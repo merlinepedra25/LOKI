@@ -9,7 +9,7 @@ import (
 
 	cortex_tripper "github.com/grafana/dskit/querier/queryrange"
 	"github.com/grafana/dskit/querier/worker"
-	"github.com/cortexproject/cortex/pkg/scheduler"
+	"github.com/grafana/dskit/scheduler"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/fakeauth"
 	"github.com/cortexproject/cortex/pkg/util/grpc/healthcheck"
