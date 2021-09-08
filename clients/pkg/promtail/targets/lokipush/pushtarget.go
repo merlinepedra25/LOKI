@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/grafana/dskit/dslog"
 	"github.com/grafana/dskit/tenant"
 	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/imdario/mergo"
@@ -105,7 +106,7 @@ func (t *PushTarget) run() error {
 }
 
 func (t *PushTarget) handle(w http.ResponseWriter, r *http.Request) {
-	logger := util_log.WithContext(r.Context(), util_log.Logger)
+	logger := dslog.WithContext(r.Context(), util_log.Logger)
 	userID, _ := tenant.ID(r.Context())
 	req, err := push.ParseRequest(logger, userID, r, nil)
 	if err != nil {

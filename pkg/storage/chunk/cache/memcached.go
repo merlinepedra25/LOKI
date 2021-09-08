@@ -11,13 +11,23 @@ import (
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	otlog "github.com/opentracing/opentracing-go/log"
+	"github.com/grafana/dskit/math"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	instr "github.com/weaveworks/common/instrument"
 
-	"github.com/grafana/dskit/math"
+	util_log "github.com/grafana/loki/pkg/util/log"
 )
+
+type observableVecCollector struct {
+	v prometheus.ObserverVec
+}
+
+func (observableVecCollector) Register()                                                  {}
+func (observableVecCollector) Before(ctx context.Context, method string, start time.Time) {}
+func (o observableVecCollector) After(ctx context.Context, method, statusCode string, start time.Time) {
+	o.v.WithLabelValues(method, statusCode).Observe(time.Since(start).Seconds())
+}
 
 // MemcachedConfig is config to make a Memcached
 type MemcachedConfig struct {
@@ -141,11 +151,12 @@ func (c *Memcached) fetch(ctx context.Context, keys []string) (found []string, b
 		defer spanLogger.Finish()
 		log.LogFields(otlog.Int("keys requested", len(keys)))
 		*/
+		spanLogger := util_log.Logger
 
 		var err error
 		items, err = c.memcache.GetMulti(keys)
 
-		spanLogger.LogFields(otlog.Int("keys found", len(items)))
+		// spanLogger.LogFields(otlog.Int("keys found", len(items)))
 
 		// Memcached returns partial results even on error.
 		if err != nil {
