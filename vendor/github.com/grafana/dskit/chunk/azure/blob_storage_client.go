@@ -13,6 +13,7 @@ import (
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"github.com/Azure/azure-storage-blob-go/azblob"
 	"github.com/go-kit/kit/log"
+	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/grafana/dskit/chunk"
 	"github.com/grafana/dskit/dslog"
@@ -95,8 +96,8 @@ type BlobStorage struct {
 }
 
 // NewBlobStorage creates a new instance of the BlobStorage struct.
-func NewBlobStorage(cfg *BlobStorageConfig, logger log.Logger) (*BlobStorage, error) {
-	dslog.WarnExperimentalUse("Azure Blob Storage", logger)
+func NewBlobStorage(cfg *BlobStorageConfig, logger log.Logger, registerer prometheus.Registerer) (*BlobStorage, error) {
+	dslog.WarnExperimentalUse("Azure Blob Storage", logger, registerer)
 	blobStorage := &BlobStorage{
 		cfg:    cfg,
 		logger: logger,

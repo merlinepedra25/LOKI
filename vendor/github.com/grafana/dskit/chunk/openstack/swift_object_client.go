@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/ncw/swift"
+	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/grafana/dskit/chunk"
 	"github.com/grafana/dskit/dslog"
@@ -42,8 +43,8 @@ func (cfg *SwiftConfig) RegisterFlagsWithPrefix(prefix string, f *flag.FlagSet) 
 }
 
 // NewSwiftObjectClient makes a new chunk.Client that writes chunks to OpenStack Swift.
-func NewSwiftObjectClient(cfg SwiftConfig, logger log.Logger) (*SwiftObjectClient, error) {
-	dslog.WarnExperimentalUse("OpenStack Swift Storage", logger)
+func NewSwiftObjectClient(cfg SwiftConfig, logger log.Logger, reg prometheus.Registerer) (*SwiftObjectClient, error) {
+	dslog.WarnExperimentalUse("OpenStack Swift Storage", logger, reg)
 
 	// Create a connection
 	c := &swift.Connection{

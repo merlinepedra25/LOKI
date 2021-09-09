@@ -220,7 +220,7 @@ func (a dynamoDBStorageClient) BatchWrite(ctx context.Context, input chunk.Write
 				level.Warn(a.logger).Log("msg", "Data lost while flushing to DynamoDB", "err", awsErr)
 				level.Debug(a.logger).Log("msg", "Dropped request details", "requests", requests)
 				// XXX: The original Event() implementation corresponds to log.NewNopLogger(), drop this?
-				// event().Log("msg", "ValidationException", "requests", requests)
+				// Event().Log("msg", "ValidationException", "requests", requests)
 				// recording the drop counter separately from recordDynamoError(), as the error code alone may not provide enough context
 				// to determine if a request was dropped (or not)
 				for tableName := range requests {

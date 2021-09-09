@@ -21,7 +21,7 @@ type RedisCache struct {
 
 // NewRedisCache creates a new RedisCache
 func NewRedisCache(name string, redisClient *RedisClient, reg prometheus.Registerer, logger log.Logger) *RedisCache {
-	dslog.WarnExperimentalUse("Redis cache", logger)
+	dslog.WarnExperimentalUse("Redis cache", logger, reg)
 	cache := &RedisCache{
 		name:   name,
 		redis:  redisClient,

@@ -75,7 +75,7 @@ func (cfg *RuleStoreConfig) IsDefaults() bool {
 // NewLegacyRuleStore returns a rule store backend client based on the provided cfg.
 // The client used by the function is based a legacy object store clients that shouldn't
 // be used anymore.
-func NewLegacyRuleStore(cfg RuleStoreConfig, loader promRules.GroupLoader, logger log.Logger) (rulestore.RuleStore, error) {
+func NewLegacyRuleStore(cfg RuleStoreConfig, loader promRules.GroupLoader, logger log.Logger, reg prometheus.Registerer) (rulestore.RuleStore, error) {
 	if cfg.mock != nil {
 		return cfg.mock, nil
 	}
@@ -95,13 +95,13 @@ func NewLegacyRuleStore(cfg RuleStoreConfig, loader promRules.GroupLoader, logge
 		}
 		return configdb.NewConfigRuleStore(c), nil
 	case "azure":
-		client, err = azure.NewBlobStorage(&cfg.Azure, logger)
+		client, err = azure.NewBlobStorage(&cfg.Azure, logger, reg)
 	case "gcs":
 		client, err = gcp.NewGCSObjectClient(context.Background(), cfg.GCS)
 	case "s3":
 		client, err = aws.NewS3ObjectClient(cfg.S3)
 	case "swift":
-		client, err = openstack.NewSwiftObjectClient(cfg.Swift, logger)
+		client, err = openstack.NewSwiftObjectClient(cfg.Swift, logger, reg)
 	case "local":
 		return local.NewLocalRulesClient(cfg.Local, loader)
 	default:

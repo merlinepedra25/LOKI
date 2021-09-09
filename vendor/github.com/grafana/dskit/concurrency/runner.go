@@ -4,10 +4,10 @@ import (
 	"context"
 	"sync"
 
-	tsdb_errors "github.com/prometheus/prometheus/tsdb/errors"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/grafana/dskit/math"
+	"github.com/grafana/dskit/multierror"
 )
 
 // ForEachUser runs the provided userFunc for each userIDs up to concurrency concurrent workers.
@@ -26,7 +26,7 @@ func ForEachUser(ctx context.Context, userIDs []string, concurrency int, userFun
 	close(ch)
 
 	// Keep track of all errors occurred.
-	errs := tsdb_errors.NewMulti()
+	errs := multierror.MultiError{}
 	errsMx := sync.Mutex{}
 
 	wg := sync.WaitGroup{}

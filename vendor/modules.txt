@@ -559,7 +559,7 @@ github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/grafana/dskit v0.0.0-20210907150518-9c91c3838270
+# github.com/grafana/dskit v0.0.0-20210909072042-db0cc6b7d527
 ## explicit
 github.com/grafana/dskit/backoff
 github.com/grafana/dskit/chunk
@@ -584,6 +584,7 @@ github.com/grafana/dskit/extract
 github.com/grafana/dskit/flagext
 github.com/grafana/dskit/grpcclient
 github.com/grafana/dskit/grpcencoding/snappy
+github.com/grafana/dskit/grpcutil/naming
 github.com/grafana/dskit/ingester/client
 github.com/grafana/dskit/kv
 github.com/grafana/dskit/kv/codec
@@ -595,6 +596,7 @@ github.com/grafana/dskit/labels
 github.com/grafana/dskit/math
 github.com/grafana/dskit/middleware
 github.com/grafana/dskit/modules
+github.com/grafana/dskit/multierror
 github.com/grafana/dskit/netutil
 github.com/grafana/dskit/prom1/storage/metric
 github.com/grafana/dskit/promext
