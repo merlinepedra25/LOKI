@@ -12,6 +12,7 @@ import (
 
 const (
 	msgWrongType          = "WRONGTYPE Operation against a key holding the wrong kind of value"
+	msgNotValidHllValue   = "WRONGTYPE Key is not a valid HyperLogLog string value."
 	msgInvalidInt         = "ERR value is not an integer or out of range"
 	msgInvalidFloat       = "ERR value is not a valid float"
 	msgInvalidMinMax      = "ERR min or max is not a float"
@@ -30,6 +31,7 @@ const (
 	msgNegativeKeysNumber = "ERR Number of keys can't be negative"
 	msgFScriptUsage       = "ERR Unknown subcommand or wrong number of arguments for '%s'. Try SCRIPT HELP."
 	msgFPubsubUsage       = "ERR Unknown subcommand or wrong number of arguments for '%s'. Try PUBSUB HELP."
+	msgScriptFlush        = "ERR SCRIPT FLUSH only support SYNC|ASYNC option"
 	msgSingleElementPair  = "ERR INCR option supports a single increment-element pair"
 	msgInvalidStreamID    = "ERR Invalid stream ID specified as stream command argument"
 	msgStreamIDTooSmall   = "ERR The ID specified in XADD is equal or smaller than the target stream top item"
@@ -38,6 +40,7 @@ const (
 	msgUnsupportedUnit    = "ERR unsupported unit provided. please use m, km, ft, mi"
 	msgNotFromScripts     = "This Redis command is not allowed from scripts"
 	msgXreadUnbalanced    = "ERR Unbalanced XREAD list of streams: for each stream key an ID or '$' must be specified."
+	msgXgroupKeyNotFound  = "ERR The XGROUP subcommand requires the key to exist. Note that for CREATE you may want to use the MKSTREAM option to create an empty stream automatically."
 )
 
 func errWrongNumber(cmd string) string {
@@ -46,6 +49,14 @@ func errWrongNumber(cmd string) string {
 
 func errLuaParseError(err error) string {
 	return fmt.Sprintf("ERR Error compiling script (new function): %s", err.Error())
+}
+
+func errReadgroup(key, group string) error {
+	return fmt.Errorf("NOGROUP No such key '%s' or consumer group '%s'", key, group)
+}
+
+func errXreadgroup(key, group string) error {
+	return fmt.Errorf("NOGROUP No such key '%s' or consumer group '%s' in XREADGROUP with GROUP option", key, group)
 }
 
 // withTx wraps the non-argument-checking part of command handling code in

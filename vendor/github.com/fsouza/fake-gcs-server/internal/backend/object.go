@@ -4,16 +4,41 @@
 
 package backend
 
-// Object represents the object that is stored within the fake server.
-type Object struct {
-	BucketName string `json:"-"`
-	Name       string `json:"-"`
-	Content    []byte
-	Crc32c     string
-	Md5Hash    string
+import (
+	"fmt"
+
+	"cloud.google.com/go/storage"
+)
+
+// ObjectAttrs represents the meta-data without its contents.
+type ObjectAttrs struct {
+	BucketName      string `json:"-"`
+	Name            string `json:"-"`
+	Size            int64  `json:"-"`
+	ContentType     string
+	ContentEncoding string
+	Crc32c          string
+	Md5Hash         string
+	ACL             []storage.ACLRule
+	Metadata        map[string]string
+	Created         string
+	Deleted         string
+	Updated         string
+	Generation      int64
 }
 
-// ID is useful for comparing objects
-func (o *Object) ID() string {
-	return o.BucketName + "/" + o.Name
+// ID is used for comparing objects.
+func (o *ObjectAttrs) ID() string {
+	return fmt.Sprintf("%s#%d", o.IDNoGen(), o.Generation)
+}
+
+// IDNoGen does not consider the generation field.
+func (o *ObjectAttrs) IDNoGen() string {
+	return fmt.Sprintf("%s/%s", o.BucketName, o.Name)
+}
+
+// Object represents the object that is stored within the fake server.
+type Object struct {
+	ObjectAttrs
+	Content []byte
 }

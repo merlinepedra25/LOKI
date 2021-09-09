@@ -23,6 +23,7 @@ func commandsString(m *Miniredis) {
 	m.srv.Register("GET", m.cmdGet)
 	m.srv.Register("GETRANGE", m.cmdGetrange)
 	m.srv.Register("GETSET", m.cmdGetset)
+	m.srv.Register("GETDEL", m.cmdGetdel)
 	m.srv.Register("INCRBYFLOAT", m.cmdIncrbyfloat)
 	m.srv.Register("INCRBY", m.cmdIncrby)
 	m.srv.Register("INCR", m.cmdIncr)
@@ -52,27 +53,30 @@ func (m *Miniredis) cmdSet(c *server.Peer, cmd string, args []string) {
 		return
 	}
 
-	var (
-		nx  = false // set iff not exists
-		xx  = false // set iff exists
-		keepttl = false // set keepttl
-		ttl time.Duration
-	)
+	var opts struct {
+		key     string
+		value   string
+		nx      bool // set iff not exists
+		xx      bool // set iff exists
+		keepttl bool // set keepttl
+		ttl     time.Duration
+		get     bool
+	}
 
-	key, value, args := args[0], args[1], args[2:]
+	opts.key, opts.value, args = args[0], args[1], args[2:]
 	for len(args) > 0 {
 		timeUnit := time.Second
 		switch strings.ToUpper(args[0]) {
 		case "NX":
-			nx = true
+			opts.nx = true
 			args = args[1:]
 			continue
 		case "XX":
-			xx = true
+			opts.xx = true
 			args = args[1:]
 			continue
 		case "KEEPTTL":
-			keepttl = true
+			opts.keepttl = true
 			args = args[1:]
 			continue
 		case "PX":
@@ -90,14 +94,18 @@ func (m *Miniredis) cmdSet(c *server.Peer, cmd string, args []string) {
 				c.WriteError(msgInvalidInt)
 				return
 			}
-			ttl = time.Duration(expire) * timeUnit
-			if ttl <= 0 {
+			opts.ttl = time.Duration(expire) * timeUnit
+			if opts.ttl <= 0 {
 				setDirty(c)
 				c.WriteError(msgInvalidSETime)
 				return
 			}
 
 			args = args[2:]
+			continue
+		case "GET":
+			opts.get = true
+			args = args[1:]
 			continue
 		default:
 			setDirty(c)
@@ -109,29 +117,43 @@ func (m *Miniredis) cmdSet(c *server.Peer, cmd string, args []string) {
 	withTx(m, c, func(c *server.Peer, ctx *connCtx) {
 		db := m.db(ctx.selectedDB)
 
-		if nx {
-			if db.exists(key) {
+		if opts.nx {
+			if db.exists(opts.key) {
 				c.WriteNull()
 				return
 			}
 		}
-		if xx {
-			if !db.exists(key) {
+		if opts.xx {
+			if !db.exists(opts.key) {
 				c.WriteNull()
 				return
 			}
 		}
-		if keepttl {
-			if val, ok := db.ttl[key]; ok {
-				ttl = val
+		if opts.keepttl {
+			if val, ok := db.ttl[opts.key]; ok {
+				opts.ttl = val
 			}
 		}
-
-		db.del(key, true) // be sure to remove existing values of other type keys.
+		if opts.get {
+			if t, ok := db.keys[opts.key]; ok && t != "string" {
+				c.WriteError(msgWrongType)
+				return
+			}
+		}
+		old, existed := db.stringKeys[opts.key]
+		db.del(opts.key, true) // be sure to remove existing values of other type keys.
 		// a vanilla SET clears the expire
-		db.stringSet(key, value)
-		if ttl != 0 {
-			db.ttl[key] = ttl
+		db.stringSet(opts.key, opts.value)
+		if opts.ttl != 0 {
+			db.ttl[opts.key] = opts.ttl
+		}
+		if opts.get {
+			if !existed {
+				c.WriteNull()
+			} else {
+				c.WriteBulk(old)
+			}
+			return
 		}
 		c.WriteOK()
 	})
@@ -391,6 +413,41 @@ func (m *Miniredis) cmdGetset(c *server.Peer, cmd string, args []string) {
 			return
 		}
 		c.WriteBulk(old)
+	})
+}
+
+// GETDEL
+func (m *Miniredis) cmdGetdel(c *server.Peer, cmd string, args []string) {
+	if len(args) != 1 {
+		setDirty(c)
+		c.WriteError(errWrongNumber(cmd))
+		return
+	}
+	if !m.handleAuth(c) {
+		return
+	}
+	if m.checkPubsub(c, cmd) {
+		return
+	}
+
+	withTx(m, c, func(c *server.Peer, ctx *connCtx) {
+		db := m.db(ctx.selectedDB)
+
+		key := args[0]
+
+		if !db.exists(key) {
+			c.WriteNull()
+			return
+		}
+
+		if db.t(key) != "string" {
+			c.WriteError(msgWrongType)
+			return
+		}
+
+		v := db.stringGet(key)
+		db.del(key, true)
+		c.WriteBulk(v)
 	})
 }
 
@@ -952,24 +1009,42 @@ func (m *Miniredis) cmdBitpos(c *server.Peer, cmd string, args []string) {
 		if t, ok := db.keys[key]; ok && t != "string" {
 			c.WriteError(msgWrongType)
 			return
+		} else if !ok {
+			// non-existing key behaves differently
+			if bit == 0 {
+				c.WriteInt(0)
+			} else {
+				c.WriteInt(-1)
+			}
+			return
 		}
 		value := db.stringKeys[key]
-		if start != 0 {
-			if start > len(value) {
-				start = len(value)
+
+		if start < 0 {
+			start += len(value)
+			if start < 0 {
+				start = 0
 			}
 		}
+		if start > len(value) {
+			start = len(value)
+		}
+
 		if withEnd {
-			end++ // redis end semantics.
 			if end < 0 {
-				end = len(value) + end
+				end += len(value)
 			}
+			if end < 0 {
+				end = 0
+			}
+			end++ // +1 for redis end semantics
 			if end > len(value) {
 				end = len(value)
 			}
 		} else {
 			end = len(value)
 		}
+
 		if start != 0 || withEnd {
 			if end < start {
 				value = ""
@@ -983,7 +1058,7 @@ func (m *Miniredis) cmdBitpos(c *server.Peer, cmd string, args []string) {
 		}
 		// Special case when looking for 0, but not when start and end are
 		// given.
-		if bit == 0 && pos == -1 && !withEnd {
+		if bit == 0 && pos == -1 && !withEnd && len(value) > 0 {
 			pos = start*8 + len(value)*8
 		}
 		c.WriteInt(pos)

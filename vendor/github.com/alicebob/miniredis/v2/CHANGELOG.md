@@ -1,5 +1,33 @@
 ## Changelog
 
+
+### v2.15.1
+
+- EVAL should cache the script (thanks @guoshimin)
+
+
+### v2.15.0
+
+- target redis 6.2 and added new args to various commands
+- support for all hyperlog commands (thanks @ilbaktin)
+- support for GETDEL (thanks @wszaranski)
+
+
+### v2.14.5
+
+- added XPENDING
+- support for BLOCK option in XREAD and XREADGROUP
+
+
+### v2.14.4
+
+- fix BITPOS error (thanks @xiaoyuzdy)
+- small fixes for XREAD, XACK, and XDEL. Mostly error cases.
+- fix empty EXEC return type (thanks @ashanbrown)
+- fix XDEL (thanks @svakili and @yvesf)
+- fix FLUSHALL for streams (thanks @svakili)
+
+
 ### v2.14.3
 
 - fix problem where Lua code didn't set the selected DB
