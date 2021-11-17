@@ -64,6 +64,8 @@ func statsHTTPMiddleware(recorder metricRecorder) middleware.Interface {
 			)
 			// http middlewares runs for every http request.
 			// but we want only to record query_range filters.
+
+			fmt.Println("Am i here with recorded?", data.recorded)
 			if data.recorded {
 				if data.statistics == nil {
 					data.statistics = &stats.Result{}
@@ -95,6 +97,10 @@ func StatsCollectorMiddleware() queryrange.Middleware {
 					statistics = &r.Statistics
 					res = logqlmodel.Streams(r.Data.Result)
 				case *LokiPromResponse:
+					statistics = &r.Statistics
+				case *LokiSeriesResponse:
+					statistics = &r.Statistics
+				case *LokiLabelNamesResponse:
 					statistics = &r.Statistics
 				default:
 					level.Warn(logger).Log("msg", fmt.Sprintf("cannot compute stats, unexpected type: %T", resp))

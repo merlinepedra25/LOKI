@@ -68,8 +68,8 @@ var (
 
 func RecordMetrics(ctx context.Context, p Params, status string, stats stats.Result, result promql_parser.Value) {
 	var (
-		logger        = util_log.WithContext(ctx, util_log.Logger)
-		rt            = string(GetRangeType(p))
+		logger = util_log.WithContext(ctx, util_log.Logger)
+		// rt            = string(GetRangeType(p))
 		latencyType   = latencyTypeFast
 		returnedLines = 0
 	)
@@ -93,7 +93,7 @@ func RecordMetrics(ctx context.Context, p Params, status string, stats stats.Res
 		"latency", latencyType, // this can be used to filter log lines.
 		"query", p.Query(),
 		"query_type", queryType,
-		"range_type", rt,
+		// "range_type", rt,
 		"length", p.End().Sub(p.Start()),
 		"step", p.Step(),
 		"duration", time.Duration(int64(stats.Summary.ExecTime*float64(time.Second))),
@@ -104,16 +104,16 @@ func RecordMetrics(ctx context.Context, p Params, status string, stats stats.Res
 		"total_bytes", strings.Replace(humanize.Bytes(uint64(stats.Summary.TotalBytesProcessed)), " ", "", 1),
 	)
 
-	bytesPerSecond.WithLabelValues(status, queryType, rt, latencyType).
-		Observe(float64(stats.Summary.BytesProcessedPerSecond))
-	execLatency.WithLabelValues(status, queryType, rt).
-		Observe(stats.Summary.ExecTime)
-	chunkDownloadLatency.WithLabelValues(status, queryType, rt).
-		Observe(stats.ChunksDownloadTime().Seconds())
-	duplicatesTotal.Add(float64(stats.TotalDuplicates()))
-	chunkDownloadedTotal.WithLabelValues(status, queryType, rt).
-		Add(float64(stats.TotalChunksDownloaded()))
-	ingesterLineTotal.Add(float64(stats.Ingester.TotalLinesSent))
+	// bytesPerSecond.WithLabelValues(status, queryType, rt, latencyType).
+	// 	Observe(float64(stats.Summary.BytesProcessedPerSecond))
+	// execLatency.WithLabelValues(status, queryType, rt).
+	// 	Observe(stats.Summary.ExecTime)
+	// chunkDownloadLatency.WithLabelValues(status, queryType, rt).
+	// 	Observe(stats.ChunksDownloadTime().Seconds())
+	// duplicatesTotal.Add(float64(stats.TotalDuplicates()))
+	// chunkDownloadedTotal.WithLabelValues(status, queryType, rt).
+	// 	Add(float64(stats.TotalChunksDownloaded()))
+	// ingesterLineTotal.Add(float64(stats.Ingester.TotalLinesSent))
 }
 
 func QueryType(query string) (string, error) {

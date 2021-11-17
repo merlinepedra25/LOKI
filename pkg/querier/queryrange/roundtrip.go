@@ -334,7 +334,7 @@ func NewLabelsTripperware(
 	retryMiddlewareMetrics *queryrange.RetryMiddlewareMetrics,
 	splitByMetrics *SplitByMetrics,
 ) (queryrange.Tripperware, error) {
-	queryRangeMiddleware := []queryrange.Middleware{}
+	queryRangeMiddleware := []queryrange.Middleware{StatsCollectorMiddleware()}
 	if cfg.SplitQueriesByInterval != 0 {
 		queryRangeMiddleware = append(queryRangeMiddleware,
 			queryrange.InstrumentMiddleware("split_by_interval", instrumentMetrics),
