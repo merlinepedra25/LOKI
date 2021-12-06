@@ -4,14 +4,44 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
-func newLogLineField() *data.Frame {
-	labelsField := data.NewFieldFromFieldType(data.FieldTypeString, 1) // labels
-	timeField := data.NewFieldFromFieldType(data.FieldTypeTime, 1)     // time
-	lineField := data.NewFieldFromFieldType(data.FieldTypeString, 1)   // line
+type logsFrame struct {
+	labels *data.Field
+	time   *data.Field
+	line   *data.Field
+	frame  *data.Frame
+}
 
-	f := data.NewFrame("", labelsField, timeField, lineField)
-	f.SetMeta(&data.FrameMeta{
+// :grimmice: this really should exist in the SDK directly
+func (f *logsFrame) clear() {
+	for {
+		if f.labels.Len() < 1 {
+			return
+		}
+		f.frame.DeleteRow(0)
+	}
+}
+
+func (f *logsFrame) append(stream Stream) {
+	str := stream.Labels.String()
+	for _, v := range stream.Entries {
+		f.frame.AppendRow(str, v.Timestamp, v.Line)
+	}
+}
+
+func newLogsFrame(size int) logsFrame {
+	wrap := logsFrame{
+		labels: data.NewFieldFromFieldType(data.FieldTypeString, size),
+		time:   data.NewFieldFromFieldType(data.FieldTypeTime, size),
+		line:   data.NewFieldFromFieldType(data.FieldTypeString, size),
+	}
+
+	wrap.labels.Name = "Labels"
+	wrap.time.Name = "Time"
+	wrap.line.Name = "Line"
+
+	wrap.frame = data.NewFrame("", wrap.labels, wrap.time, wrap.line)
+	wrap.frame.SetMeta(&data.FrameMeta{
 		// TODO -- types
 	})
-	return f
+	return wrap
 }
