@@ -779,108 +779,74 @@ func (res LokiResponse) Count() int64 {
 	return result
 }
 
+// paramsFromRequest wraps a queryrange.Request into a struct that implements
+// the logql.Params interface.
 func paramsFromRequest(req queryrange.Request) (logql.Params, error) {
 	switch r := req.(type) {
 	case *LokiRequest:
-		return &paramsRangeWrapper{
-			LokiRequest: r,
-		}, nil
+		return &paramsRangeWrapper{r}, nil
 	case *LokiInstantRequest:
-		return &paramsInstantWrapper{
-			LokiInstantRequest: r,
-		}, nil
+		return &paramsInstantWrapper{r}, nil
 	case *LokiLabelNamesRequest:
-		return &paramsLabelNamesWrapper{
-			LokiLabelNamesRequest: r,
-		}, nil
+		return &paramsLabelNamesWrapper{r}, nil
+	case *LokiSeriesRequest:
+		return &paramsSeriesWrapper{r}, nil
 	default:
-		return nil, fmt.Errorf("expected *LokiRequest, *LokiLabelNamesRequest, or *LokiInstantRequest, got (%T)", r)
+		return nil, fmt.Errorf("expected *LokiRequest, *LokiInstantRequest, *LokiLabelNamesRequest or *LokiSeriesRequest; got (%T)", r)
 	}
-}
-
-type paramsLabelNamesWrapper struct {
-	*LokiLabelNamesRequest
-}
-
-func (p paramsLabelNamesWrapper) Query() string {
-	return p.GetQuery()
-}
-
-func (p paramsLabelNamesWrapper) Start() time.Time {
-	return p.GetStartTs()
-}
-
-func (p paramsLabelNamesWrapper) End() time.Time {
-	return p.GetEndTs()
-}
-
-func (p paramsLabelNamesWrapper) Step() time.Duration {
-	return time.Duration(p.GetStep() * 1e6)
-}
-func (p paramsLabelNamesWrapper) Interval() time.Duration { return 0 }
-func (p paramsLabelNamesWrapper) Direction() logproto.Direction {
-	return logproto.FORWARD
-}
-func (p paramsLabelNamesWrapper) Limit() uint32 { return 0 } // no limit.
-func (p paramsLabelNamesWrapper) Shards() []string {
-	return []string{}
 }
 
 type paramsRangeWrapper struct {
 	*LokiRequest
 }
 
-func (p paramsRangeWrapper) Query() string {
-	return p.GetQuery()
-}
-
-func (p paramsRangeWrapper) Start() time.Time {
-	return p.GetStartTs()
-}
-
-func (p paramsRangeWrapper) End() time.Time {
-	return p.GetEndTs()
-}
-
-func (p paramsRangeWrapper) Step() time.Duration {
-	return time.Duration(p.GetStep() * 1e6)
-}
-func (p paramsRangeWrapper) Interval() time.Duration { return 0 }
-func (p paramsRangeWrapper) Direction() logproto.Direction {
-	return p.GetDirection()
-}
-func (p paramsRangeWrapper) Limit() uint32 { return p.LokiRequest.Limit }
-func (p paramsRangeWrapper) Shards() []string {
-	return p.GetShards()
-}
+func (p paramsRangeWrapper) Query() string                 { return p.GetQuery() }
+func (p paramsRangeWrapper) Start() time.Time              { return p.GetStartTs() }
+func (p paramsRangeWrapper) End() time.Time                { return p.GetEndTs() }
+func (p paramsRangeWrapper) Step() time.Duration           { return time.Duration(p.GetStep() * 1e6) }
+func (p paramsRangeWrapper) Interval() time.Duration       { return 0 }
+func (p paramsRangeWrapper) Direction() logproto.Direction { return p.GetDirection() }
+func (p paramsRangeWrapper) Limit() uint32                 { return p.LokiRequest.Limit }
+func (p paramsRangeWrapper) Shards() []string              { return p.GetShards() }
 
 type paramsInstantWrapper struct {
 	*LokiInstantRequest
 }
 
-func (p paramsInstantWrapper) Query() string {
-	return p.GetQuery()
+func (p paramsInstantWrapper) Query() string                 { return p.GetQuery() }
+func (p paramsInstantWrapper) Start() time.Time              { return p.GetTimeTs() }
+func (p paramsInstantWrapper) End() time.Time                { return p.GetTimeTs() }
+func (p paramsInstantWrapper) Step() time.Duration           { return time.Duration(p.GetStep() * 1e6) }
+func (p paramsInstantWrapper) Interval() time.Duration       { return 0 }
+func (p paramsInstantWrapper) Direction() logproto.Direction { return p.GetDirection() }
+func (p paramsInstantWrapper) Limit() uint32                 { return p.LokiInstantRequest.Limit }
+func (p paramsInstantWrapper) Shards() []string              { return p.GetShards() }
+
+type paramsLabelNamesWrapper struct {
+	*LokiLabelNamesRequest
 }
 
-func (p paramsInstantWrapper) Start() time.Time {
-	return p.LokiInstantRequest.GetTimeTs()
+func (p paramsLabelNamesWrapper) Query() string                 { return p.GetQuery() }
+func (p paramsLabelNamesWrapper) Start() time.Time              { return p.GetStartTs() }
+func (p paramsLabelNamesWrapper) End() time.Time                { return p.GetEndTs() }
+func (p paramsLabelNamesWrapper) Step() time.Duration           { return time.Duration(p.GetStep() * 1e6) }
+func (p paramsLabelNamesWrapper) Interval() time.Duration       { return 0 }
+func (p paramsLabelNamesWrapper) Direction() logproto.Direction { return logproto.FORWARD }
+func (p paramsLabelNamesWrapper) Limit() uint32                 { return 0 }
+func (p paramsLabelNamesWrapper) Shards() []string              { return []string{} }
+
+type paramsSeriesWrapper struct {
+	*LokiSeriesRequest
 }
 
-func (p paramsInstantWrapper) End() time.Time {
-	return p.LokiInstantRequest.GetTimeTs()
-}
-
-func (p paramsInstantWrapper) Step() time.Duration {
-	return time.Duration(p.GetStep() * 1e6)
-}
-func (p paramsInstantWrapper) Interval() time.Duration { return 0 }
-func (p paramsInstantWrapper) Direction() logproto.Direction {
-	return p.GetDirection()
-}
-func (p paramsInstantWrapper) Limit() uint32 { return p.LokiInstantRequest.Limit }
-func (p paramsInstantWrapper) Shards() []string {
-	return p.GetShards()
-}
+func (p paramsSeriesWrapper) Query() string                 { return p.GetQuery() }
+func (p paramsSeriesWrapper) Start() time.Time              { return p.GetStartTs() }
+func (p paramsSeriesWrapper) End() time.Time                { return p.GetEndTs() }
+func (p paramsSeriesWrapper) Step() time.Duration           { return time.Duration(p.GetStep() * 1e6) }
+func (p paramsSeriesWrapper) Interval() time.Duration       { return 0 }
+func (p paramsSeriesWrapper) Direction() logproto.Direction { return logproto.FORWARD }
+func (p paramsSeriesWrapper) Limit() uint32                 { return 0 }
+func (p paramsSeriesWrapper) Shards() []string              { return p.GetShards() }
 
 func httpResponseHeadersToPromResponseHeaders(httpHeaders http.Header) []queryrange.PrometheusResponseHeader {
 	var promHeaders []queryrange.PrometheusResponseHeader
