@@ -225,15 +225,17 @@ enqueueAgain:
 	select {
 	case <-ctx.Done():
 		if cancelCh != nil {
-			select {
-			case cancelCh <- freq.queryID:
-				// cancellation sent.
-			default:
-				level.Info(f.log).Log("msg", "failed to cancel, ignore", "queryID", freq.queryID)
-				// failed to cancel, ignore.
-			}
+			cancelCh <- freq.queryID
+			// select {
+			// case cancelCh <- freq.queryID:
+			// 	// cancellation sent.
+			// 	// default:
+			// 	// 	level.Info(f.log).Log("msg", "failed to cancel, ignore", "queryID", freq.queryID)
+			// 	// 	// failed to cancel, ignore.
+			// }
 		}
 		level.Info(f.log).Log("msg", "is cancelCh nil?", "answer", cancelCh == nil, "queryID", freq.queryID)
+
 		return nil, ctx.Err()
 
 	case resp := <-freq.response:
