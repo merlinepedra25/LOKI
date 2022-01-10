@@ -215,6 +215,8 @@ enqueueAgain:
 			if retries > 0 {
 				goto enqueueAgain
 			}
+		} else {
+			level.Info(f.log).Log("msg", "reached not-supposed to reach branch in enqueueAgain", "status", enqRes.status, "queryID", freq.queryID)
 		}
 
 		return nil, httpgrpc.Errorf(http.StatusInternalServerError, "failed to enqueue request")
@@ -227,9 +229,11 @@ enqueueAgain:
 			case cancelCh <- freq.queryID:
 				// cancellation sent.
 			default:
+				level.Info(f.log).Log("msg", "failed to cancel, ignore", "queryID", freq.queryID)
 				// failed to cancel, ignore.
 			}
 		}
+		level.Info(f.log).Log("msg", "is cancelCh nil?", "answer", cancelCh == nil, "queryID", freq.queryID)
 		return nil, ctx.Err()
 
 	case resp := <-freq.response:

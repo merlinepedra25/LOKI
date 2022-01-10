@@ -184,6 +184,8 @@ func (c *DefaultClient) doRequest(path, query string, quiet bool, out interface{
 		req.Header.Set("X-Scope-OrgID", c.OrgID)
 	}
 
+	req.Header.Set("X-Query-Tags", "Source=logvolhist")
+
 	if (c.Username != "" || c.Password != "") && (len(c.BearerToken) > 0 || len(c.BearerTokenFile) > 0) {
 		return fmt.Errorf("at most one of HTTP basic auth (username/password), bearer-token & bearer-token-file is allowed to be configured")
 	}
