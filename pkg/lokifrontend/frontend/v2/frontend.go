@@ -98,7 +98,7 @@ const (
 type enqueueResult struct {
 	status enqueueStatus
 
-	cancelCh chan<- uint64 // Channel that can be used for request cancellation. If nil, cancellation is not possible.
+	cancelCh chan<- uint64 // Channel that can be used for request cancellation. If nil, cancellation is not possible. Q(kavi): Who makes it nil? what makes it nil? it stays uninitalized from the start or mutated at some point?. I don't see anyone making it nil
 }
 
 // NewFrontend creates a new frontend.

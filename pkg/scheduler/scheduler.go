@@ -303,6 +303,7 @@ func (s *Scheduler) FrontendLoop(frontend schedulerpb.SchedulerForFrontend_Front
 			}
 
 		case schedulerpb.CANCEL:
+			level.Info(s.log).Log("msg", "received cancel in scheduler", msg.QueryID)
 			s.cancelRequestAndRemoveFromPending(frontendAddress, msg.QueryID)
 			resp = &schedulerpb.SchedulerToFrontend{Status: schedulerpb.OK}
 
