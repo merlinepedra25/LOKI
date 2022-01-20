@@ -7,6 +7,7 @@ import (
 	"time"
 
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/log/level"
 	"github.com/grafana/dskit/ring"
 	ring_client "github.com/grafana/dskit/ring/client"
 	"github.com/grafana/dskit/services"
@@ -45,7 +46,8 @@ func NewIngesterQuerier(clientCfg client.Config, ring ring.ReadRing, extraQueryD
 
 // newIngesterQuerier creates a new IngesterQuerier and allows to pass a custom ingester client factory
 // used for testing purposes
-func newIngesterQuerier(clientCfg client.Config, ring ring.ReadRing, extraQueryDelay time.Duration, clientFactory ring_client.PoolFactory) (*IngesterQuerier, error) {
+func newIngesterQuerier(clientCfg client.Config, ring ring.ReadRing, extraQueryDelay time.Duration, clientFactory ring_client.PoolFactory) (*IngesterQuerier,
+	error) {
 	iq := IngesterQuerier{
 		ring:            ring,
 		pool:            clientpool.NewPool(clientCfg.PoolConfig, ring, clientFactory, util_log.Logger),
@@ -73,7 +75,9 @@ func (q *IngesterQuerier) forAllIngesters(ctx context.Context, f func(logproto.Q
 
 // forGivenIngesters runs f, in parallel, for given ingesters
 // TODO taken from Cortex, see if we can refactor out an usable interface.
-func (q *IngesterQuerier) forGivenIngesters(ctx context.Context, replicationSet ring.ReplicationSet, f func(logproto.QuerierClient) (interface{}, error)) ([]responseFromIngesters, error) {
+func (q *IngesterQuerier) forGivenIngesters(ctx context.Context,
+	replicationSet ring.ReplicationSet,
+	f func(logproto.QuerierClient) (interface{}, error)) ([]responseFromIngesters, error) {
 	results, err := replicationSet.Do(ctx, q.extraQueryDelay, func(ctx context.Context, ingester *ring.InstanceDesc) (interface{}, error) {
 		client, err := q.pool.GetClientFor(ingester.Addr)
 		if err != nil {
@@ -121,6 +125,7 @@ func (q *IngesterQuerier) SelectSample(ctx context.Context, params logql.SelectS
 		return client.QuerySample(ctx, params.SampleQueryRequest)
 	})
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "error SelectSample supra89kren", "err", err)
 		return nil, err
 	}
 
@@ -163,7 +168,9 @@ func (q *IngesterQuerier) Tail(ctx context.Context, req *logproto.TailRequest) (
 	return tailClients, nil
 }
 
-func (q *IngesterQuerier) TailDisconnectedIngesters(ctx context.Context, req *logproto.TailRequest, connectedIngestersAddr []string) (map[string]logproto.Querier_TailClient, error) {
+func (q *IngesterQuerier) TailDisconnectedIngesters(ctx context.Context,
+	req *logproto.TailRequest,
+	connectedIngestersAddr []string) (map[string]logproto.Querier_TailClient, error) {
 	// Build a map to easily check if an ingester address is already connected
 	connected := make(map[string]bool)
 	for _, addr := range connectedIngestersAddr {
@@ -197,7 +204,8 @@ func (q *IngesterQuerier) TailDisconnectedIngesters(ctx context.Context, req *lo
 	}
 
 	// Instance a tail client for each ingester to re(connect)
-	reconnectClients, err := q.forGivenIngesters(ctx, ring.ReplicationSet{Instances: reconnectIngesters}, func(client logproto.QuerierClient) (interface{}, error) {
+	reconnectClients, err := q.forGivenIngesters(ctx, ring.ReplicationSet{Instances: reconnectIngesters}, func(client logproto.QuerierClient) (interface{},
+		error) {
 		return client.Tail(ctx, req)
 	})
 	if err != nil {
