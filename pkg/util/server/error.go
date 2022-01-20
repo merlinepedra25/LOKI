@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/kit/log/level"
 	"net/http"
 
 	"google.golang.org/grpc/codes"
@@ -57,6 +59,7 @@ func WriteError(err error, w http.ResponseWriter) {
 
 	me, ok := err.(util.MultiError)
 	if ok && me.IsCancel() {
+		level.Error(util_log.Logger).Log("msg", "supra89kren", "err", err)
 		JSONError(w, StatusClientClosedRequest, ErrClientCanceled)
 		return
 	}

@@ -14,7 +14,6 @@ import (
 	"github.com/grafana/loki/pkg/logproto"
 	"github.com/grafana/loki/pkg/logql"
 	"github.com/grafana/loki/pkg/logql/log"
-	"github.com/grafana/loki/pkg/util"
 )
 
 const bufferSizeForTailResponse = 5
@@ -94,9 +93,7 @@ func (t *tailer) loop() {
 			err = t.conn.Send(&tailResponse)
 			if err != nil {
 				// Don't log any error due to tail client closing the connection
-				if !util.IsConnCanceled(err) {
-					level.Error(util_log.WithContext(t.conn.Context(), util_log.Logger)).Log("msg", "Error writing to tail client", "err", err)
-				}
+				level.Error(util_log.WithContext(t.conn.Context(), util_log.Logger)).Log("msg", "Error writing to tail client supra89kren", "err", err)
 				t.close()
 				return
 			}
