@@ -133,7 +133,7 @@ func (c *Client) CAS(ctx context.Context, key string, f func(in interface{}) (ou
 func (c *Client) cas(ctx context.Context, key string, f func(in interface{}) (out interface{}, retry bool, err error)) error {
 	retries := c.cfg.MaxCasRetries
 	if retries == 0 {
-		retries = 10
+		retries = 100
 	}
 
 	sleepBeforeRetry := time.Duration(0)
@@ -162,6 +162,17 @@ func (c *Client) cas(ctx context.Context, key string, f func(in interface{}) (ou
 				continue
 			}
 			// If key doesn't exist, index will be 0.
+			// NOTE: this `kvp.ModifyIndex` is been shared by all the ring members
+			// that is part of the single kv (e.g: `collectors/distributors`).
+			// This index is monotonically increasing counter that get updated
+			// everytime any member update this particular kv.
+			// The CAS operation for this particular member **only succeeds** if
+			// this `kvp.ModifyIndex` is same as the latest one.
+			// That's why we have retries.
+
+			// But retry of 10 may work for ingester (it has expensive and time-consuming gracefull shutdown process)
+			// So most likely, one of the CAS retry would succeed.
+			// But not the case for distributor (it can shutdown almost instantly).
 			index = kvp.ModifyIndex
 			intermediate = out
 		}
