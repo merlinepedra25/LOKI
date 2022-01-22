@@ -20,7 +20,6 @@ import (
 	"github.com/grafana/dskit/flagext"
 	"github.com/grafana/dskit/kv"
 	"github.com/grafana/dskit/services"
-	dstime "github.com/grafana/dskit/time"
 )
 
 // LifecyclerConfig is the config to build a Lifecycler.
@@ -404,7 +403,7 @@ func (i *Lifecycler) loop(ctx context.Context) error {
 	autoJoinAfter := time.After(i.cfg.JoinAfter)
 	var observeChan <-chan time.Time
 
-	heartbeatTickerStop, heartbeatTickerChan := dstime.NewDisableableTicker(i.cfg.HeartbeatPeriod)
+	heartbeatTickerStop, heartbeatTickerChan := newDisableableTicker(i.cfg.HeartbeatPeriod)
 	defer heartbeatTickerStop()
 
 	for {
@@ -481,7 +480,7 @@ func (i *Lifecycler) stopping(runningError error) error {
 		return nil
 	}
 
-	heartbeatTickerStop, heartbeatTickerChan := dstime.NewDisableableTicker(i.cfg.HeartbeatPeriod)
+	heartbeatTickerStop, heartbeatTickerChan := newDisableableTicker(i.cfg.HeartbeatPeriod)
 	defer heartbeatTickerStop()
 
 	// Mark ourselved as Leaving so no more samples are send to us.
@@ -514,6 +513,7 @@ heartbeatLoop:
 
 	if i.ShouldUnregisterOnShutdown() {
 		if err := i.unregister(context.Background()); err != nil {
+			level.Debug(i.logger).Log("failed to unregister from the KV store, ring: %s", i.RingName, "err", err)
 			return perrors.Wrapf(err, "failed to unregister from the KV store, ring: %s", i.RingName)
 		}
 		level.Info(i.logger).Log("msg", "instance removed from the KV store", "ring", i.RingName)
@@ -847,7 +847,21 @@ func (i *Lifecycler) processShutdown(ctx context.Context) {
 	}
 
 	// Sleep so the shutdownDuration metric can be collected.
+	level.Info(i.logger).Log("msg", "lifecycler entering final sleep before shutdown", "final_sleep", i.cfg.FinalSleep)
 	time.Sleep(i.cfg.FinalSleep)
+}
+
+func (i *Lifecycler) casRing(ctx context.Context, f func(in interface{}) (out interface{}, retry bool, err error)) error {
+	return i.KVStore.CAS(ctx, i.RingKey, f)
+}
+
+func (i *Lifecycler) getRing(ctx context.Context) (*Desc, error) {
+	obj, err := i.KVStore.Get(ctx, i.RingKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return GetOrCreateRingDesc(obj), nil
 }
 
 func (i *Lifecycler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
