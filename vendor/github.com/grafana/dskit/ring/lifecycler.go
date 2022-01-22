@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"sort"
 	"sync"
@@ -19,6 +20,7 @@ import (
 	"github.com/grafana/dskit/flagext"
 	"github.com/grafana/dskit/kv"
 	"github.com/grafana/dskit/services"
+	dstime "github.com/grafana/dskit/time"
 )
 
 // LifecyclerConfig is the config to build a Lifecycler.
@@ -402,7 +404,7 @@ func (i *Lifecycler) loop(ctx context.Context) error {
 	autoJoinAfter := time.After(i.cfg.JoinAfter)
 	var observeChan <-chan time.Time
 
-	heartbeatTickerStop, heartbeatTickerChan := newDisableableTicker(i.cfg.HeartbeatPeriod)
+	heartbeatTickerStop, heartbeatTickerChan := dstime.NewDisableableTicker(i.cfg.HeartbeatPeriod)
 	defer heartbeatTickerStop()
 
 	for {
@@ -479,7 +481,7 @@ func (i *Lifecycler) stopping(runningError error) error {
 		return nil
 	}
 
-	heartbeatTickerStop, heartbeatTickerChan := newDisableableTicker(i.cfg.HeartbeatPeriod)
+	heartbeatTickerStop, heartbeatTickerChan := dstime.NewDisableableTicker(i.cfg.HeartbeatPeriod)
 	defer heartbeatTickerStop()
 
 	// Mark ourselved as Leaving so no more samples are send to us.
@@ -845,8 +847,11 @@ func (i *Lifecycler) processShutdown(ctx context.Context) {
 	}
 
 	// Sleep so the shutdownDuration metric can be collected.
-	level.Info(i.logger).Log("msg", "lifecycler entering final sleep before shutdown", "final_sleep", i.cfg.FinalSleep)
 	time.Sleep(i.cfg.FinalSleep)
+}
+
+func (i *Lifecycler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	newRingPageHandler(i, i.cfg.HeartbeatPeriod).handle(w, req)
 }
 
 // unregister removes our entry from consul.
