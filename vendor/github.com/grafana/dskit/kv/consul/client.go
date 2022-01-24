@@ -133,7 +133,7 @@ func (c *Client) CAS(ctx context.Context, key string, f func(in interface{}) (ou
 func (c *Client) cas(ctx context.Context, key string, f func(in interface{}) (out interface{}, retry bool, err error)) error {
 	retries := c.cfg.MaxCasRetries
 	if retries == 0 {
-		retries = 10
+		retries = 100
 	}
 
 	sleepBeforeRetry := time.Duration(0)
