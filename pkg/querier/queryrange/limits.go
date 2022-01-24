@@ -3,6 +3,7 @@ package queryrange
 import (
 	"context"
 	"fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"net/http"
 	"sync"
 	"time"
@@ -334,7 +335,12 @@ func (rt limitedRoundTripper) do(ctx context.Context, r queryrangebase.Request) 
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = response.Body.Close() }()
+	defer func() {
+		err = response.Body.Close()
+		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 1", "err", err)
+		}
+	}()
 
 	return rt.codec.DecodeResponse(ctx, response, r)
 }

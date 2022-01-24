@@ -7,6 +7,7 @@ import (
 	"fmt"
 	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"net/http"
+	"runtime/debug"
 
 	"github.com/go-kit/log/level"
 	"google.golang.org/grpc/codes"
@@ -52,12 +53,16 @@ func JSONError(w http.ResponseWriter, code int, message string, args ...interfac
 
 // WriteError write a go error with the correct status code.
 func WriteError(err error, w http.ResponseWriter) {
+	WriteErrorWithContext(context.Background(), err, w)
+}
+
+func WriteErrorWithContext(ctx context.Context, err error, w http.ResponseWriter) {
 	var (
 		queryErr chunk.QueryError
 		promErr  promql.ErrStorage
 	)
 
-	level.Error(util_log.Logger).Log("msg", "supra89kren", "err", err)
+	level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren", "err", err)
 	me, ok := err.(util.MultiError)
 	if ok && me.IsCancel() {
 		JSONError(w, StatusClientClosedRequest, ErrClientCanceled)
@@ -69,6 +74,9 @@ func WriteError(err error, w http.ResponseWriter) {
 	}
 
 	s, isRPC := status.FromError(err)
+	if isRPC && s.Code() == codes.Canceled {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren stacktrace", "stacktrace", string(debug.Stack()))
+	}
 	switch {
 	case errors.Is(err, context.Canceled) ||
 		(isRPC && s.Code() == codes.Canceled) ||

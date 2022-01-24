@@ -26,7 +26,7 @@ var (
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			defer func() {
 				if p := recover(); p != nil {
-					WriteError(onPanic(p), w)
+					WriteErrorWithContext(req.Context(), onPanic(p), w)
 				}
 			}()
 			next.ServeHTTP(w, req)

@@ -400,7 +400,8 @@ func (it *logBatchIterator) newChunksIterator(b *chunkBatch) (iter.EntryIterator
 	return iter.NewHeapIterator(it.ctx, iters, it.direction), nil
 }
 
-func (it *logBatchIterator) buildIterators(chks map[model.Fingerprint][][]*LazyChunk, from, through time.Time, nextChunk *LazyChunk) ([]iter.EntryIterator, error) {
+func (it *logBatchIterator) buildIterators(chks map[model.Fingerprint][][]*LazyChunk, from, through time.Time, nextChunk *LazyChunk) ([]iter.EntryIterator,
+	error) {
 	result := make([]iter.EntryIterator, 0, len(chks))
 	for _, chunks := range chks {
 		if len(chunks) != 0 && len(chunks[0]) != 0 {
@@ -417,7 +418,10 @@ func (it *logBatchIterator) buildIterators(chks map[model.Fingerprint][][]*LazyC
 	return result, nil
 }
 
-func (it *logBatchIterator) buildHeapIterator(chks [][]*LazyChunk, from, through time.Time, streamPipeline log.StreamPipeline, nextChunk *LazyChunk) (iter.EntryIterator, error) {
+func (it *logBatchIterator) buildHeapIterator(chks [][]*LazyChunk,
+	from, through time.Time,
+	streamPipeline log.StreamPipeline,
+	nextChunk *LazyChunk) (iter.EntryIterator, error) {
 	result := make([]iter.EntryIterator, 0, len(chks))
 
 	for i := range chks {
@@ -493,7 +497,11 @@ func (it *sampleBatchIterator) Error() error {
 func (it *sampleBatchIterator) Close() error {
 	it.cancel()
 	if it.curr != nil {
-		return it.curr.Close()
+		err := it.curr.Close()
+		if err != nil {
+			level.Error(util_log.WithContext(it.ctx, util_log.Logger)).Log("msg", "supra89kre 77777", "err", err)
+		}
+		return err
 	}
 	return nil
 }
@@ -540,7 +548,8 @@ func (it *sampleBatchIterator) newChunksIterator(b *chunkBatch) (iter.SampleIter
 	return iter.NewHeapSampleIterator(it.ctx, iters), nil
 }
 
-func (it *sampleBatchIterator) buildIterators(chks map[model.Fingerprint][][]*LazyChunk, from, through time.Time, nextChunk *LazyChunk) ([]iter.SampleIterator, error) {
+func (it *sampleBatchIterator) buildIterators(chks map[model.Fingerprint][][]*LazyChunk, from, through time.Time, nextChunk *LazyChunk) ([]iter.SampleIterator,
+	error) {
 	result := make([]iter.SampleIterator, 0, len(chks))
 	for _, chunks := range chks {
 		if len(chunks) != 0 && len(chunks[0]) != 0 {
@@ -556,7 +565,10 @@ func (it *sampleBatchIterator) buildIterators(chks map[model.Fingerprint][][]*La
 	return result, nil
 }
 
-func (it *sampleBatchIterator) buildHeapIterator(chks [][]*LazyChunk, from, through time.Time, streamExtractor log.StreamSampleExtractor, nextChunk *LazyChunk) (iter.SampleIterator, error) {
+func (it *sampleBatchIterator) buildHeapIterator(chks [][]*LazyChunk,
+	from, through time.Time,
+	streamExtractor log.StreamSampleExtractor,
+	nextChunk *LazyChunk) (iter.SampleIterator, error) {
 	result := make([]iter.SampleIterator, 0, len(chks))
 
 	for i := range chks {

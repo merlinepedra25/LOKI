@@ -4,6 +4,8 @@ import (
 	"container/heap"
 	"context"
 	"fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/log/level"
 	"math"
 	"sort"
 	"time"
@@ -116,6 +118,7 @@ type SampleEvaluator interface {
 type SampleEvaluatorFunc func(ctx context.Context, nextEvaluator SampleEvaluator, expr SampleExpr, p Params) (StepEvaluator, error)
 
 func (s SampleEvaluatorFunc) StepEvaluator(ctx context.Context, nextEvaluator SampleEvaluator, expr SampleExpr, p Params) (StepEvaluator, error) {
+	//todo logs
 	return s(ctx, nextEvaluator, expr, p)
 }
 
@@ -167,6 +170,7 @@ func (ev *DefaultEvaluator) StepEvaluator(
 	expr SampleExpr,
 	q Params,
 ) (StepEvaluator, error) {
+	// todo add logs
 	switch e := expr.(type) {
 	case *VectorAggregationExpr:
 		if rangExpr, ok := e.Left.(*RangeAggregationExpr); ok && e.Operation == OpTypeSum {
@@ -184,7 +188,7 @@ func (ev *DefaultEvaluator) StepEvaluator(
 				if err != nil {
 					return nil, err
 				}
-				return rangeAggEvaluator(iter.NewPeekingSampleIterator(it), rangExpr, q, rangExpr.Left.Offset)
+				return rangeAggEvaluator(iter.NewPeekingSampleIterator(it), rangExpr, q, rangExpr.Left.Offset, ctx)
 			})
 		}
 		return vectorAggEvaluator(ctx, nextEv, e, q)
@@ -200,7 +204,7 @@ func (ev *DefaultEvaluator) StepEvaluator(
 		if err != nil {
 			return nil, err
 		}
-		return rangeAggEvaluator(iter.NewPeekingSampleIterator(it), e, q, e.Left.Offset)
+		return rangeAggEvaluator(iter.NewPeekingSampleIterator(it), e, q, e.Left.Offset, ctx)
 	case *BinOpExpr:
 		return binOpStepEvaluator(ctx, nextEv, e, q)
 	case *LabelReplaceExpr:
@@ -400,15 +404,23 @@ func vectorAggEvaluator(
 			})
 		}
 		return next, ts, vec
-	}, nextEvaluator.Close, nextEvaluator.Error)
+	}, func() error {
+		err2 := nextEvaluator.Close()
+		if err2 != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 1010101010", "err", err2, "evType", fmt.Sprintf("%T", nextEvaluator))
+		}
+		return err2
+	}, func() error {
+		err2 := nextEvaluator.Error()
+		if err2 != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren +1 1010101010", "err", err2, "evType", fmt.Sprintf("%T", nextEvaluator))
+		}
+		return err2
+	})
 }
 
-func rangeAggEvaluator(
-	it iter.PeekingSampleIterator,
-	expr *RangeAggregationExpr,
-	q Params,
-	o time.Duration,
-) (StepEvaluator, error) {
+func rangeAggEvaluator(it iter.PeekingSampleIterator, expr *RangeAggregationExpr, q Params, o time.Duration, ctx context.Context) (StepEvaluator, error) {
+	//todo	add logs
 	agg, err := expr.aggregator()
 	if err != nil {
 		return nil, err
@@ -423,19 +435,21 @@ func rangeAggEvaluator(
 		return &absentRangeVectorEvaluator{
 			iter: iter,
 			lbs:  absentLabels(expr),
+			ctx:  ctx,
 		}, nil
 	}
 	return &rangeVectorEvaluator{
 		iter: iter,
 		agg:  agg,
+		ctx:  ctx,
 	}, nil
 }
 
 type rangeVectorEvaluator struct {
 	agg  RangeVectorAggregator
 	iter RangeVectorIterator
-
-	err error
+	ctx  context.Context
+	err  error
 }
 
 func (r *rangeVectorEvaluator) Next() (bool, int64, promql.Vector) {
@@ -458,16 +472,21 @@ func (r rangeVectorEvaluator) Close() error { return r.iter.Close() }
 
 func (r rangeVectorEvaluator) Error() error {
 	if r.err != nil {
+		level.Error(util_log.WithContext(r.ctx, util_log.Logger)).Log("msg", "supra89kren + rangeVectorEvaluator ", "err", r.err, "evType", fmt.Sprintf("%T", r))
 		return r.err
 	}
-	return r.iter.Error()
+	err := r.iter.Error()
+	if err != nil {
+		level.Error(util_log.WithContext(r.ctx, util_log.Logger)).Log("msg", "supra89kren + rangeVectorEvaluator 2 ", "err", err, "evType", fmt.Sprintf("%T", r.iter))
+	}
+	return err
 }
 
 type absentRangeVectorEvaluator struct {
 	iter RangeVectorIterator
 	lbs  labels.Labels
-
-	err error
+	ctx  context.Context
+	err  error
 }
 
 func (r *absentRangeVectorEvaluator) Next() (bool, int64, promql.Vector) {
@@ -502,9 +521,14 @@ func (r absentRangeVectorEvaluator) Close() error { return r.iter.Close() }
 
 func (r absentRangeVectorEvaluator) Error() error {
 	if r.err != nil {
+		level.Error(util_log.WithContext(r.ctx, util_log.Logger)).Log("msg", "supra89kren + absentRangeVectorEvaluator ", "err", r.err, "evType", fmt.Sprintf("%T", r))
 		return r.err
 	}
-	return r.iter.Error()
+	err := r.iter.Error()
+	if err != nil {
+		level.Error(util_log.WithContext(r.ctx, util_log.Logger)).Log("msg", "supra89kren + absentRangeVectorEvaluator 2 ", "err", r.err, "evType", fmt.Sprintf("%T", r))
+	}
+	return err
 }
 
 // binOpExpr explicitly does not handle when both legs are literals as
@@ -531,6 +555,7 @@ func binOpStepEvaluator(
 			rhs,
 			false,
 			expr.Opts.ReturnBool,
+			ctx,
 		)
 	}
 	if rOk {
@@ -544,6 +569,7 @@ func binOpStepEvaluator(
 			lhs,
 			true,
 			expr.Opts.ReturnBool,
+			ctx,
 		)
 	}
 
@@ -599,6 +625,7 @@ func binOpStepEvaluator(
 	}, func() (lastError error) {
 		for _, ev := range []StepEvaluator{lse, rse} {
 			if err := ev.Close(); err != nil {
+				level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 3334", "err", err)
 				lastError = err
 			}
 		}
@@ -610,6 +637,7 @@ func binOpStepEvaluator(
 		}
 		for _, ev := range []StepEvaluator{lse, rse} {
 			if err := ev.Error(); err != nil {
+				level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 5555", "err", err, "evType", fmt.Sprintf("%T", ev))
 				errs = append(errs, err)
 			}
 		}
@@ -1052,6 +1080,7 @@ func literalStepEvaluator(
 	eval StepEvaluator,
 	inverted bool,
 	returnBool bool,
+	ctx context.Context,
 ) (StepEvaluator, error) {
 	return newStepEvaluator(
 		func() (bool, int64, promql.Vector) {
@@ -1082,8 +1111,20 @@ func literalStepEvaluator(
 
 			return ok, ts, results
 		},
-		eval.Close,
-		eval.Error,
+		func() error {
+			err := eval.Close()
+			if err != nil {
+				level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 888888888", "err", err, "evType", fmt.Sprintf("%T", eval))
+			}
+			return err
+		},
+		func() error {
+			err := eval.Error()
+			if err != nil {
+				level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren + 1 888888888", "err", err, "evType", fmt.Sprintf("%T", eval))
+			}
+			return err
+		},
 	)
 }
 
@@ -1132,7 +1173,19 @@ func labelReplaceEvaluator(
 			vec[i].Metric = outLbs
 		}
 		return next, ts, vec
-	}, nextEvaluator.Close, nextEvaluator.Error)
+	}, func() error {
+		err2 := nextEvaluator.Close()
+		if err2 != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 9999999", "err", err2, "evType", fmt.Sprintf("%T", nextEvaluator))
+		}
+		return err2
+	}, func() error {
+		err2 := nextEvaluator.Error()
+		if err2 != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren +1 9999999", "err", err2, "evType", fmt.Sprintf("%T", nextEvaluator))
+		}
+		return err2
+	})
 }
 
 // This is to replace missing timeseries during absent_over_time aggregation.

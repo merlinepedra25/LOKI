@@ -8,6 +8,8 @@ import (
 	context "context"
 	encoding_binary "encoding/binary"
 	fmt "fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/log/level"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
@@ -2802,9 +2804,11 @@ func (c *querierClient) QuerySample(ctx context.Context, in *SampleQueryRequest,
 	}
 	x := &querierQuerySampleClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren + querierClient sendMsg", "err", err)
 		return nil, err
 	}
 	if err := x.ClientStream.CloseSend(); err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren + querierClient closeSend", "err", err)
 		return nil, err
 	}
 	return x, nil

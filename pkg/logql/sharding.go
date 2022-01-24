@@ -257,7 +257,7 @@ func (ev *DownstreamEvaluator) StepEvaluator(
 			xs = append(xs, stepper)
 		}
 
-		return ConcatEvaluator(xs)
+		return ConcatEvaluator(xs, ctx)
 
 	default:
 		return ev.defaultEvaluator.StepEvaluator(ctx, nextEv, e, params)
@@ -329,7 +329,7 @@ func (ev *DownstreamEvaluator) Iterator(
 
 // ConcatEvaluator joins multiple StepEvaluators.
 // Contract: They must be of identical start, end, and step values.
-func ConcatEvaluator(evaluators []StepEvaluator) (StepEvaluator, error) {
+func ConcatEvaluator(evaluators []StepEvaluator, ctx context.Context) (StepEvaluator, error) {
 	return newStepEvaluator(
 		func() (ok bool, ts int64, vec promql.Vector) {
 			var cur promql.Vector
@@ -342,6 +342,9 @@ func ConcatEvaluator(evaluators []StepEvaluator) (StepEvaluator, error) {
 		func() (lastErr error) {
 			for _, eval := range evaluators {
 				if err := eval.Close(); err != nil {
+					if err != nil {
+						level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren shard 1", "err", err, "evType", fmt.Sprintf("%T", eval))
+					}
 					lastErr = err
 				}
 			}
@@ -351,6 +354,7 @@ func ConcatEvaluator(evaluators []StepEvaluator) (StepEvaluator, error) {
 			var errs []error
 			for _, eval := range evaluators {
 				if err := eval.Error(); err != nil {
+					level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren shard 12", "err", err, "evType", fmt.Sprintf("%T", eval))
 					errs = append(errs, err)
 				}
 			}

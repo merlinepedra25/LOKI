@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"math"
 	"sort"
 	"time"
@@ -153,22 +155,30 @@ func (q *query) Eval(ctx context.Context) (promql_parser.Value, error) {
 
 	expr, err := q.parse(ctx, q.params.Query())
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 11", "err", err)
 		return nil, err
 	}
 
 	switch e := expr.(type) {
 	case SampleExpr:
 		value, err := q.evalSample(ctx, e)
+		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 12", "err", err)
+		}
 		return value, err
 
 	case LogSelectorExpr:
 		iter, err := q.evaluator.Iterator(ctx, e, q.params)
 		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 13", "err", err)
 			return nil, err
 		}
 
 		defer util.LogErrorWithContext(ctx, "closing iterator", iter.Close)
 		streams, err := readStreams(iter, q.params.Limit(), q.params.Direction(), q.params.Interval())
+		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 14", "err", err)
+		}
 		return streams, err
 	default:
 		return nil, errors.New("Unexpected type (%T): cannot evaluate")
@@ -183,16 +193,19 @@ func (q *query) evalSample(ctx context.Context, expr SampleExpr) (promql_parser.
 
 	userID, err := tenant.TenantID(ctx)
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 21", "err", err)
 		return nil, err
 	}
 
 	expr, err = optimizeSampleExpr(expr)
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 22", "err", err)
 		return nil, err
 	}
 
 	stepEvaluator, err := q.evaluator.StepEvaluator(ctx, q.evaluator, expr, q.params)
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 23", "err", err)
 		return nil, err
 	}
 	defer util.LogErrorWithContext(ctx, "closing SampleExpr", stepEvaluator.Close)
@@ -202,6 +215,7 @@ func (q *query) evalSample(ctx context.Context, expr SampleExpr) (promql_parser.
 
 	next, ts, vec := stepEvaluator.Next()
 	if stepEvaluator.Error() != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 24", "err", stepEvaluator.Error(), "evType", fmt.Sprintf("%T", stepEvaluator))
 		return nil, stepEvaluator.Error()
 	}
 
@@ -247,6 +261,7 @@ func (q *query) evalSample(ctx context.Context, expr SampleExpr) (promql_parser.
 		}
 		next, ts, vec = stepEvaluator.Next()
 		if stepEvaluator.Error() != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 25", "err", stepEvaluator.Error())
 			return nil, stepEvaluator.Error()
 		}
 	}
@@ -257,7 +272,9 @@ func (q *query) evalSample(ctx context.Context, expr SampleExpr) (promql_parser.
 	}
 	result := promql.Matrix(series)
 	sort.Sort(result)
-
+	if stepEvaluator.Error() != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 26", "err", stepEvaluator.Error())
+	}
 	return result, stepEvaluator.Error()
 }
 

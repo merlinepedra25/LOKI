@@ -3,6 +3,7 @@ package querier
 import (
 	"context"
 	"flag"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"net/http"
 	"time"
 
@@ -94,6 +95,7 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 	var err error
 	params.Start, params.End, err = q.validateQueryRequest(ctx, params)
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 31", "err", err)
 		return nil, err
 	}
 
@@ -114,6 +116,7 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 			"params", newParams)
 		ingesterIters, err := q.ingesterQuerier.SelectLogs(ctx, newParams)
 		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 32", "err", err)
 			return nil, err
 		}
 
@@ -128,6 +131,7 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 			"params", params)
 		storeIter, err := q.store.SelectLogs(ctx, params)
 		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 33", "err", err)
 			return nil, err
 		}
 
@@ -138,9 +142,11 @@ func (q *Querier) SelectLogs(ctx context.Context, params logql.SelectLogParams) 
 }
 
 func (q *Querier) SelectSamples(ctx context.Context, params logql.SelectSampleParams) (iter.SampleIterator, error) {
+	//todo add logs here on each line
 	var err error
 	params.Start, params.End, err = q.validateQueryRequest(ctx, params)
 	if err != nil {
+		level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren SelectSamples 1", "err", err)
 		return nil, err
 	}
 
@@ -159,6 +165,7 @@ func (q *Querier) SelectSamples(ctx context.Context, params logql.SelectSamplePa
 
 		ingesterIters, err := q.ingesterQuerier.SelectSample(ctx, newParams)
 		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren SelectSamples 2", "err", err)
 			return nil, err
 		}
 
@@ -171,6 +178,7 @@ func (q *Querier) SelectSamples(ctx context.Context, params logql.SelectSamplePa
 
 		storeIter, err := q.store.SelectSamples(ctx, params)
 		if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren SelectSamples 3", "err", err)
 			return nil, err
 		}
 

@@ -30,7 +30,7 @@ func newStepEvaluator(fn func() (bool, int64, promql.Vector), close func() error
 	if close == nil {
 		close = func() error { return nil }
 	}
-
+	//todo add debug logs
 	if err == nil {
 		err = func() error { return nil }
 	}

@@ -40,12 +40,12 @@ func (q *Querier) RangeQueryHandler(w http.ResponseWriter, r *http.Request) {
 
 	request, err := loghttp.ParseRangeQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(ctx, httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
 	if err := q.validateEntriesLimits(ctx, request.Query, request.Limit); err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 
@@ -62,11 +62,11 @@ func (q *Querier) RangeQueryHandler(w http.ResponseWriter, r *http.Request) {
 	query := q.engine.Query(params)
 	result, err := query.Exec(ctx)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 	if err := marshal.WriteQueryResponseJSON(result, w); err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 }
@@ -79,12 +79,12 @@ func (q *Querier) InstantQueryHandler(w http.ResponseWriter, r *http.Request) {
 
 	request, err := loghttp.ParseInstantQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(ctx, httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
 	if err := q.validateEntriesLimits(ctx, request.Query, request.Limit); err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 
@@ -101,12 +101,12 @@ func (q *Querier) InstantQueryHandler(w http.ResponseWriter, r *http.Request) {
 	query := q.engine.Query(params)
 	result, err := query.Exec(ctx)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 
 	if err := marshal.WriteQueryResponseJSON(result, w); err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 }
@@ -119,29 +119,29 @@ func (q *Querier) LogQueryHandler(w http.ResponseWriter, r *http.Request) {
 
 	request, err := loghttp.ParseRangeQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(ctx, httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 	request.Query, err = parseRegexQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(ctx, httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
 	expr, err := logql.ParseExpr(request.Query)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 
 	// short circuit metric queries
 	if _, ok := expr.(logql.SampleExpr); ok {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, "legacy endpoints only support %s result type", logqlmodel.ValueTypeStreams), w)
+		serverutil.WriteErrorWithContext(ctx, httpgrpc.Errorf(http.StatusBadRequest, "legacy endpoints only support %s result type", logqlmodel.ValueTypeStreams), w)
 		return
 	}
 
 	if err := q.validateEntriesLimits(ctx, request.Query, request.Limit); err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 
@@ -159,12 +159,12 @@ func (q *Querier) LogQueryHandler(w http.ResponseWriter, r *http.Request) {
 
 	result, err := query.Exec(ctx)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 
 	if err := marshal_legacy.WriteQueryResponseJSON(result, w); err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(ctx, err, w)
 		return
 	}
 }
@@ -173,13 +173,13 @@ func (q *Querier) LogQueryHandler(w http.ResponseWriter, r *http.Request) {
 func (q *Querier) LabelHandler(w http.ResponseWriter, r *http.Request) {
 	req, err := loghttp.ParseLabelQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(r.Context(), httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
 	resp, err := q.Label(r.Context(), req)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(r.Context(), err, w)
 		return
 	}
 
@@ -189,7 +189,7 @@ func (q *Querier) LabelHandler(w http.ResponseWriter, r *http.Request) {
 		err = marshal_legacy.WriteLabelResponseJSON(*resp, w)
 	}
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(r.Context(), err, w)
 		return
 	}
 }
@@ -203,13 +203,13 @@ func (q *Querier) TailHandler(w http.ResponseWriter, r *http.Request) {
 
 	req, err := loghttp.ParseTailQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(r.Context(), httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
 	req.Query, err = parseRegexQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(r.Context(), httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
@@ -222,7 +222,7 @@ func (q *Querier) TailHandler(w http.ResponseWriter, r *http.Request) {
 	tenantID, err := tenant.TenantID(r.Context())
 	if err != nil {
 		level.Error(logger).Log("msg", "error getting tenant id", "err", err)
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(r.Context(), httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 	level.Info(logger).Log("msg", "starting to tail logs", "tenant", tenantID, "selectors", req.Query)
@@ -322,19 +322,19 @@ func (q *Querier) TailHandler(w http.ResponseWriter, r *http.Request) {
 func (q *Querier) SeriesHandler(w http.ResponseWriter, r *http.Request) {
 	req, err := logql.ParseAndValidateSeriesQuery(r)
 	if err != nil {
-		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
+		serverutil.WriteErrorWithContext(r.Context(), httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
 	resp, err := q.Series(r.Context(), req)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(r.Context(), err, w)
 		return
 	}
 
 	err = marshal.WriteSeriesResponseJSON(*resp, w)
 	if err != nil {
-		serverutil.WriteError(err, w)
+		serverutil.WriteErrorWithContext(r.Context(), err, w)
 		return
 	}
 }

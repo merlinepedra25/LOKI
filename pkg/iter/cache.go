@@ -1,6 +1,8 @@
 package iter
 
 import (
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/log/level"
 	"github.com/grafana/loki/pkg/logproto"
 )
 
@@ -91,6 +93,9 @@ func (it *cachedIterator) Error() error { return it.iterErr }
 
 func (it *cachedIterator) Close() error {
 	it.Reset()
+	if it.closeErr != nil {
+		level.Error(util_log.Logger).Log("msg", "supraspy", "err", it.closeErr)
+	}
 	return it.closeErr
 }
 

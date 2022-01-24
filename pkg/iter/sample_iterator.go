@@ -3,6 +3,9 @@ package iter
 import (
 	"container/heap"
 	"context"
+	"fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/log/level"
 	"io"
 	"sync"
 
@@ -60,7 +63,11 @@ func NewPeekingSampleIterator(iter SampleIterator) PeekingSampleIterator {
 }
 
 func (it *peekingSampleIterator) Close() error {
-	return it.iter.Close()
+	err := it.iter.Close()
+	if err != nil {
+		level.Error(util_log.Logger).Log("msg", "supraspy 4", "err", err)
+	}
+	return err
 }
 
 func (it *peekingSampleIterator) Labels() string {
@@ -149,6 +156,7 @@ type heapSampleIterator struct {
 	curr       logproto.Sample
 	currLabels string
 	errs       []error
+	ctx        context.Context
 }
 
 // NewHeapSampleIterator returns a new iterator which uses a heap to merge together
@@ -160,6 +168,7 @@ func NewHeapSampleIterator(ctx context.Context, is []SampleIterator) SampleItera
 		is:     is,
 		heap:   &h,
 		tuples: make([]sampletuple, 0, len(is)),
+		ctx:    ctx,
 	}
 }
 
@@ -194,9 +203,10 @@ func (i *heapSampleIterator) requeue(ei SampleIterator, advanced bool) {
 	}
 
 	if err := ei.Error(); err != nil {
+		level.Error(util_log.WithContext(i.ctx, util_log.Logger)).Log("msg", "supra89kren heapSampleIterator 1", "err", err, "sampleIteratorType", fmt.Sprintf("%T", ei))
 		i.errs = append(i.errs, err)
 	}
-	util.LogError("closing iterator", ei.Close)
+	util.LogErrorWithContext(i.ctx, "supra89kren heapSampleIterator closing iterator", ei.Close)
 }
 
 type sampletuple struct {
@@ -285,6 +295,7 @@ func (i *heapSampleIterator) Error() error {
 func (i *heapSampleIterator) Close() error {
 	for i.heap.Len() > 0 {
 		if err := i.heap.Pop().(SampleIterator).Close(); err != nil {
+			level.Error(util_log.WithContext(i.ctx, util_log.Logger)).Log("msg", "supra89kren heapSampleIterator  5", "err", err)
 			return err
 		}
 	}
@@ -319,6 +330,7 @@ func (i *sampleQueryClientIterator) Next() bool {
 		if err == io.EOF {
 			return false
 		} else if err != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren + sample 1", "err", err, "clientType", fmt.Sprintf("%T", i.client))
 			i.err = err
 			return false
 		}
@@ -341,7 +353,11 @@ func (i *sampleQueryClientIterator) Error() error {
 }
 
 func (i *sampleQueryClientIterator) Close() error {
-	return i.client.CloseSend()
+	err := i.client.CloseSend()
+	if err != nil {
+		level.Error(util_log.Logger).Log("msg", "supraspy 2", "err", err)
+	}
+	return err
 }
 
 // NewSampleQueryResponseIterator returns an iterator over a SampleQueryResponse.
@@ -374,7 +390,9 @@ func (w *withCloseSampleIterator) Close() error {
 	if len(w.errs) == 0 {
 		return nil
 	}
-	return util.MultiError(w.errs)
+	multiError := util.MultiError(w.errs)
+	level.Error(util_log.Logger).Log("msg", "supraspy 6665", "err", multiError)
+	return multiError
 }
 
 func SampleIteratorWithClose(it SampleIterator, closeFn func() error) SampleIterator {

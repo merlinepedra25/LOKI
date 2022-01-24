@@ -122,7 +122,7 @@ func (f *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	queryResponseTime := time.Since(startTime)
 
 	if err != nil {
-		writeError(w, err)
+		writeError(r.Context(), w, err)
 		return
 	}
 
@@ -218,12 +218,12 @@ func formatQueryString(queryString url.Values) (fields []interface{}) {
 	return fields
 }
 
-func writeError(w http.ResponseWriter, err error) {
+func writeError(ctx context.Context, w http.ResponseWriter, err error) {
 	if util.IsRequestBodyTooLarge(err) {
 		serverutil.JSONError(w, http.StatusRequestEntityTooLarge, "http: request body too large")
 		return
 	}
-	serverutil.WriteError(err, w)
+	serverutil.WriteErrorWithContext(ctx, err, w)
 }
 
 func writeServiceTimingHeader(queryResponseTime time.Duration, headers http.Header, stats *querier_stats.Stats) {

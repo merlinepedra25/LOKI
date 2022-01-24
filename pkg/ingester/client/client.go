@@ -2,6 +2,9 @@ package client
 
 import (
 	"flag"
+	"fmt"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
+	"github.com/go-kit/log/level"
 	"io"
 	"time"
 
@@ -70,6 +73,7 @@ func New(cfg Config, addr string) (HealthAndIngesterClient, error) {
 
 	opts = append(opts, dialOpts...)
 	conn, err := grpc.Dial(addr, opts...)
+	level.Error(util_log.Logger).Log("msg", "supra89kren HealthAndIngesterClient", "conn", fmt.Sprintf("%+v", conn))
 	if err != nil {
 		return nil, err
 	}

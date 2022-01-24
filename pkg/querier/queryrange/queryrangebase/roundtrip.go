@@ -18,6 +18,7 @@ package queryrangebase
 import (
 	"context"
 	"flag"
+	util_log "github.com/cortexproject/cortex/pkg/util/log"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -295,7 +296,10 @@ func (q roundTripper) Do(ctx context.Context, r Request) (Response, error) {
 	}
 	defer func() {
 		_, _ = io.Copy(ioutil.Discard, io.LimitReader(response.Body, 1024)) //nolint:errcheck
-		response.Body.Close()
+		closingError := response.Body.Close()
+		if closingError != nil {
+			level.Error(util_log.WithContext(ctx, util_log.Logger)).Log("msg", "supra89kren 2333", "err", closingError)
+		}
 	}()
 
 	return q.codec.DecodeResponse(ctx, response, r)
