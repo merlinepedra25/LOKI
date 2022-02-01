@@ -127,7 +127,6 @@ func (p *Pool) RemoveClientFor(addr string) {
 		}
 		// Close in the background since this operation may take awhile and we have a mutex
 		go func(addr string, closer PoolClient) {
-			level.Error(p.logger).Log("msg", "supra89kren closing connection", "addr", addr)
 			if err := closer.Close(); err != nil {
 				level.Error(p.logger).Log("msg", fmt.Sprintf("error closing connection to %s", p.clientName), "addr", addr, "err", err)
 			}
@@ -180,21 +179,11 @@ func (p *Pool) cleanUnhealthy() {
 		client, ok := p.fromCache(addr)
 		// not ok means someone removed a client between the start of this loop and now
 		if ok {
-			var err error
-			for i := 0; i < 3; i++ {
-				err = healthCheck(client, p.cfg.HealthCheckTimeout)
-				if err == nil {
-					break
-				}
-				level.Warn(p.logger).Log("msg", fmt.Sprintf("error while healthcheck %s", p.clientName), "addr", addr, "reason", err, "healthcheckDuration", p.cfg.HealthCheckTimeout, "attempt", i)
-			}
+			err := healthCheck(client, p.cfg.HealthCheckTimeout)
 			if err != nil {
-				level.Warn(p.logger).Log("msg", fmt.Sprintf("removing %s failing healthcheck", p.clientName), "addr", addr, "reason", err, "healthcheckDuration", p.cfg.HealthCheckTimeout)
+				level.Warn(p.logger).Log("msg", fmt.Sprintf("removing %s failing healthcheck", p.clientName), "addr", addr, "reason", err)
 				p.RemoveClientFor(addr)
-			}else {
-				level.Info(p.logger).Log("msg", fmt.Sprintf("healthcheck %s is ok ", p.clientName), "addr", addr, "healthcheckDuration", p.cfg.HealthCheckTimeout)
 			}
-
 		}
 	}
 }

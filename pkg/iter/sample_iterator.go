@@ -354,8 +354,9 @@ func (i *sampleQueryClientIterator) Error() error {
 
 func (i *sampleQueryClientIterator) Close() error {
 	err := i.client.CloseSend()
+	level.Info(util_log.WithContext(i.client.Context(), util_log.Logger)).Log("msg", "supra89kren calling close method of sampleQueryClientIterator", "err", err)
 	if err != nil {
-		level.Error(util_log.Logger).Log("msg", "supraspy 2", "err", err)
+		level.Error(util_log.WithContext(i.client.Context(), util_log.Logger)).Log("msg", "supraspy 2", "err", err)
 	}
 	return err
 }
