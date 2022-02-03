@@ -69,8 +69,8 @@ type Frontend struct {
 	// frontend workers will read from this channel, and send request to scheduler.
 	requestsCh chan *frontendRequest
 
-	schedulerWorkers *frontendSchedulerWorkers
-	requests         *requestsInProgress
+	scheduler *scheduler
+	requests  *requestsInProgress
 }
 
 type frontendRequest struct {
@@ -105,17 +105,17 @@ type enqueueResult struct {
 func NewFrontend(cfg Config, ring ring.ReadRing, log log.Logger, reg prometheus.Registerer) (*Frontend, error) {
 	requestsCh := make(chan *frontendRequest)
 
-	schedulerWorkers, err := newFrontendSchedulerWorkers(cfg, fmt.Sprintf("%s:%d", cfg.Addr, cfg.Port), ring, requestsCh, log)
+	scheduler, err := newScheduler(cfg, fmt.Sprintf("%s:%d", cfg.Addr, cfg.Port), ring, requestsCh, log)
 	if err != nil {
 		return nil, err
 	}
 
 	f := &Frontend{
-		cfg:              cfg,
-		log:              log,
-		requestsCh:       requestsCh,
-		schedulerWorkers: schedulerWorkers,
-		requests:         newRequestsInProgress(),
+		cfg:        cfg,
+		log:        log,
+		requestsCh: requestsCh,
+		scheduler:  scheduler,
+		requests:   &requestsInProgress{},
 	}
 	// Randomize to avoid getting responses from queries sent before restart, which could lead to mixing results
 	// between different queries. Note that frontend verifies the user, so it cannot leak results between tenants.
@@ -133,7 +133,7 @@ func NewFrontend(cfg Config, ring ring.ReadRing, log log.Logger, reg prometheus.
 		Name: "cortex_query_frontend_connected_schedulers",
 		Help: "Number of schedulers this frontend is connected to.",
 	}, func() float64 {
-		return float64(f.schedulerWorkers.getWorkersCount())
+		return float64(f.scheduler.getWorkersCount())
 	})
 
 	f.Service = services.NewIdleService(f.starting, f.stopping)
@@ -141,11 +141,11 @@ func NewFrontend(cfg Config, ring ring.ReadRing, log log.Logger, reg prometheus.
 }
 
 func (f *Frontend) starting(ctx context.Context) error {
-	return errors.Wrap(services.StartAndAwaitRunning(ctx, f.schedulerWorkers), "failed to start frontend scheduler workers")
+	return errors.Wrap(services.StartAndAwaitRunning(ctx, f.scheduler), "failed to start frontend scheduler")
 }
 
 func (f *Frontend) stopping(_ error) error {
-	return errors.Wrap(services.StopAndAwaitTerminated(context.Background(), f.schedulerWorkers), "failed to stop frontend scheduler workers")
+	return errors.Wrap(services.StopAndAwaitTerminated(context.Background(), f.scheduler), "failed to stop frontend scheduler")
 }
 
 // RoundTripGRPC round trips a proto (instead of a HTTP request).
@@ -237,6 +237,7 @@ enqueueAgain:
 	}
 }
 
+// QueryResult implements FrontendForQuerierServer
 func (f *Frontend) QueryResult(ctx context.Context, qrReq *frontendv2pb.QueryResultRequest) (*frontendv2pb.QueryResultResponse, error) {
 	tenantIDs, err := tenant.TenantIDs(ctx)
 	if err != nil {
@@ -263,7 +264,7 @@ func (f *Frontend) QueryResult(ctx context.Context, qrReq *frontendv2pb.QueryRes
 // CheckReady determines if the query frontend is ready.  Function parameters/return
 // chosen to match the same method in the ingester
 func (f *Frontend) CheckReady(_ context.Context) error {
-	workers := f.schedulerWorkers.getWorkersCount()
+	workers := f.scheduler.getWorkersCount()
 
 	// If frontend is connected to at least one scheduler, we are ready.
 	if workers > 0 {
@@ -278,12 +279,6 @@ func (f *Frontend) CheckReady(_ context.Context) error {
 type requestsInProgress struct {
 	mu       sync.Mutex
 	requests map[uint64]*frontendRequest
-}
-
-func newRequestsInProgress() *requestsInProgress {
-	return &requestsInProgress{
-		requests: map[uint64]*frontendRequest{},
-	}
 }
 
 func (r *requestsInProgress) count() int {

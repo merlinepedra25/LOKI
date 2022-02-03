@@ -225,14 +225,14 @@ func TestFrontendFailedCancellation(t *testing.T) {
 
 		// stop scheduler workers
 		addr := ""
-		f.schedulerWorkers.mu.Lock()
-		for k := range f.schedulerWorkers.workers {
+		f.scheduler.mu.Lock()
+		for k := range f.scheduler.workers {
 			addr = k
 			break
 		}
-		f.schedulerWorkers.mu.Unlock()
+		f.scheduler.mu.Unlock()
 
-		f.schedulerWorkers.AddressRemoved(addr)
+		f.scheduler.AddressRemoved(addr)
 
 		// Wait for worker goroutines to stop.
 		time.Sleep(100 * time.Millisecond)

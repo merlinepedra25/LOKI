@@ -9,160 +9,17 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/grafana/dskit/backoff"
-	"github.com/grafana/dskit/ring"
-	"github.com/grafana/dskit/services"
 	"github.com/pkg/errors"
 	"github.com/weaveworks/common/httpgrpc"
 	"google.golang.org/grpc"
 
 	"github.com/grafana/loki/pkg/lokifrontend/frontend/v2/frontendv2pb"
 	"github.com/grafana/loki/pkg/scheduler/schedulerpb"
-	"github.com/grafana/loki/pkg/util"
-	lokiutil "github.com/grafana/loki/pkg/util"
 )
-
-type frontendSchedulerWorkers struct {
-	services.Service
-
-	cfg             Config
-	logger          log.Logger
-	frontendAddress string
-
-	// Channel with requests that should be forwarded to the scheduler.
-	requestsCh <-chan *frontendRequest
-
-	watcher services.Service
-
-	mu sync.Mutex
-	// Set to nil when stop is called... no more workers are created afterwards.
-	workers map[string]*frontendSchedulerWorker
-}
-
-func newFrontendSchedulerWorkers(cfg Config, frontendAddress string, ring ring.ReadRing, requestsCh <-chan *frontendRequest, logger log.Logger) (*frontendSchedulerWorkers, error) {
-	f := &frontendSchedulerWorkers{
-		cfg:             cfg,
-		logger:          logger,
-		frontendAddress: frontendAddress,
-		requestsCh:      requestsCh,
-		workers:         map[string]*frontendSchedulerWorker{},
-	}
-
-	switch {
-	case ring != nil:
-		// Use the scheduler ring and RingWatcher to find schedulers.
-		w, err := lokiutil.NewRingWatcher(log.With(logger, "component", "frontend-scheduler-worker"), ring, cfg.DNSLookupPeriod, f)
-		if err != nil {
-			return nil, err
-		}
-		f.watcher = w
-	default:
-		// If there is no ring config fallback on using DNS for the frontend scheduler worker to find the schedulers.
-		w, err := util.NewDNSWatcher(cfg.SchedulerAddress, cfg.DNSLookupPeriod, f)
-		if err != nil {
-			return nil, err
-		}
-		f.watcher = w
-	}
-
-	f.Service = services.NewIdleService(f.starting, f.stopping)
-	return f, nil
-}
-
-func (f *frontendSchedulerWorkers) starting(ctx context.Context) error {
-	return services.StartAndAwaitRunning(ctx, f.watcher)
-}
-
-func (f *frontendSchedulerWorkers) stopping(_ error) error {
-	err := services.StopAndAwaitTerminated(context.Background(), f.watcher)
-
-	f.mu.Lock()
-	defer f.mu.Unlock()
-
-	for _, w := range f.workers {
-		w.stop()
-	}
-	f.workers = nil
-
-	return err
-}
-
-func (f *frontendSchedulerWorkers) AddressAdded(address string) {
-	f.mu.Lock()
-	ws := f.workers
-	w := f.workers[address]
-
-	// Already stopped or we already have worker for this address.
-	if ws == nil || w != nil {
-		f.mu.Unlock()
-		return
-	}
-	f.mu.Unlock()
-
-	level.Info(f.logger).Log("msg", "adding connection to scheduler", "addr", address)
-	conn, err := f.connectToScheduler(context.Background(), address)
-	if err != nil {
-		level.Error(f.logger).Log("msg", "error connecting to scheduler", "addr", address, "err", err)
-		return
-	}
-
-	// No worker for this address yet, start a new one.
-	w = newFrontendSchedulerWorker(conn, address, f.frontendAddress, f.requestsCh, f.cfg.WorkerConcurrency, f.logger)
-
-	f.mu.Lock()
-	defer f.mu.Unlock()
-
-	// Can be nil if stopping has been called already.
-	if f.workers == nil {
-		return
-	}
-	// We have to recheck for presence in case we got called again while we were
-	// connecting and that one finished first.
-	if f.workers[address] != nil {
-		return
-	}
-	f.workers[address] = w
-	w.start()
-}
-
-func (f *frontendSchedulerWorkers) AddressRemoved(address string) {
-	level.Info(f.logger).Log("msg", "removing connection to scheduler", "addr", address)
-
-	f.mu.Lock()
-	// This works fine if f.workers is nil already.
-	w := f.workers[address]
-	delete(f.workers, address)
-	f.mu.Unlock()
-
-	if w != nil {
-		w.stop()
-	}
-}
-
-// Get number of workers.
-func (f *frontendSchedulerWorkers) getWorkersCount() int {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-
-	return len(f.workers)
-}
-
-func (f *frontendSchedulerWorkers) connectToScheduler(ctx context.Context, address string) (*grpc.ClientConn, error) {
-	// Because we only use single long-running method, it doesn't make sense to inject user ID, send over tracing or add metrics.
-	opts, err := f.cfg.GRPCClientConfig.DialOption(nil, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	conn, err := grpc.DialContext(ctx, address, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return conn, nil
-}
 
 // Worker managing single gRPC connection to Scheduler. Each worker starts multiple goroutines for forwarding
 // requests and cancellations to scheduler.
-type frontendSchedulerWorker struct {
+type worker struct {
 	log log.Logger
 
 	conn          *grpc.ClientConn
@@ -183,8 +40,8 @@ type frontendSchedulerWorker struct {
 	cancelCh chan uint64
 }
 
-func newFrontendSchedulerWorker(conn *grpc.ClientConn, schedulerAddr string, frontendAddr string, requestCh <-chan *frontendRequest, concurrency int, log log.Logger) *frontendSchedulerWorker {
-	w := &frontendSchedulerWorker{
+func newWorker(conn *grpc.ClientConn, schedulerAddr string, frontendAddr string, requestCh <-chan *frontendRequest, concurrency int, log log.Logger) *worker {
+	w := &worker{
 		log:           log,
 		conn:          conn,
 		concurrency:   concurrency,
@@ -199,7 +56,7 @@ func newFrontendSchedulerWorker(conn *grpc.ClientConn, schedulerAddr string, fro
 	return w
 }
 
-func (w *frontendSchedulerWorker) start() {
+func (w *worker) start() {
 	client := schedulerpb.NewSchedulerForFrontendClient(w.conn)
 	for i := 0; i < w.concurrency; i++ {
 		w.wg.Add(1)
@@ -210,7 +67,7 @@ func (w *frontendSchedulerWorker) start() {
 	}
 }
 
-func (w *frontendSchedulerWorker) stop() {
+func (w *worker) stop() {
 	w.cancel()
 	w.wg.Wait()
 	if err := w.conn.Close(); err != nil {
@@ -218,7 +75,7 @@ func (w *frontendSchedulerWorker) stop() {
 	}
 }
 
-func (w *frontendSchedulerWorker) runOne(ctx context.Context, client schedulerpb.SchedulerForFrontendClient) {
+func (w *worker) runOne(ctx context.Context, client schedulerpb.SchedulerForFrontendClient) {
 	backoffConfig := backoff.Config{
 		MinBackoff: 500 * time.Millisecond,
 		MaxBackoff: 5 * time.Second,
@@ -248,7 +105,7 @@ func (w *frontendSchedulerWorker) runOne(ctx context.Context, client schedulerpb
 	}
 }
 
-func (w *frontendSchedulerWorker) schedulerLoop(loop schedulerpb.SchedulerForFrontend_FrontendLoopClient) error {
+func (w *worker) schedulerLoop(loop schedulerpb.SchedulerForFrontend_FrontendLoopClient) error {
 	if err := loop.Send(&schedulerpb.FrontendToScheduler{
 		Type:            schedulerpb.INIT,
 		FrontendAddress: w.frontendAddr,
