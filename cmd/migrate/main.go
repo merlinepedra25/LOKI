@@ -5,6 +5,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+
 	"log"
 	"os"
 	"sort"
@@ -25,6 +26,7 @@ import (
 	"github.com/grafana/loki/pkg/storage"
 	"github.com/grafana/loki/pkg/storage/chunk"
 	chunk_storage "github.com/grafana/loki/pkg/storage/chunk/storage"
+	"github.com/grafana/loki/pkg/storage/stores/shipper"
 	"github.com/grafana/loki/pkg/util"
 	"github.com/grafana/loki/pkg/util/cfg"
 	util_log "github.com/grafana/loki/pkg/util/log"
@@ -90,10 +92,27 @@ func main() {
 		log.Println("Failed to validate dest store config:", err)
 		os.Exit(1)
 	}
+
 	// Create a new registerer to avoid registering duplicate metrics
-	prometheus.DefaultRegisterer = prometheus.NewRegistry()
-	clientMetrics := chunk_storage.NewClientMetrics()
-	sourceStore, err := chunk_storage.NewStore(sourceConfig.StorageConfig.Config, sourceConfig.ChunkStoreConfig.StoreConfig, sourceConfig.SchemaConfig.SchemaConfig, limits, clientMetrics, prometheus.DefaultRegisterer, nil, util_log.Logger)
+	sourceReg := prometheus.NewRegistry()
+	prometheus.DefaultRegisterer = sourceReg
+	sourceMetrics := chunk_storage.NewClientMetrics()
+	// The hook we have for adding boltdb-shipper into what used to be separate cortex code is global, so first we setup our source index client
+	chunk_storage.RegisterIndexStore(shipper.BoltDBShipperType, func() (chunk.IndexClient, error) {
+		objectClient, err := chunk_storage.NewObjectClient(sourceConfig.StorageConfig.BoltDBShipperConfig.SharedStoreType, sourceConfig.StorageConfig.Config, sourceMetrics)
+		if err != nil {
+			return nil, err
+		}
+		return shipper.NewShipper(sourceConfig.StorageConfig.BoltDBShipperConfig, objectClient, sourceReg)
+	}, func() (client chunk.TableClient, e error) {
+		objectClient, err := chunk_storage.NewObjectClient(sourceConfig.StorageConfig.BoltDBShipperConfig.SharedStoreType, sourceConfig.StorageConfig.Config, sourceMetrics)
+		if err != nil {
+			return nil, err
+		}
+		return shipper.NewBoltDBShipperTableClient(objectClient, sourceConfig.StorageConfig.BoltDBShipperConfig.SharedStoreKeyPrefix), nil
+	})
+
+	sourceStore, err := chunk_storage.NewStore(sourceConfig.StorageConfig.Config, sourceConfig.ChunkStoreConfig.StoreConfig, sourceConfig.SchemaConfig.SchemaConfig, limits, sourceMetrics, sourceReg, nil, util_log.Logger)
 	if err != nil {
 		log.Println("Failed to create source store:", err)
 		os.Exit(1)
@@ -105,8 +124,25 @@ func main() {
 	}
 
 	// Create a new registerer to avoid registering duplicate metrics
-	prometheus.DefaultRegisterer = prometheus.NewRegistry()
-	destStore, err := chunk_storage.NewStore(destConfig.StorageConfig.Config, destConfig.ChunkStoreConfig.StoreConfig, destConfig.SchemaConfig.SchemaConfig, limits, clientMetrics, prometheus.DefaultRegisterer, nil, util_log.Logger)
+	destReg := prometheus.NewRegistry()
+	prometheus.DefaultRegisterer = destReg
+	destMetrics := chunk_storage.NewClientMetrics()
+	// We call RegisterIndexStore again, this time setting up the global with the destination index client
+	chunk_storage.RegisterIndexStore(shipper.BoltDBShipperType, func() (chunk.IndexClient, error) {
+		objectClient, err := chunk_storage.NewObjectClient(destConfig.StorageConfig.BoltDBShipperConfig.SharedStoreType, destConfig.StorageConfig.Config, destMetrics)
+		if err != nil {
+			return nil, err
+		}
+		return shipper.NewShipper(destConfig.StorageConfig.BoltDBShipperConfig, objectClient, destReg)
+	}, func() (client chunk.TableClient, e error) {
+		objectClient, err := chunk_storage.NewObjectClient(destConfig.StorageConfig.BoltDBShipperConfig.SharedStoreType, destConfig.StorageConfig.Config, destMetrics)
+		if err != nil {
+			return nil, err
+		}
+		return shipper.NewBoltDBShipperTableClient(objectClient, destConfig.StorageConfig.BoltDBShipperConfig.SharedStoreKeyPrefix), nil
+	})
+
+	destStore, err := chunk_storage.NewStore(destConfig.StorageConfig.Config, destConfig.ChunkStoreConfig.StoreConfig, destConfig.SchemaConfig.SchemaConfig, limits, destMetrics, destReg, nil, util_log.Logger)
 	if err != nil {
 		log.Println("Failed to create destination store:", err)
 		os.Exit(1)
@@ -226,7 +262,10 @@ func main() {
 	log.Println("Waiting for threads to exit")
 	wg.Wait()
 	close(statsChan)
-	log.Println("All threads finished")
+	log.Println("All threads finished, stopping destination store (uploading index files for boltdb-shipper)")
+
+	// For boltdb shipper this is important as it will upload all the index files.
+	destStore.Stop()
 
 	log.Println("Going to sleep....")
 	for {
