@@ -1,0 +1,57 @@
+---
+title: Reference
+weight: 90
+slug: reference
+---
+
+# Configuration reference
+
+{{ .GeneratedFileWarning }}
+
+To specify which configuration file to load, pass the `-config.file` flag at the
+command line. The file is written in [YAML format](https://en.wikipedia.org/wiki/YAML),
+defined by the scheme below. Brackets indicate that a parameter is optional. For
+non-list parameters the value is set to the specified default.
+
+### Use environment variables in the configuration
+
+> **Note:** This feature is only available in Loki 2.1+.
+
+You can use environment variable references in the configuration file to set values that need to be configurable during deployment.
+To do this, pass `-config.expand-env=true` and use:
+
+```
+${VAR}
+```
+
+Where VAR is the name of the environment variable.
+
+Each variable reference is replaced at startup by the value of the environment variable.
+The replacement is case-sensitive and occurs before the YAML file is parsed.
+References to undefined variables are replaced by empty strings unless you specify a default value or custom error text.
+
+To specify a default value, use:
+
+```
+${VAR:default_value}
+```
+
+Where default_value is the value to use if the environment variable is undefined.
+
+Pass the `-config.expand-env` flag at the command line to enable this way of setting configs.
+
+### Generic placeholders
+
+- `<boolean>` : a boolean that can take the values `true` or `false`
+- `<int>` : any integer matching the regular expression `[1-9]+[0-9]*`
+- `<duration>` : a duration matching the regular expression `[0-9]+(ns|us|µs|ms|[smh])`
+- `<labelname>` : a string matching the regular expression `[a-zA-Z_][a-zA-Z0-9_]*`
+- `<labelvalue>` : a string of unicode characters
+- `<filename>` : a valid path relative to current working directory or an absolute path.
+- `<host>` : a valid string consisting of a hostname or IP followed by an optional port number
+- `<string>` : a string
+- `<secret>` : a string that represents a secret, such as a password
+
+### Supported contents and default values of `loki.yaml`
+
+{{ .ConfigFile }}

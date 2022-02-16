@@ -1,5 +1,6 @@
 ---
 title: Query Frontend
+weight: 20
 ---
 # Kubernetes Query Frontend Example
 

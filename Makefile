@@ -10,7 +10,7 @@
 .PHONY: validate-example-configs generate-example-config-doc check-example-config-doc
 .PHONY: clean clean-protos
 
-SHELL = /usr/bin/env bash
+SHELL = /usr/bin/env bash -o pipefail
 
 GOTEST ?= go test
 
@@ -123,6 +123,19 @@ check-generated-files: yacc ragel protos clients/pkg/promtail/server/ui/assets_v
 		echo "(Don't forget to check in the generated files when finished)\n"; \
 		exit 1; \
 	fi
+
+#################
+# Documentation #
+#################
+
+clean-docs:
+	rm -rf docs/sources/configuration/reference.md
+
+docs: clean-docs
+	go run ./cmd/docgen/ ./docs/sources/configuration/reference.template > ./docs/sources/configuration/reference.md
+
+check-docs: docs
+	@git diff --exit-code -- ./docs/sources/configuration/reference.md
 
 ##########
 # Logcli #

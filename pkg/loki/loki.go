@@ -91,12 +91,18 @@ func (c *Config) RegisterFlags(f *flag.FlagSet) {
 
 	// Set the default module list to 'all'
 	c.Target = []string{All}
-	f.Var(&c.Target, "target", "Comma-separated list of Loki modules to load. "+
-		"The alias 'all' can be used in the list to load a number of core modules and will enable single-binary mode. "+
-		"The aliases 'read' and 'write' can be used to only run components related to the read path or write path, respectively.")
-	f.BoolVar(&c.AuthEnabled, "auth.enabled", true, "Set to false to disable auth.")
-	f.IntVar(&c.BallastBytes, "config.ballast-bytes", 0, "The amount of virtual memory to reserve as a ballast in order to optimise "+
-		"garbage collection. Larger ballasts result in fewer garbage collection passes, reducing compute overhead at the cost of memory usage.")
+	f.Var(&c.Target, "target",
+		"A comma-separated list of Loki components to run.\n"+
+			"The default value \"all\" runs Loki in single binary mode.\n"+
+			"The value \"read\" is an alias to run only read-path related components such as the querier and query-frontend, but all in the same process.\n"+
+			"The value \"write\" is an alias to run only write-path related components such as the distributor and compactor, but all in the same process.\n"+
+			"Supported values: all, compactor, distributor, ingester, querier, query-scheduler, ingester-querier, query-frontend, index-gateway, ruler, table-manager, read, write.\n"+
+			"A full list of available targets can be printed when running Loki with the `-list-targets` command line flag.")
+	f.BoolVar(&c.AuthEnabled, "auth.enabled", true,
+		"Enables authentication through the X-Scope-OrgID header, which must be present if true. If false, the OrgID will always be set to \"fake\".")
+	f.IntVar(&c.BallastBytes, "config.ballast-bytes", 0,
+		"The amount of virtual memory to reserve as a ballast in order to optimize garbage collection. Larger ballasts result in fewer garbage collection passes, reducing compute overhead at the cost of memory usage.\n"+
+			"It will, however, distort metrics, because it is counted as live memory.")
 
 	c.registerServerFlagsWithChangedDefaultValues(f)
 	c.Common.RegisterFlags(f)
