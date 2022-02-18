@@ -371,6 +371,7 @@ local manifest(apps) = pipeline('manifest') {
       make('check-generated-files', container=false) { depends_on: ['clone'] },
       make('test', container=false) { depends_on: ['clone', 'check-generated-files'] },
       make('lint', container=false) { depends_on: ['clone', 'check-generated-files'] },
+      make('check-docs', container=false) { depends_on: ['clone', 'test', 'lint'] },
       make('check-mod', container=false) { depends_on: ['clone', 'test', 'lint'] },
       {
         name: 'shellcheck',
