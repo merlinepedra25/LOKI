@@ -16,7 +16,7 @@ import (
 
 var nilMetrics = NewShardingMetrics(nil)
 
-func TestMappingEquivalence(t *testing.T) {
+func TestShardMappingEquivalence(t *testing.T) {
 	var (
 		shards   = 3
 		nStreams = 60
@@ -95,6 +95,74 @@ func TestMappingEquivalence(t *testing.T) {
 			} else {
 				require.Equal(t, res.Data, shardedRes.Data)
 			}
+		})
+	}
+}
+
+func TestRangeMappingEquivalence(t *testing.T) {
+	var (
+		shards   = 3
+		nStreams = 60
+		rounds   = 20
+		streams  = randomStreams(nStreams, rounds+1, shards, []string{"a", "b", "c", "d"})
+		start    = time.Unix(0, 0)
+		end      = time.Unix(0, int64(time.Second*time.Duration(rounds)))
+		step     = time.Second
+		interval = time.Duration(0)
+		limit    = 100
+	)
+
+	for _, tc := range []struct {
+		query string
+	}{
+		{`sum(bytes_over_time({a=~".+"}[2s]))`},
+		{`sum(bytes_over_time({a=~".+"}[2s])) by (a)`},
+
+		{`sum(count_over_time({a=~".+"}[2s]))`},
+		{`sum(count_over_time({a=~".+"}[2s])) by (a)`},
+
+		{`sum(sum_over_time({a=~".+"} | unwrap a [2s]))`},
+		{`sum(sum_over_time({a=~".+"} | unwrap a [2s])) by (a)`},
+	} {
+		q := NewMockQuerier(
+			shards,
+			streams,
+		)
+
+		opts := EngineOpts{}
+		regularEngine := NewEngine(opts, q, NoLimits, log.NewNopLogger())
+		downstreamEngine := NewDownstreamEngine(opts, MockDownstreamer{regularEngine}, nilMetrics, NoLimits, log.NewNopLogger())
+
+		t.Run(tc.query, func(t *testing.T) {
+			ctx := user.InjectOrgID(context.Background(), "fake")
+
+			params := NewLiteralParams(
+				tc.query,
+				start,
+				end,
+				step,
+				interval,
+				logproto.FORWARD,
+				uint32(limit),
+				nil,
+			)
+
+			// Regular engine
+			qry := regularEngine.Query(params)
+			res, err := qry.Exec(ctx)
+			require.Nil(t, err)
+
+			// Downstream engine - split by range
+			rangeMapper, err := NewRangeVectorMapper(time.Second)
+			require.Nil(t, err)
+			_, rangeExpr, err := rangeMapper.Parse(tc.query)
+			require.Nil(t, err)
+
+			rangeQry := downstreamEngine.Query(params, rangeExpr)
+			rangeRes, err := rangeQry.Exec(ctx)
+			require.Nil(t, err)
+
+			require.Equal(t, res.Data, rangeRes.Data)
 		})
 	}
 }
