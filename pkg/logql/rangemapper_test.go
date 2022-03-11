@@ -16,130 +16,188 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 		expected   string
 		expectNoop bool
 	}{
+		// Range vector aggregators
+		{
+			`bytes_over_time({app="foo"}[3m])`,
+			`sum(downstream<bytes_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<bytes_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<bytes_over_time({app="foo"}[1m]), shard=<nil>>)`,
+			false,
+		},
+		{
+			`count_over_time({app="foo"}[3m])`,
+			`sum(downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m]), shard=<nil>>)`,
+			false,
+		},
+		{
+			`sum_over_time({app="foo"} | unwrap bar [3m])`,
+			`sum(downstream<sum_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<sum_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<sum_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>)`,
+			false,
+		},
+		{
+			`max_over_time({app="foo"} | unwrap bar [3m])`,
+			`max(downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>)`,
+			false,
+		},
+		{
+			`max_over_time ({app="foo"} | unwrap bar [3m]) by (bar)`,
+			`max by (bar) (downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 2m0s) by (bar), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 1m0s) by (bar), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m]) by (bar), shard=<nil>>)`,
+			false,
+		},
+		{
+			`min_over_time({app="foo"} | unwrap bar [3m])`,
+			`min(downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>)`,
+			false,
+		},
+		{
+			`min_over_time ({app="foo"} | unwrap bar [3m]) by (bar)`,
+			`min by (bar) (downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 2m0s) by (bar), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 1m0s) by (bar), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m]) by (bar), shard=<nil>>)`,
+			false,
+		},
 		// sum
 		{
 			`sum(bytes_over_time({app="foo"}[3m]))`,
-			`sum(downstream<sum(bytes_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum(bytes_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum(bytes_over_time({app="foo"}[1m])), shard=<nil>>)`,
+			`sum(sum(
+				downstream<bytes_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<bytes_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<bytes_over_time({app="foo"}[1m]), shard=<nil>>
+			))`,
 			false,
 		},
 		{
 			`sum by (bar) (bytes_over_time({app="foo"}[3m]))`,
-			`sum by (bar) (downstream<sum by (bar) (bytes_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum by (bar) (bytes_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum by (bar) (bytes_over_time({app="foo"}[1m])), shard=<nil>>)`,
+			`sum by (bar) (sum(
+				downstream<bytes_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<bytes_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<bytes_over_time({app="foo"}[1m]), shard=<nil>>
+			))`,
 			false,
 		},
 		{
 			`sum(count_over_time({app="foo"}[3m]))`,
-			`sum(downstream<sum(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum(count_over_time({app="foo"}[1m])), shard=<nil>>)`,
+			`sum(sum(
+				downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m]), shard=<nil>>
+			))`,
 			false,
 		},
 		{
 			`sum by (bar) (count_over_time({app="foo"}[3m]))`,
-			`sum by (bar) (downstream<sum by (bar) (count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum by (bar) (count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum by (bar) (count_over_time({app="foo"}[1m])), shard=<nil>>)`,
+			`sum by (bar) (sum(
+				downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m]), shard=<nil>>
+			))`,
 			false,
 		},
 		{
 			`sum(sum_over_time({app="foo"} | unwrap bar [3m]))`,
-			`sum(downstream<sum(sum_over_time({app="foo"} | unwrap bar [1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum(sum_over_time({app="foo"} | unwrap bar [1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum(sum_over_time({app="foo"} | unwrap bar [1m])), shard=<nil>>)`,
+			`sum(sum(
+				downstream<sum_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<sum_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<sum_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>
+			))`,
 			false,
 		},
 		{
 			`sum by (bar) (sum_over_time({app="foo"} | unwrap bar [3m]))`,
-			`sum by (bar) (downstream<sum by (bar) (sum_over_time({app="foo"} | unwrap bar [1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum by (bar) (sum_over_time({app="foo"} | unwrap bar [1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum by (bar) (sum_over_time({app="foo"} | unwrap bar [1m])), shard=<nil>>)`,
+			`sum by (bar) (sum(
+				downstream<sum_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<sum_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<sum_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>
+			))`,
+			false,
+		},
+		{
+			`sum(max_over_time({app="foo"} | unwrap bar [3m]))`,
+			`sum(max(
+				downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>
+			))`,
+			false,
+		},
+		{
+			`sum by (bar) (max_over_time({app="foo"} | unwrap bar [3m]))`,
+			`sum by (bar) (max(
+				downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>
+			))`,
+			false,
+		},
+		{
+			`sum(max_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
+			`sum(max by (bar) (
+				downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 2m0s) by (bar), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 1m0s) by (bar), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m]) by (bar), shard=<nil>>
+			))`,
+			false,
+		},
+		{
+			`sum by (bar) (max_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
+			`sum by (bar) (max by (bar) (
+				downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 2m0s) by (bar), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m] offset 1m0s) by (bar), shard=<nil>>
+				++ downstream<max_over_time({app="foo"} | unwrap bar [1m]) by (bar), shard=<nil>>
+			))`,
 			false,
 		},
 
-		// sum - TODO: Fix
-		{
-			`sum(max_over_time({app="foo"} | unwrap bar [3m]))`,
-			`sum(max_over_time({app="foo"} | unwrap bar [3m]))`,
-			true,
-		},
-		{
-			`sum by (bar) (max_over_time({app="foo"} | unwrap bar [3m]))`,
-			`sum by (bar) (max_over_time({app="foo"} | unwrap bar [3m]))`,
-			true,
-		},
-		{
-			`sum(max_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			`sum(max_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			true,
-		},
-		{
-			`sum by (bar) (max_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			`sum by (bar) (max_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			true,
-		},
 		{
 			`sum(min_over_time({app="foo"} | unwrap bar [3m]))`,
-			`sum(min_over_time({app="foo"} | unwrap bar [3m]))`,
-			true,
+			`sum(min(
+				downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>
+			))`,
+			false,
 		},
 		{
 			`sum by (bar) (min_over_time({app="foo"} | unwrap bar [3m]))`,
-			`sum by (bar) (min_over_time({app="foo"} | unwrap bar [3m]))`,
-			true,
+			`sum by (bar) (min(
+				downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 2m0s), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 1m0s), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m]), shard=<nil>>
+			))`,
+			false,
 		},
 		{
 			`sum(min_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			`sum(min_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			true,
+			`sum(min by (bar) (
+				downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 2m0s) by (bar), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 1m0s) by (bar), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m]) by (bar), shard=<nil>>
+			))`,
+			false,
 		},
 		{
 			`sum by (bar) (min_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			`sum by (bar) (min_over_time({app="foo"} | unwrap bar [3m]) by (bar))`,
-			true,
+			`sum by (bar) (min by (bar) (
+				downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 2m0s) by (bar), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m] offset 1m0s) by (bar), shard=<nil>>
+				++ downstream<min_over_time({app="foo"} | unwrap bar [1m]) by (bar), shard=<nil>>
+			))`,
+			false,
 		},
 
-		// count, max, min - TODO: Fix
+		// count, max, min - TODO
 
-		// noop - TODO: Fix
-		{
-			`bytes_over_time({app="foo"}[3m])`,
-			`bytes_over_time({app="foo"}[3m])`,
-			true,
-		},
-		{
-			`count_over_time({app="foo"}[3m])`,
-			`count_over_time({app="foo"}[3m])`,
-			true,
-		},
-		{
-			`sum_over_time({app="foo"} | unwrap bar [3m])`,
-			`sum_over_time({app="foo"} | unwrap bar [3m])`,
-			true,
-		},
-		{
-			`max_over_time({app="foo"} | unwrap bar [3m])`,
-			`max_over_time({app="foo"} | unwrap bar [3m])`,
-			true,
-		},
-		{
-			`max_over_time({app="foo"} | unwrap bar [3m]) by (bar)`,
-			`max_over_time({app="foo"} | unwrap bar [3m]) by (bar)`,
-			true,
-		},
-		{
-			`min_over_time({app="foo"} | unwrap bar [3m])`,
-			`min_over_time({app="foo"} | unwrap bar [3m])`,
-			true,
-		},
-		{
-			`min_over_time({app="foo"} | unwrap bar [3m]) by (bar)`,
-			`min_over_time({app="foo"} | unwrap bar [3m]) by (bar)`,
-			true,
-		},
+		// noop - TODO
 
 		// TODO: Add binary operations
 		// TODO: Add cases where the aggregation function is non-splittable, e.g., topk(2, sum(bytes_over_time({app="foo"}[3m])))

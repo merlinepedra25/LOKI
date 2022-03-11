@@ -115,14 +115,125 @@ func TestRangeMappingEquivalence(t *testing.T) {
 	for _, tc := range []struct {
 		query string
 	}{
-		{`sum(bytes_over_time({a=~".+"}[2s]))`},
-		{`sum(bytes_over_time({a=~".+"}[2s])) by (a)`},
+		// Range vector aggregators
+		{`bytes_over_time({a=~".+"}[5s])`},
+		{`count_over_time({a=~".+"}[5s])`},
+		{`sum_over_time({a=~".+"} | unwrap a [5s])`},
 
-		{`sum(count_over_time({a=~".+"}[2s]))`},
-		{`sum(count_over_time({a=~".+"}[2s])) by (a)`},
+		{`max_over_time({a=~".+"} | unwrap a [5s])`},
+		{`max_over_time({a=~".+"} | unwrap a [5s]) by (a)`},
+		{`max_over_time({a=~".+"} | unwrap a [5s]) without (b)`},
 
-		{`sum(sum_over_time({a=~".+"} | unwrap a [2s]))`},
-		{`sum(sum_over_time({a=~".+"} | unwrap a [2s])) by (a)`},
+		{`min_over_time({a=~".+"} | unwrap a [5s])`},
+		{`min_over_time({a=~".+"} | unwrap a [5s]) by (a)`},
+		{`min_over_time({a=~".+"} | unwrap a [5s]) without (b)`},
+
+		// Vector aggregator - sum
+		{`sum(bytes_over_time({a=~".+"}[5s]))`},
+		{`sum(bytes_over_time({a=~".+"}[5s])) by (a)`},
+		{`sum(bytes_over_time({a=~".+"}[5s])) without (a)`},
+
+		{`sum(count_over_time({a=~".+"}[5s]))`},
+		{`sum(count_over_time({a=~".+"}[5s])) by (a)`},
+		{`sum(count_over_time({a=~".+"}[5s])) without (a)`},
+
+		{`sum(sum_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`sum(sum_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`sum(sum_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`sum(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`sum(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		// Vector aggregator - count
+		{`count(bytes_over_time({a=~".+"}[5s]))`},
+		{`count(bytes_over_time({a=~".+"}[5s])) by (a)`},
+
+		{`count(count_over_time({a=~".+"}[5s]))`},
+		{`count(count_over_time({a=~".+"}[5s])) by (a)`},
+
+		{`count(sum_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`count(sum_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+
+		{`count(max_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`count(max_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`count(max_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`count(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`count(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`count(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`count(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		{`count(min_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`count(min_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`count(min_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`count(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`count(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`count(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`count(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		// Vector aggregator - max
+		{`max(bytes_over_time({a=~".+"}[5s]))`},
+		{`max(bytes_over_time({a=~".+"}[5s])) by (a)`},
+
+		{`max(count_over_time({a=~".+"}[5s]))`},
+		{`max(count_over_time({a=~".+"}[5s])) by (a)`},
+
+		{`max(sum_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`max(sum_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+
+		{`max(max_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`max(max_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`max(max_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`max(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`max(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`max(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`max(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		{`max(min_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`max(min_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`max(min_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`max(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`max(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`max(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`max(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		// Vector aggregator - min
+		{`min(bytes_over_time({a=~".+"}[5s]))`},
+		{`min(bytes_over_time({a=~".+"}[5s])) by (a)`},
+
+		{`min(count_over_time({a=~".+"}[5s]))`},
+		{`min(count_over_time({a=~".+"}[5s])) by (a)`},
+
+		{`min(sum_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`min(sum_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+
+		{`min(max_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`min(max_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`min(max_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`min(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`min(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`min(max_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`min(max_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
+
+		{`min(min_over_time({a=~".+"} | unwrap a [5s]))`},
+		{`min(min_over_time({a=~".+"} | unwrap a [5s])) by (a)`},
+		{`min(min_over_time({a=~".+"} | unwrap a [5s])) without (a)`},
+		{`min(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) by (a)`},
+		{`min(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) by (a)`},
+		{`min(min_over_time({a=~".+"} | unwrap a [5s]) by (a)) without (a)`},
+		{`min(min_over_time({a=~".+"} | unwrap a [5s]) without (a)) without (a)`},
 	} {
 		q := NewMockQuerier(
 			shards,

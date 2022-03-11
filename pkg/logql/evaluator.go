@@ -243,33 +243,44 @@ func vectorAggEvaluator(
 			metric := s.Metric
 
 			var groupingKey uint64
-			if expr.Grouping.Without {
-				groupingKey, buf = metric.HashWithoutLabels(buf, expr.Grouping.Groups...)
+			if expr.Grouping.preserveLabels {
+				groupingKey = metric.Hash()
 			} else {
-				groupingKey, buf = metric.HashForLabels(buf, expr.Grouping.Groups...)
+				if expr.Grouping.Without {
+					groupingKey, buf = metric.HashWithoutLabels(buf, expr.Grouping.Groups...)
+				} else {
+					groupingKey, buf = metric.HashForLabels(buf, expr.Grouping.Groups...)
+				}
 			}
+
 			group, ok := result[groupingKey]
 			// Add a new group if it doesn't exist.
 			if !ok {
 				var m labels.Labels
 
-				if expr.Grouping.Without {
-					lb.Reset(metric)
-					lb.Del(expr.Grouping.Groups...)
-					lb.Del(labels.MetricName)
-					m = lb.Labels()
+				if expr.Grouping.preserveLabels {
+					// Preserve the evaluator result label for the inner expression aggregation
+					m = metric
 				} else {
-					m = make(labels.Labels, 0, len(expr.Grouping.Groups))
-					for _, l := range metric {
-						for _, n := range expr.Grouping.Groups {
-							if l.Name == n {
-								m = append(m, l)
-								break
+					if expr.Grouping.Without {
+						lb.Reset(metric)
+						lb.Del(expr.Grouping.Groups...)
+						lb.Del(labels.MetricName)
+						m = lb.Labels()
+					} else {
+						m = make(labels.Labels, 0, len(metric))
+						for _, l := range metric {
+							for _, n := range expr.Grouping.Groups {
+								if l.Name == n {
+									m = append(m, l)
+									break
+								}
 							}
 						}
+						sort.Sort(m)
 					}
-					sort.Sort(m)
 				}
+
 				result[groupingKey] = &groupedAggregation{
 					labels:     m,
 					value:      s.V,

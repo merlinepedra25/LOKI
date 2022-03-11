@@ -866,8 +866,9 @@ func (e *RangeAggregationExpr) Walk(f WalkFn) {
 }
 
 type Grouping struct {
-	Groups  []string
-	Without bool
+	Groups         []string
+	Without        bool
+	preserveLabels bool
 }
 
 // impls Stringer
