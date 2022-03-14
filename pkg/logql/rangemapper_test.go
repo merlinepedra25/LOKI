@@ -18,7 +18,7 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 	}{
 		{
 			`count_over_time({app="foo"}[3m])`,
-			`sum without (downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+			`sum without(downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
 				++ downstream<count_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
 				++ downstream<count_over_time({app="foo"}[1m]), shard=<nil>>)`,
 			false,
@@ -27,9 +27,9 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 		{
 			`sum(count_over_time({app="foo"}[3m]))`,
 			`sum(
-				downstream<sum(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
-				++ downstream<sum(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
-				++ downstream<sum(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
+				downstream<sum without(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
+				++ downstream<sum without(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<sum without(count_over_time({app="foo"}[1m])), shard=<nil>>)`,
 			false,
 		},
 
@@ -43,7 +43,25 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 
 		{
 			`min(count_over_time({app="foo"}[3m]))`,
-			`min(
+			`min(sum without(
+				downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m]), shard=<nil>>)`,
+			false,
+		},
+
+		{
+			`min by (bar) (count_over_time({app="foo"}[3m]))`,
+			`min by (bar)(
+				downstream<sum by (bar)(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
+				++ downstream<sum by (bar)(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<sum by (bar)(count_over_time({app="foo"}[1m])), shard=<nil>>)`,
+			false,
+		},
+
+		{
+			`sum(min(count_over_time({app="foo"}[3m])))`,
+			`sum(min(
 				downstream<min(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
 				++ downstream<min(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
 				++ downstream<min(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
@@ -51,11 +69,11 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 		},
 
 		{
-			`min by (bar) (count_over_time({app="foo"}[3m]))`,
-			`min by (bar)(
-				downstream<min by (bar)(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
-				++ downstream<min by (bar)(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
-				++ downstream<min by (bar)(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
+			`sum(min by (bar)(count_over_time({app="foo"}[3m])))`,
+			`sum(min by (bar)(
+				downstream<sum(min by (bar)(count_over_time({app="foo"}[1m] offset 2m0s))), shard=<nil>>
+				++ downstream<min(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<min(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
 			false,
 		},
 

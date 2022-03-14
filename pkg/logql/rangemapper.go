@@ -50,7 +50,7 @@ func (m RangeVectorMapper) Map(expr Expr) (Expr, error) {
 		return m.mapVectorAggregationExpr(e)
 	case *RangeAggregationExpr:
 		// noop - TODO: the aggregation of range aggregation expressions needs to preserve the labels
-		return m.mapRangeAggregationExpr(e), nil
+		return m.mapRangeAggregationExpr(e, nil), nil
 	case *BinOpExpr:
 		lhsMapped, err := m.Map(e.SampleExpr)
 		if err != nil {
@@ -92,7 +92,7 @@ func getRangeInterval(expr SampleExpr) time.Duration {
 // mapSampleExpr transform expr in multiple subexpressions split by offset range interval
 // rangeInterval should be greater than m.splitByInterval, otherwise the resultant expression
 // will have an unnecessary aggregation operation
-func (m RangeVectorMapper) mapSampleExpr(expr SampleExpr, rangeInterval time.Duration) SampleExpr {
+func (m RangeVectorMapper) mapSampleExpr(expr SampleExpr, rangeInterval time.Duration, grouping *Grouping) SampleExpr {
 	var head *ConcatSampleExpr
 
 	splitCount := int(rangeInterval / m.splitByInterval)
@@ -107,7 +107,10 @@ func (m RangeVectorMapper) mapSampleExpr(expr SampleExpr, rangeInterval time.Dur
 				if offset != 0 {
 					concrete.Left.Offset = offset
 				}
+			case *VectorAggregationExpr:
+				concrete.Grouping = grouping
 			}
+
 		})
 		head = &ConcatSampleExpr{
 			DownstreamSampleExpr: DownstreamSampleExpr{
@@ -133,25 +136,27 @@ func (m RangeVectorMapper) mapVectorAggregationExpr(expr *VectorAggregationExpr)
 		return expr, nil
 	}
 
-	// Split the vector aggregation child node
-	subMapped, err := m.Map(expr.Left)
-	if err != nil {
-		return nil, err
+	switch expr.Operation {
+	case OpTypeSum, OpTypeMin:
+		// sum(x) -> sum(sum(x offset splitByInterval1) ++ sum(x offset splitByInterval2)...)
+		grouping := expr.Grouping
+		if expr.Grouping.Groups == nil {
+			grouping = &Grouping{
+				Groups:  []string{" "},
+				Without: true,
+			}
+		}
+		return &VectorAggregationExpr{
+			Left:      m.mapSampleExpr(expr, rangeInterval, grouping),
+			Grouping:  expr.Grouping,
+			Params:    expr.Params,
+			Operation: expr.Operation,
+		}, nil
 	}
-	sampleExpr, ok := subMapped.(SampleExpr)
-	if !ok {
-		return nil, badASTMapping(subMapped)
-	}
-
-	return &VectorAggregationExpr{
-		Left:      sampleExpr,
-		Grouping:  expr.Grouping,
-		Params:    expr.Params,
-		Operation: expr.Operation,
-	}, nil
+	return nil, nil
 }
 
-func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr) SampleExpr {
+func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr, aggExpr *VectorAggregationExpr) SampleExpr {
 	// TODO: In case expr is non-splittable, can we attempt to shard a child node?
 
 	rangeInterval := getRangeInterval(expr)
@@ -166,13 +171,17 @@ func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr) S
 	if isSplittableByRange(expr) {
 		switch expr.Operation {
 		case OpRangeTypeBytes, OpRangeTypeCount, OpRangeTypeSum:
-			return &VectorAggregationExpr{
-				Left: m.mapSampleExpr(expr, rangeInterval),
-				Grouping: &Grouping{
-					Without: true,
-				},
-				Operation: OpTypeSum,
+			if aggExpr == nil {
+				return &VectorAggregationExpr{
+					Left: m.mapSampleExpr(expr, rangeInterval, nil),
+					Grouping: &Grouping{
+						Without: true,
+					},
+					Operation: OpTypeSum,
+				}
 			}
+
+			return m.mapSampleExpr(aggExpr, rangeInterval, aggExpr.Grouping)
 		case OpRangeTypeMax:
 			grouping := expr.Grouping
 			if expr.Grouping == nil {
@@ -181,7 +190,7 @@ func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr) S
 				}
 			}
 			return &VectorAggregationExpr{
-				Left:      m.mapSampleExpr(expr, rangeInterval),
+				Left:      m.mapSampleExpr(expr, rangeInterval, nil),
 				Grouping:  grouping,
 				Operation: OpTypeMax,
 			}
@@ -193,7 +202,7 @@ func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr) S
 				}
 			}
 			return &VectorAggregationExpr{
-				Left:      m.mapSampleExpr(expr, rangeInterval),
+				Left:      m.mapSampleExpr(expr, rangeInterval, nil),
 				Grouping:  grouping,
 				Operation: OpTypeMin,
 			}
