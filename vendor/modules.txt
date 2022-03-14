@@ -780,6 +780,12 @@ github.com/mwitkow/go-conntrack
 # github.com/ncw/swift v1.0.52
 ## explicit
 github.com/ncw/swift
+# github.com/ohler55/ojg v1.13.0
+## explicit; go 1.17
+github.com/ohler55/ojg
+github.com/ohler55/ojg/alt
+github.com/ohler55/ojg/gen
+github.com/ohler55/ojg/oj
 # github.com/oklog/run v1.1.0
 ## explicit; go 1.13
 github.com/oklog/run

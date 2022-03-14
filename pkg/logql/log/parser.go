@@ -12,6 +12,7 @@ import (
 	"github.com/grafana/loki/pkg/logql/log/logfmt"
 	"github.com/grafana/loki/pkg/logql/log/pattern"
 	"github.com/grafana/loki/pkg/logqlmodel"
+	"github.com/ohler55/ojg/oj"
 
 	"github.com/grafana/regexp"
 	jsoniter "github.com/json-iterator/go"
@@ -53,14 +54,16 @@ func (j *JSONParser) Process(line []byte, lbs *LabelsBuilder) ([]byte, bool) {
 	if lbs.ParserLabelHints().NoLabels() {
 		return line, true
 	}
-	it := jsoniter.ConfigFastest.BorrowIterator(line)
-	defer jsoniter.ConfigFastest.ReturnIterator(it)
 
 	// reset the state.
 	j.buf = j.buf[:0]
 	j.lbs = lbs
 
-	if err := j.readObject(it); err != nil {
+	th := &LokiTokenHandler{
+		lbs:   lbs,
+		stack: make([]string, 100),
+	}
+	if err := oj.Tokenize(line, th); err != nil {
 		lbs.SetErr(errJSON)
 		return line, true
 	}
@@ -184,6 +187,73 @@ func readValue(iter *jsoniter.Iterator) string {
 		iter.Skip()
 		return ""
 	}
+}
+
+// LokiTokenHandler is a LokiTokenHandler whose functions do nothing. It is used as an
+// embedded member for TokenHandlers that don't care about all of the
+// LokiTokenHandler functions.
+type LokiTokenHandler struct {
+	lbs   *LabelsBuilder
+	stack []string
+	depth int
+}
+
+func (z *LokiTokenHandler) fqn() string {
+	return strings.Join(z.stack[:z.depth], "_")
+}
+
+// Null is called when a JSON null is encountered.
+func (z *LokiTokenHandler) Null() {
+}
+
+// Bool is called when a JSON true or false is encountered.
+func (z *LokiTokenHandler) Bool(value bool) {
+}
+
+// Int is called when a JSON integer is encountered.
+func (z *LokiTokenHandler) Int(value int64) {
+	z.lbs.Set(z.fqn(), fmt.Sprintf("%d", value))
+}
+
+// Float is called when a JSON decimal is encountered that fits into a
+// float64.
+func (z *LokiTokenHandler) Float(value float64) {
+	z.lbs.Set(z.fqn(), fmt.Sprintf("%f", value))
+}
+
+// Number is called when a JSON number is encountered that does not fit
+// into an int64 or float64.
+func (z *LokiTokenHandler) Number(value string) {
+}
+
+// String is called when a JSON string is encountered.
+func (z *LokiTokenHandler) String(value string) {
+	z.lbs.Set(z.fqn(), value)
+}
+
+// ObjectStart is called when a JSON object start '{' is encountered.
+func (z *LokiTokenHandler) ObjectStart() {
+	z.depth++
+	//fmt.Printf("object start: %d %v\n", z.depth, z.stack)
+}
+
+// ObjectEnd is called when a JSON object end '}' is encountered.
+func (z *LokiTokenHandler) ObjectEnd() {
+	z.depth--
+	//fmt.Printf("object end: %d %v\n", z.depth, z.stack)
+}
+
+// Key is called when a JSON object key is encountered.
+func (z *LokiTokenHandler) Key(key string) {
+	z.stack[z.depth-1] = key
+}
+
+// ArrayStart is called when a JSON array start '[' is encountered.
+func (z *LokiTokenHandler) ArrayStart() {
+}
+
+// ArrayEnd is called when a JSON array end ']' is encountered.
+func (z *LokiTokenHandler) ArrayEnd() {
 }
 
 type RegexpParser struct {

@@ -150,7 +150,7 @@ func jsonBenchmark(b *testing.B, parser Stage) {
 		mustFilter(NewFilter("metrics.go", labels.MatchEqual)).ToStage(),
 		parser,
 	})
-	line := []byte(`{"ts":"2020-12-27T09:15:54.333026285Z","error":"action could not be completed", "context":{"file": "metrics.go"}}`)
+	line := []byte(`{"ts":"2020-12-27T09:15:54.333026285Z","foo":{"bar": "baz", "foobar": 1.2345}, "arr": [1,2,3],"error":"action could not be completed", "context":{"file": "metrics.go"}}`)
 	lbs := labels.Labels{
 		{Name: "cluster", Value: "ops-tool1"},
 		{Name: "name", Value: "querier"},
@@ -167,11 +167,11 @@ func jsonBenchmark(b *testing.B, parser Stage) {
 		resLine, resLbs, resOK = sp.Process(line)
 
 		if !resOK {
-			b.Fatalf("resulting line not ok: %s\n", line)
+			b.Fatalf("resulting line not ok:\nexpected: %s\ngot: %s\n", line, string(resLine))
 		}
 
 		if resLbs.Labels().Get("context_file") != "metrics.go" {
-			b.Fatalf("label was not extracted correctly! %+v\n", resLbs)
+			b.Fatalf("label was not extracted correctly:\ngot: %+v\n", resLbs)
 		}
 	}
 }

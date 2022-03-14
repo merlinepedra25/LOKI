@@ -278,6 +278,7 @@ require (
 	github.com/cloudflare/cloudflare-go v0.27.0
 	github.com/gofrs/flock v0.7.1 // indirect
 	github.com/gogo/status v1.1.0
+	github.com/ohler55/ojg v1.13.0
 	github.com/oklog/ulid v1.3.1
 )
 
