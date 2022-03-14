@@ -50,7 +50,7 @@ func (m RangeVectorMapper) Map(expr Expr) (Expr, error) {
 		return m.mapVectorAggregationExpr(e)
 	case *RangeAggregationExpr:
 		// noop - TODO: the aggregation of range aggregation expressions needs to preserve the labels
-		return expr, nil
+		return m.mapRangeAggregationExpr(e), nil
 	case *BinOpExpr:
 		lhsMapped, err := m.Map(e.SampleExpr)
 		if err != nil {
@@ -124,26 +124,6 @@ func (m RangeVectorMapper) mapSampleExpr(expr SampleExpr, rangeInterval time.Dur
 }
 
 func (m RangeVectorMapper) mapVectorAggregationExpr(expr *VectorAggregationExpr) (SampleExpr, error) {
-	// if this AST contains non-splittable operations, don't split at this level,
-	// but attempt to split a child node.
-	if !isSplittableByRange(expr) {
-		subMapped, err := m.Map(expr.Left)
-		if err != nil {
-			return nil, err
-		}
-		sampleExpr, ok := subMapped.(SampleExpr)
-		if !ok {
-			return nil, badASTMapping(subMapped)
-		}
-
-		return &VectorAggregationExpr{
-			Left:      sampleExpr,
-			Grouping:  expr.Grouping,
-			Params:    expr.Params,
-			Operation: expr.Operation,
-		}, nil
-	}
-
 	rangeInterval := getRangeInterval(expr)
 
 	// in case the interval is smaller than the configured split interval,
@@ -153,24 +133,82 @@ func (m RangeVectorMapper) mapVectorAggregationExpr(expr *VectorAggregationExpr)
 		return expr, nil
 	}
 
-	switch expr.Operation {
-	case OpTypeSum:
-		// sum(x) -> sum(sum(x offset splitByInterval1) ++ sum(x offset splitByInterval2)...)
-		return &VectorAggregationExpr{
-			Left:      m.mapSampleExpr(expr, rangeInterval),
-			Grouping:  expr.Grouping,
-			Params:    expr.Params,
-			Operation: expr.Operation,
-		}, nil
-	default:
-		// this should not be reachable. If an operation is splittable by range it should
-		// have an optimization listed.
-		level.Warn(util_log.Logger).Log(
-			"msg", "unexpected operation which appears splittable by range, ignoring",
-			"operation", expr.Operation,
-		)
-		return expr, nil
+	// Split the vector aggregation child node
+	subMapped, err := m.Map(expr.Left)
+	if err != nil {
+		return nil, err
 	}
+	sampleExpr, ok := subMapped.(SampleExpr)
+	if !ok {
+		return nil, badASTMapping(subMapped)
+	}
+
+	return &VectorAggregationExpr{
+		Left:      sampleExpr,
+		Grouping:  expr.Grouping,
+		Params:    expr.Params,
+		Operation: expr.Operation,
+	}, nil
+}
+
+func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr) SampleExpr {
+	// TODO: In case expr is non-splittable, can we attempt to shard a child node?
+
+	rangeInterval := getRangeInterval(expr)
+
+	// in case the interval is smaller than the configured split interval,
+	// don't split it.
+	// TODO: what if there is another internal expr with an interval that can be split?
+	if rangeInterval <= m.splitByInterval {
+		return expr
+	}
+
+	if isSplittableByRange(expr) {
+		switch expr.Operation {
+		case OpRangeTypeBytes, OpRangeTypeCount, OpRangeTypeSum:
+			return &VectorAggregationExpr{
+				Left: m.mapSampleExpr(expr, rangeInterval),
+				Grouping: &Grouping{
+					Without: true,
+				},
+				Operation: OpTypeSum,
+			}
+		case OpRangeTypeMax:
+			grouping := expr.Grouping
+			if expr.Grouping == nil {
+				grouping = &Grouping{
+					Without: true,
+				}
+			}
+			return &VectorAggregationExpr{
+				Left:      m.mapSampleExpr(expr, rangeInterval),
+				Grouping:  grouping,
+				Operation: OpTypeMax,
+			}
+		case OpRangeTypeMin:
+			grouping := expr.Grouping
+			if expr.Grouping == nil {
+				grouping = &Grouping{
+					Without: true,
+				}
+			}
+			return &VectorAggregationExpr{
+				Left:      m.mapSampleExpr(expr, rangeInterval),
+				Grouping:  grouping,
+				Operation: OpTypeMin,
+			}
+		default:
+			// this should not be reachable. If an operation is splittable it should
+			// have an optimization listed
+			level.Warn(util_log.Logger).Log(
+				"msg", "unexpected range aggregation expression which appears shardable, ignoring",
+				"operation", expr.Operation,
+			)
+			return expr
+		}
+	}
+
+	return expr
 }
 
 func isSplittableByRange(expr SampleExpr) bool {
@@ -191,16 +229,16 @@ func isSplittableByRange(expr SampleExpr) bool {
 }
 
 var SplittableVectorOp = map[string]struct{}{
-	OpTypeSum: {},
-	//OpTypeCount: {},
-	//OpTypeMax:   {},
-	//OpTypeMin:   {},
+	OpTypeSum:   {},
+	OpTypeCount: {},
+	OpTypeMax:   {},
+	OpTypeMin:   {},
 }
 
 var SplittableRangeVectorOp = map[string]struct{}{
 	OpRangeTypeBytes: {},
 	OpRangeTypeCount: {},
 	OpRangeTypeSum:   {},
-	//OpRangeTypeMax:   {},
-	//OpRangeTypeMin:   {},
+	OpRangeTypeMax:   {},
+	OpRangeTypeMin:   {},
 }

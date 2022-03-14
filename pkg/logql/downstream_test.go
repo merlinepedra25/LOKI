@@ -2,6 +2,7 @@ package logql
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"testing"
 	"time"
@@ -115,6 +116,12 @@ func TestRangeMappingEquivalence(t *testing.T) {
 	for _, tc := range []struct {
 		query string
 	}{
+		{`count_over_time({a=~".+"}[2s])`},
+		{`sum(count_over_time({a=~".+"}[2s]))`},
+		{`sum by (a) (count_over_time({a=~".+"}[2s]))`},
+
+		{`min(count_over_time({a=~".+"}[2s]))`},
+
 		{`sum(bytes_over_time({a=~".+"}[2s]))`},
 		{`sum(bytes_over_time({a=~".+"}[2s])) by (a)`},
 
@@ -161,6 +168,8 @@ func TestRangeMappingEquivalence(t *testing.T) {
 			rangeQry := downstreamEngine.Query(params, rangeExpr)
 			rangeRes, err := rangeQry.Exec(ctx)
 			require.Nil(t, err)
+
+			fmt.Printf("########### res: %v\n", res.Data)
 
 			require.Equal(t, res.Data, rangeRes.Data)
 		})

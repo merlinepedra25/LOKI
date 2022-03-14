@@ -16,6 +16,49 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 		expected   string
 		expectNoop bool
 	}{
+		{
+			`count_over_time({app="foo"}[3m])`,
+			`sum without (downstream<count_over_time({app="foo"}[1m] offset 2m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m] offset 1m0s), shard=<nil>>
+				++ downstream<count_over_time({app="foo"}[1m]), shard=<nil>>)`,
+			false,
+		},
+
+		{
+			`sum(count_over_time({app="foo"}[3m]))`,
+			`sum(
+				downstream<sum(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
+				++ downstream<sum(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<sum(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
+			false,
+		},
+
+		{
+			`sum by (bar) (count_over_time({app="foo"}[3m]))`,
+			`sum by (bar) (downstream<sum by (bar) (count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
+				++ downstream<sum by (bar) (count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<sum by (bar) (count_over_time({app="foo"}[1m])), shard=<nil>>)`,
+			false,
+		},
+
+		{
+			`min(count_over_time({app="foo"}[3m]))`,
+			`min(
+				downstream<min(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
+				++ downstream<min(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<min(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
+			false,
+		},
+
+		{
+			`min by (bar) (count_over_time({app="foo"}[3m]))`,
+			`min by (bar)(
+				downstream<min by (bar)(count_over_time({app="foo"}[1m] offset 2m0s)), shard=<nil>>
+				++ downstream<min by (bar)(count_over_time({app="foo"}[1m] offset 1m0s)), shard=<nil>>
+				++ downstream<min by (bar)(count_over_time({app="foo"}[1m])), shard=<nil>>))`,
+			false,
+		},
+
 		// sum
 		{
 			`sum(bytes_over_time({app="foo"}[3m]))`,
@@ -148,7 +191,7 @@ func Test_SplitRangeVectorMapping(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.expr, func(t *testing.T) {
-			t.Parallel()
+			//t.Parallel()
 			noop, mappedExpr, err := rvm.Parse(tc.expr)
 			require.NoError(t, err)
 			require.Equal(t, removeWhiteSpace(tc.expected), removeWhiteSpace(mappedExpr.String()))
