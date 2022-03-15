@@ -136,6 +136,26 @@ func TestRangeMappingEquivalence(t *testing.T) {
 		{`sum by (a) (sum_over_time({a=~".+"} | unwrap b [2s]))`},
 		{`sum by (a) (max_over_time({a=~".+"} | unwrap b [2s]))`},
 		{`sum by (a) (min_over_time({a=~".+"} | unwrap b [2s]))`},
+
+		{`count by (a) (sum_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`count by (a) (max_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`count by (a) (min_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`count by (a) (count_over_time({a=~".+"}[2s]))`},
+
+		{`count (sum_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`count (max_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`count (min_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`count (count_over_time({a=~".+"}[2s]))`},
+
+		{`max by (a) (sum_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`max by (a) (max_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`max by (a) (min_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`max by (a) (count_over_time({a=~".+"} [2s]))`},
+
+		{`min by (a) (sum_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`min by (a) (max_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`min by (a) (min_over_time({a=~".+"} | unwrap b [2s]))`},
+		{`min by (a) (count_over_time({a=~".+"} [2s]))`},
 	} {
 		q := NewMockQuerier(
 			shards,
