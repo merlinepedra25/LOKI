@@ -30,7 +30,7 @@ func (m RangeVectorMapper) Parse(query string) (bool, Expr, error) {
 		return true, nil, err
 	}
 
-	modExpr, err := m.Map(origExpr)
+	modExpr, err := m.Map(origExpr, nil)
 	if err != nil {
 		return true, nil, err
 	}
@@ -38,7 +38,7 @@ func (m RangeVectorMapper) Parse(query string) (bool, Expr, error) {
 	return origExpr.String() == modExpr.String(), modExpr, err
 }
 
-func (m RangeVectorMapper) Map(expr Expr) (Expr, error) {
+func (m RangeVectorMapper) Map(expr Expr, grouping *Grouping) (Expr, error) {
 	// immediately clone the passed expr to avoid mutating the original
 	expr, err := Clone(expr)
 	if err != nil {
@@ -50,13 +50,13 @@ func (m RangeVectorMapper) Map(expr Expr) (Expr, error) {
 		return m.mapVectorAggregationExpr(e)
 	case *RangeAggregationExpr:
 		// noop - TODO: the aggregation of range aggregation expressions needs to preserve the labels
-		return m.mapRangeAggregationExpr(e, nil), nil
+		return m.mapRangeAggregationExpr(e, grouping), nil
 	case *BinOpExpr:
-		lhsMapped, err := m.Map(e.SampleExpr)
+		lhsMapped, err := m.Map(e.SampleExpr, nil)
 		if err != nil {
 			return nil, err
 		}
-		rhsMapped, err := m.Map(e.RHS)
+		rhsMapped, err := m.Map(e.RHS, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -107,8 +107,6 @@ func (m RangeVectorMapper) mapSampleExpr(expr SampleExpr, rangeInterval time.Dur
 				if offset != 0 {
 					concrete.Left.Offset = offset
 				}
-			case *VectorAggregationExpr:
-				concrete.Grouping = grouping
 			}
 
 		})
@@ -136,27 +134,48 @@ func (m RangeVectorMapper) mapVectorAggregationExpr(expr *VectorAggregationExpr)
 		return expr, nil
 	}
 
-	switch expr.Operation {
-	case OpTypeSum, OpTypeMin:
-		// sum(x) -> sum(sum(x offset splitByInterval1) ++ sum(x offset splitByInterval2)...)
-		//grouping := expr.Grouping
-		//if expr.Grouping.Groups == nil {
-		//	grouping = &Grouping{
-		//		Groups:  []string{" "},
-		//		Without: true,
-		//	}
-		//}
-		return &VectorAggregationExpr{
-			Left:      m.mapSampleExpr(expr, rangeInterval, nil),
-			Grouping:  expr.Grouping,
-			Params:    expr.Params,
-			Operation: expr.Operation,
-		}, nil
+	//switch expr.Operation {
+	//case OpTypeSum, OpTypeMin:
+	//	// sum(x) -> sum(sum(x offset splitByInterval1) ++ sum(x offset splitByInterval2)...)
+	//	return &VectorAggregationExpr{
+	//		Left: &VectorAggregationExpr{
+	//			Left: m.mapSampleExpr(expr.Left, rangeInterval, nil),
+	//			Grouping: &Grouping{
+	//				Without: true,
+	//			},
+	//			Params:    expr.Params,
+	//			Operation: expr.Operation,
+	//		},
+	//		Grouping:  expr.Grouping,
+	//		Params:    expr.Params,
+	//		Operation: expr.Operation,
+	//	}, nil
+	//}
+	//return nil, nil
+
+	grouping := expr.Grouping
+	if grouping.Groups == nil {
+		grouping = nil
 	}
-	return nil, nil
+	// Split the vector aggregation child node
+	subMapped, err := m.Map(expr.Left, grouping)
+	if err != nil {
+		return nil, err
+	}
+	sampleExpr, ok := subMapped.(SampleExpr)
+	if !ok {
+		return nil, badASTMapping(subMapped)
+	}
+
+	return &VectorAggregationExpr{
+		Left:      sampleExpr,
+		Grouping:  expr.Grouping,
+		Params:    expr.Params,
+		Operation: expr.Operation,
+	}, nil
 }
 
-func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr, aggExpr *VectorAggregationExpr) SampleExpr {
+func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr, grouping *Grouping) SampleExpr {
 	// TODO: In case expr is non-splittable, can we attempt to shard a child node?
 
 	rangeInterval := getRangeInterval(expr)
@@ -171,45 +190,64 @@ func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr, a
 	if isSplittableByRange(expr) {
 		switch expr.Operation {
 		case OpRangeTypeBytes, OpRangeTypeCount, OpRangeTypeSum:
-			return &VectorAggregationExpr{
-				Left: m.mapSampleExpr(expr, rangeInterval, nil),
-				Grouping: &Grouping{
-					Without: true,
-				},
-				Operation: OpTypeSum,
-			}
-		case OpRangeTypeMax:
-			if expr.Grouping == nil {
+			if grouping == nil {
 				return &VectorAggregationExpr{
 					Left: m.mapSampleExpr(expr, rangeInterval, nil),
 					Grouping: &Grouping{
 						Without: true,
 					},
+					Operation: OpTypeSum,
+				}
+			} else {
+				aggr := &VectorAggregationExpr{
+					Left:      expr,
+					Grouping:  grouping,
+					Operation: OpTypeSum,
+				}
+				return m.mapSampleExpr(aggr, rangeInterval, nil)
+			}
+		case OpRangeTypeMax:
+			if grouping == nil {
+				subGrouping := expr.Grouping
+				if subGrouping == nil {
+					subGrouping = &Grouping{
+						Without: true,
+					}
+				}
+				return &VectorAggregationExpr{
+					Left:      m.mapSampleExpr(expr, rangeInterval, nil),
+					Grouping:  subGrouping,
 					Operation: OpTypeMax,
 				}
 			} else {
-				return &VectorAggregationExpr{
-					Left:      m.mapSampleExpr(expr, rangeInterval, expr.Grouping),
-					Grouping:  expr.Grouping,
-					Operation: OpTypeMax,
+				aggr := &VectorAggregationExpr{
+					Left:      expr,
+					Grouping:  grouping,
+					Operation: OpTypeSum,
 				}
+				return m.mapSampleExpr(aggr, rangeInterval, nil)
 			}
 
 		case OpRangeTypeMin:
-			if expr.Grouping == nil {
-				return &VectorAggregationExpr{
-					Left: m.mapSampleExpr(expr, rangeInterval, nil),
-					Grouping: &Grouping{
+			if grouping == nil {
+				subGrouping := expr.Grouping
+				if subGrouping == nil {
+					subGrouping = &Grouping{
 						Without: true,
-					},
+					}
+				}
+				return &VectorAggregationExpr{
+					Left:      m.mapSampleExpr(expr, rangeInterval, nil),
+					Grouping:  subGrouping,
 					Operation: OpTypeMin,
 				}
 			} else {
-				return &VectorAggregationExpr{
-					Left:      m.mapSampleExpr(expr, rangeInterval, expr.Grouping),
-					Grouping:  expr.Grouping,
-					Operation: OpTypeMin,
+				aggr := &VectorAggregationExpr{
+					Left:      expr,
+					Grouping:  grouping,
+					Operation: OpTypeSum,
 				}
+				return m.mapSampleExpr(aggr, rangeInterval, nil)
 			}
 		default:
 			// this should not be reachable. If an operation is splittable it should
