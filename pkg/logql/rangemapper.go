@@ -139,15 +139,15 @@ func (m RangeVectorMapper) mapVectorAggregationExpr(expr *VectorAggregationExpr)
 	switch expr.Operation {
 	case OpTypeSum, OpTypeMin:
 		// sum(x) -> sum(sum(x offset splitByInterval1) ++ sum(x offset splitByInterval2)...)
-		grouping := expr.Grouping
-		if expr.Grouping.Groups == nil {
-			grouping = &Grouping{
-				Groups:  []string{" "},
-				Without: true,
-			}
-		}
+		//grouping := expr.Grouping
+		//if expr.Grouping.Groups == nil {
+		//	grouping = &Grouping{
+		//		Groups:  []string{" "},
+		//		Without: true,
+		//	}
+		//}
 		return &VectorAggregationExpr{
-			Left:      m.mapSampleExpr(expr, rangeInterval, grouping),
+			Left:      m.mapSampleExpr(expr, rangeInterval, nil),
 			Grouping:  expr.Grouping,
 			Params:    expr.Params,
 			Operation: expr.Operation,
@@ -171,40 +171,45 @@ func (m RangeVectorMapper) mapRangeAggregationExpr(expr *RangeAggregationExpr, a
 	if isSplittableByRange(expr) {
 		switch expr.Operation {
 		case OpRangeTypeBytes, OpRangeTypeCount, OpRangeTypeSum:
-			if aggExpr == nil {
+			return &VectorAggregationExpr{
+				Left: m.mapSampleExpr(expr, rangeInterval, nil),
+				Grouping: &Grouping{
+					Without: true,
+				},
+				Operation: OpTypeSum,
+			}
+		case OpRangeTypeMax:
+			if expr.Grouping == nil {
 				return &VectorAggregationExpr{
 					Left: m.mapSampleExpr(expr, rangeInterval, nil),
 					Grouping: &Grouping{
 						Without: true,
 					},
-					Operation: OpTypeSum,
+					Operation: OpTypeMax,
+				}
+			} else {
+				return &VectorAggregationExpr{
+					Left:      m.mapSampleExpr(expr, rangeInterval, expr.Grouping),
+					Grouping:  expr.Grouping,
+					Operation: OpTypeMax,
 				}
 			}
 
-			return m.mapSampleExpr(aggExpr, rangeInterval, aggExpr.Grouping)
-		case OpRangeTypeMax:
-			grouping := expr.Grouping
-			if expr.Grouping == nil {
-				grouping = &Grouping{
-					Without: true,
-				}
-			}
-			return &VectorAggregationExpr{
-				Left:      m.mapSampleExpr(expr, rangeInterval, nil),
-				Grouping:  grouping,
-				Operation: OpTypeMax,
-			}
 		case OpRangeTypeMin:
-			grouping := expr.Grouping
 			if expr.Grouping == nil {
-				grouping = &Grouping{
-					Without: true,
+				return &VectorAggregationExpr{
+					Left: m.mapSampleExpr(expr, rangeInterval, nil),
+					Grouping: &Grouping{
+						Without: true,
+					},
+					Operation: OpTypeMin,
 				}
-			}
-			return &VectorAggregationExpr{
-				Left:      m.mapSampleExpr(expr, rangeInterval, nil),
-				Grouping:  grouping,
-				Operation: OpTypeMin,
+			} else {
+				return &VectorAggregationExpr{
+					Left:      m.mapSampleExpr(expr, rangeInterval, expr.Grouping),
+					Grouping:  expr.Grouping,
+					Operation: OpTypeMin,
+				}
 			}
 		default:
 			// this should not be reachable. If an operation is splittable it should

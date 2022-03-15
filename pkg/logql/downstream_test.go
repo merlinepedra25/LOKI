@@ -116,20 +116,11 @@ func TestRangeMappingEquivalence(t *testing.T) {
 	for _, tc := range []struct {
 		query string
 	}{
+		{`bytes_over_time({a=~".+"}[2s])`},
 		{`count_over_time({a=~".+"}[2s])`},
-		{`sum(count_over_time({a=~".+"}[2s]))`},
-		{`sum by (a) (count_over_time({a=~".+"}[2s]))`},
-
-		{`min(count_over_time({a=~".+"}[2s]))`},
-
-		{`sum(bytes_over_time({a=~".+"}[2s]))`},
-		{`sum(bytes_over_time({a=~".+"}[2s])) by (a)`},
-
-		{`sum(count_over_time({a=~".+"}[2s]))`},
-		{`sum(count_over_time({a=~".+"}[2s])) by (a)`},
-
-		{`sum(sum_over_time({a=~".+"} | unwrap a [2s]))`},
-		{`sum(sum_over_time({a=~".+"} | unwrap a [2s])) by (a)`},
+		{`sum_over_time({a=~".+"} | unwrap b [2s])`},
+		{`max_over_time({a=~".+"} | unwrap b [2s])`},
+		{`min_over_time({a=~".+"} | unwrap b [2s])`},
 	} {
 		q := NewMockQuerier(
 			shards,
