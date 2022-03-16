@@ -72,7 +72,7 @@ func (j *JSONParser) Process(line []byte, lbs *LabelsBuilder) ([]byte, bool) {
 
 func (j *JSONParser) RequiredLabelNames() []string { return []string{} }
 
-func (j *JSONParser) fqn() string {
+func (j *JSONParser) currentKey() []byte {
 	j.buf = j.buf[:0]
 	for i, k := range j.stack {
 		j.buf = append(j.buf, k...)
@@ -80,14 +80,15 @@ func (j *JSONParser) fqn() string {
 			j.buf = append(j.buf, jsonSpacer)
 		}
 	}
-	return unsafeGetString(j.buf)
+	return j.buf
 }
 
 func (j *JSONParser) addValue(v string) {
-	if j.skip {
+	if j.skip || !j.lbs.ParserLabelHints().ShouldExtract(unsafeGetString(j.currentKey())) {
+		j.stack = append(j.stack[:len(j.stack)-1], emptyStr)
 		return
 	}
-	j.lbs.Set(j.fqn(), v)
+	j.lbs.Set(string(j.currentKey()), v)
 }
 
 // Null is called when a JSON null is encountered.
@@ -148,7 +149,7 @@ func (j *JSONParser) Key(key string) {
 		sanitizeLabelKey(key, false),
 	)
 	// if key already exists => replace it with _extracted suffix
-	if _, ok := j.lbs.Get(j.fqn()); ok {
+	if _, exists := j.lbs.Get(unsafeGetString(j.currentKey())); exists {
 		key = key + "_extracted"
 		j.stack = append(
 			j.stack[:len(j.stack)-1],
