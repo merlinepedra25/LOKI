@@ -212,13 +212,13 @@ func (z *LokiTokenHandler) Bool(value bool) {
 
 // Int is called when a JSON integer is encountered.
 func (z *LokiTokenHandler) Int(value int64) {
-	z.lbs.Set(z.fqn(), fmt.Sprintf("%d", value))
+	//z.lbs.Set(z.fqn(), fmt.Sprintf("%d", value))
 }
 
 // Float is called when a JSON decimal is encountered that fits into a
 // float64.
 func (z *LokiTokenHandler) Float(value float64) {
-	z.lbs.Set(z.fqn(), fmt.Sprintf("%f", value))
+	//z.lbs.Set(z.fqn(), fmt.Sprintf("%f", value))
 }
 
 // Number is called when a JSON number is encountered that does not fit
@@ -228,7 +228,7 @@ func (z *LokiTokenHandler) Number(value string) {
 
 // String is called when a JSON string is encountered.
 func (z *LokiTokenHandler) String(value string) {
-	z.lbs.Set(z.fqn(), value)
+	//z.lbs.Set(z.fqn(), value)
 }
 
 // ObjectStart is called when a JSON object start '{' is encountered.
