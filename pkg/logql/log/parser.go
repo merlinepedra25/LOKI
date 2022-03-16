@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 
@@ -24,6 +25,7 @@ const (
 	duplicateSuffix = "_extracted"
 	trueString      = "true"
 	falseString     = "false"
+	emptyStr        = ""
 )
 
 var (
@@ -35,18 +37,19 @@ var (
 	errMissingCapture       = errors.New("at least one named capture must be supplied")
 )
 
+// JSONParser implements the Stage and oj.TokenHandler interfaces
 type JSONParser struct {
-	buf []byte // buffer used to build json keys
-	lbs *LabelsBuilder
-
-	keys internedStringSet
+	buf   []byte   // buf is a buffer that is reused to build json keys
+	stack []string // stack holds the keys of the current JSON object depth
+	lbs   *LabelsBuilder
+	skip  bool // skip indicates whether the next value should be skipped
 }
 
 // NewJSONParser creates a log stage that can parse a json log line and add properties as labels.
 func NewJSONParser() *JSONParser {
 	return &JSONParser{
-		buf:  make([]byte, 0, 1024),
-		keys: internedStringSet{},
+		buf:   make([]byte, 0, 1024),
+		stack: make([]string, 0, 1024),
 	}
 }
 
@@ -57,203 +60,111 @@ func (j *JSONParser) Process(line []byte, lbs *LabelsBuilder) ([]byte, bool) {
 
 	// reset the state.
 	j.buf = j.buf[:0]
+	j.stack = j.stack[:0]
 	j.lbs = lbs
 
-	th := &LokiTokenHandler{
-		lbs:   lbs,
-		stack: make([]string, 100),
-	}
-	if err := oj.Tokenize(line, th); err != nil {
+	if err := oj.Tokenize(line, j); err != nil {
 		lbs.SetErr(errJSON)
 		return line, true
 	}
 	return line, true
 }
 
-func (j *JSONParser) readObject(it *jsoniter.Iterator) error {
-	// we only care about object and values.
-	if nextType := it.WhatIsNext(); nextType != jsoniter.ObjectValue {
-		return errUnexpectedJSONObject
-	}
-	_ = it.ReadMapCB(j.parseMap(""))
-	if it.Error != nil && it.Error != io.EOF {
-		return it.Error
-	}
-	return nil
-}
-
-func (j *JSONParser) parseMap(prefix string) func(iter *jsoniter.Iterator, field string) bool {
-	return func(iter *jsoniter.Iterator, field string) bool {
-		switch iter.WhatIsNext() {
-		// are we looking at a value that needs to be added ?
-		case jsoniter.StringValue, jsoniter.NumberValue, jsoniter.BoolValue:
-			j.parseLabelValue(iter, prefix, field)
-		// Or another new object based on a prefix.
-		case jsoniter.ObjectValue:
-			if key, ok := j.nextKeyPrefix(prefix, field); ok {
-				return iter.ReadMapCB(j.parseMap(key))
-			}
-			// If this keys is not expected we skip the object
-			iter.Skip()
-		default:
-			iter.Skip()
-		}
-		return true
-	}
-}
-
-func (j *JSONParser) nextKeyPrefix(prefix, field string) (string, bool) {
-	// first time we add return the field as prefix.
-	if len(prefix) == 0 {
-		field = sanitizeLabelKey(field, true)
-		if j.lbs.ParserLabelHints().ShouldExtractPrefix(field) {
-			return field, true
-		}
-		return "", false
-	}
-	// otherwise we build the prefix and check using the buffer
-	j.buf = j.buf[:0]
-	j.buf = append(j.buf, prefix...)
-	j.buf = append(j.buf, byte(jsonSpacer))
-	j.buf = append(j.buf, sanitizeLabelKey(field, false)...)
-	// if matches keep going
-	if j.lbs.ParserLabelHints().ShouldExtractPrefix(unsafeGetString(j.buf)) {
-		return string(j.buf), true
-	}
-	return "", false
-}
-
-func (j *JSONParser) parseLabelValue(iter *jsoniter.Iterator, prefix, field string) {
-	// the first time we use the field as label key.
-	if len(prefix) == 0 {
-		key, ok := j.keys.Get(unsafeGetBytes(field), func() (string, bool) {
-			field = sanitizeLabelKey(field, true)
-			if !j.lbs.ParserLabelHints().ShouldExtract(field) {
-				return "", false
-			}
-			if j.lbs.BaseHas(field) {
-				field = field + duplicateSuffix
-			}
-			return field, true
-		})
-		if !ok {
-			iter.Skip()
-			return
-		}
-		j.lbs.Set(key, readValue(iter))
-		return
-
-	}
-	// otherwise we build the label key using the buffer
-	j.buf = j.buf[:0]
-	j.buf = append(j.buf, prefix...)
-	j.buf = append(j.buf, byte(jsonSpacer))
-	j.buf = append(j.buf, sanitizeLabelKey(field, false)...)
-	key, ok := j.keys.Get(j.buf, func() (string, bool) {
-		if j.lbs.BaseHas(string(j.buf)) {
-			j.buf = append(j.buf, duplicateSuffix...)
-		}
-		if !j.lbs.ParserLabelHints().ShouldExtract(string(j.buf)) {
-			return "", false
-		}
-		return string(j.buf), true
-	})
-	if !ok {
-		iter.Skip()
-		return
-	}
-	j.lbs.Set(key, readValue(iter))
-}
-
 func (j *JSONParser) RequiredLabelNames() []string { return []string{} }
 
-func readValue(iter *jsoniter.Iterator) string {
-	switch iter.WhatIsNext() {
-	case jsoniter.StringValue:
-		v := iter.ReadString()
-		// the rune error replacement is rejected by Prometheus, so we skip it.
-		if strings.ContainsRune(v, utf8.RuneError) {
-			return ""
+func (j *JSONParser) fqn() string {
+	j.buf = j.buf[:0]
+	for i, k := range j.stack {
+		j.buf = append(j.buf, k...)
+		if i < len(j.stack)-1 {
+			j.buf = append(j.buf, jsonSpacer)
 		}
-		return v
-	case jsoniter.NumberValue:
-		return iter.ReadNumber().String()
-	case jsoniter.BoolValue:
-		if iter.ReadBool() {
-			return trueString
-		}
-		return falseString
-	default:
-		iter.Skip()
-		return ""
 	}
+	return unsafeGetString(j.buf)
 }
 
-// LokiTokenHandler is a LokiTokenHandler whose functions do nothing. It is used as an
-// embedded member for TokenHandlers that don't care about all of the
-// LokiTokenHandler functions.
-type LokiTokenHandler struct {
-	lbs   *LabelsBuilder
-	stack []string
-	depth int
-}
-
-func (z *LokiTokenHandler) fqn() string {
-	return strings.Join(z.stack[:z.depth], "_")
+func (j *JSONParser) addValue(v string) {
+	if j.skip {
+		return
+	}
+	j.lbs.Set(j.fqn(), v)
 }
 
 // Null is called when a JSON null is encountered.
-func (z *LokiTokenHandler) Null() {
+func (j *JSONParser) Null() {
+	j.addValue(emptyStr)
 }
 
 // Bool is called when a JSON true or false is encountered.
-func (z *LokiTokenHandler) Bool(value bool) {
+func (j *JSONParser) Bool(value bool) {
+	if value {
+		j.addValue(trueString)
+	} else {
+		j.addValue(falseString)
+	}
 }
 
 // Int is called when a JSON integer is encountered.
-func (z *LokiTokenHandler) Int(value int64) {
-	//z.lbs.Set(z.fqn(), fmt.Sprintf("%d", value))
+func (j *JSONParser) Int(value int64) {
+	j.addValue(strconv.FormatInt(value, 10))
 }
 
 // Float is called when a JSON decimal is encountered that fits into a
 // float64.
-func (z *LokiTokenHandler) Float(value float64) {
-	//z.lbs.Set(z.fqn(), fmt.Sprintf("%f", value))
+func (j *JSONParser) Float(value float64) {
+	j.addValue(strconv.FormatFloat(value, 'f', 5, 64))
 }
 
 // Number is called when a JSON number is encountered that does not fit
 // into an int64 or float64.
-func (z *LokiTokenHandler) Number(value string) {
+func (j *JSONParser) Number(value string) {
+	j.addValue(value)
 }
 
 // String is called when a JSON string is encountered.
-func (z *LokiTokenHandler) String(value string) {
-	//z.lbs.Set(z.fqn(), value)
+func (j *JSONParser) String(value string) {
+	if strings.ContainsRune(value, utf8.RuneError) {
+		j.addValue(emptyStr)
+	} else {
+		j.addValue(value)
+	}
 }
 
 // ObjectStart is called when a JSON object start '{' is encountered.
-func (z *LokiTokenHandler) ObjectStart() {
-	z.depth++
-	//fmt.Printf("object start: %d %v\n", z.depth, z.stack)
+func (j *JSONParser) ObjectStart() {
+	j.stack = append(j.stack, emptyStr)
 }
 
 // ObjectEnd is called when a JSON object end '}' is encountered.
-func (z *LokiTokenHandler) ObjectEnd() {
-	z.depth--
-	//fmt.Printf("object end: %d %v\n", z.depth, z.stack)
+func (j *JSONParser) ObjectEnd() {
+	j.stack = j.stack[:len(j.stack)-1]
 }
 
 // Key is called when a JSON object key is encountered.
-func (z *LokiTokenHandler) Key(key string) {
-	z.stack[z.depth-1] = key
+func (j *JSONParser) Key(key string) {
+	// replace top item of stack
+	j.stack = append(
+		j.stack[:len(j.stack)-1],
+		sanitizeLabelKey(key, false),
+	)
+	// if key already exists => replace it with _extracted suffix
+	if _, ok := j.lbs.Get(j.fqn()); ok {
+		key = key + "_extracted"
+		j.stack = append(
+			j.stack[:len(j.stack)-1],
+			sanitizeLabelKey(key, false),
+		)
+	}
 }
 
 // ArrayStart is called when a JSON array start '[' is encountered.
-func (z *LokiTokenHandler) ArrayStart() {
+func (j *JSONParser) ArrayStart() {
+	j.skip = true
 }
 
 // ArrayEnd is called when a JSON array end ']' is encountered.
-func (z *LokiTokenHandler) ArrayEnd() {
+func (j *JSONParser) ArrayEnd() {
+	j.skip = false
 }
 
 type RegexpParser struct {
