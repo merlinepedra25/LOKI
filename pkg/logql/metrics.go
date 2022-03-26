@@ -74,6 +74,27 @@ var (
 	linePerSecondLogUsage    = usagestats.NewStatistics("query_log_lines_per_second")
 )
 
+func RecordMetricsLabelQuery(ctx context.Context, log log.Logger, status string, stats logql_stats.Result) {
+	logger := util_log.WithContext(ctx, log)
+
+	latencyType := latencyTypeFast
+
+	// Tag throughput metric by latency type based on a threshold.
+	// Latency below the threshold is fast, above is slow.
+	if stats.Summary.ExecTime > slowQueryThresholdSecond {
+		latencyType = latencyTypeSlow
+	}
+
+	level.Info(logger).Log(
+		"latency", latencyType, // this can be used to filter log lines.
+		"query_type", "labels",
+		"duration", logql_stats.ConvertSecondsToNanoseconds(stats.Summary.ExecTime),
+		"status", status,
+		"queue_time", logql_stats.ConvertSecondsToNanoseconds(stats.Summary.QueueTime),
+		"subqueries", stats.Summary.Subqueries,
+	)
+}
+
 func RecordMetrics(ctx context.Context, log log.Logger, p Params, status string, stats logql_stats.Result, result promql_parser.Value) {
 	var (
 		logger        = util_log.WithContext(ctx, log)

@@ -17,11 +17,14 @@ import (
 	"github.com/grafana/loki/pkg/logql"
 	"github.com/grafana/loki/pkg/logql/syntax"
 	"github.com/grafana/loki/pkg/logqlmodel"
+	"github.com/grafana/loki/pkg/logqlmodel/stats"
 	"github.com/grafana/loki/pkg/tenant"
+	"github.com/grafana/loki/pkg/util/httpreq"
 	util_log "github.com/grafana/loki/pkg/util/log"
 	"github.com/grafana/loki/pkg/util/marshal"
 	marshal_legacy "github.com/grafana/loki/pkg/util/marshal/legacy"
 	serverutil "github.com/grafana/loki/pkg/util/server"
+	"github.com/grafana/loki/pkg/util/spanlogger"
 	util_validation "github.com/grafana/loki/pkg/util/validation"
 	"github.com/grafana/loki/pkg/validation"
 )
@@ -193,17 +196,34 @@ func (q *QuerierAPI) LogQueryHandler(w http.ResponseWriter, r *http.Request) {
 
 // LabelHandler is a http.HandlerFunc for handling label queries.
 func (q *QuerierAPI) LabelHandler(w http.ResponseWriter, r *http.Request) {
+
+	ctx := r.Context()
+
+	log, ctx := spanlogger.New(ctx, "query.Labels")
+	defer log.Finish()
+
 	req, err := loghttp.ParseLabelQuery(r)
 	if err != nil {
 		serverutil.WriteError(httpgrpc.Errorf(http.StatusBadRequest, err.Error()), w)
 		return
 	}
 
-	resp, err := q.querier.Label(r.Context(), req)
+	resp, err := q.querier.Label(ctx, req)
 	if err != nil {
 		serverutil.WriteError(err, w)
 		return
 	}
+
+	// records query statistics
+	start := time.Now()
+	statsCtx, ctx := stats.NewContext(ctx)
+
+	queueTime, _ := ctx.Value(httpreq.QueryQueueTimeHTTPHeader).(time.Duration)
+
+	statResult := statsCtx.Result(time.Since(start), queueTime)
+	statResult.Log(level.Debug(log))
+
+	logql.RecordMetricsLabelQuery(ctx, util_log.WithContext(ctx, util_log.Logger), "all good", statResult)
 
 	if loghttp.GetVersion(r.RequestURI) == loghttp.VersionV1 {
 		err = marshal.WriteLabelResponseJSON(*resp, w)

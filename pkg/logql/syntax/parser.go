@@ -76,17 +76,17 @@ func parseExprWithoutValidation(input string) (expr Expr, err error) {
 		return nil, logqlmodel.NewParseError(fmt.Sprintf("input size too long (%d > %d)", len(input), maxInputSize), 0, 0)
 	}
 
-	defer func() {
-		if r := recover(); r != nil {
-			var ok bool
-			if err, ok = r.(error); ok {
-				if errors.Is(err, logqlmodel.ErrParse) {
-					return
-				}
-				err = logqlmodel.NewParseError(err.Error(), 0, 0)
-			}
-		}
-	}()
+	// defer func() {
+	// 	if r := recover(); r != nil {
+	// 		var ok bool
+	// 		if err, ok = r.(error); ok {
+	// 			if errors.Is(err, logqlmodel.ErrParse) {
+	// 				return
+	// 			}
+	// 			err = logqlmodel.NewParseError(err.Error(), 0, 0)
+	// 		}
+	// 	}
+	// }()
 
 	p := parserPool.Get().(*parser)
 	defer parserPool.Put(p)
