@@ -47,18 +47,12 @@ local utils = import 'mixin-utils/utils.libsonnet';
           .addPanel(
             $.containerCPUUsagePanel('CPU', 'ingester'),
           )
-        )
-        .addRow(
-          $.row('')
           .addPanel(
             $.containerMemoryWorkingSetPanel('Memory (workingset)', 'ingester'),
           )
           .addPanel(
             $.goHeapInUsePanel('Memory (go heap inuse)', 'ingester'),
           )
-        )
-        .addRow(
-          $.row('')
           .addPanel(
             $.panel('Disk Writes') +
             $.queryPanel(
