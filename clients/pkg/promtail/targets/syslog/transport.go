@@ -24,8 +24,8 @@ import (
 )
 
 var (
-	udpTransport = "udp"
-	tcpTransport = "tcp"
+	protocolUDP = "udp"
+	protocolTCP = "tcp"
 )
 
 type SyslogTransport interface {
@@ -146,7 +146,7 @@ func NewSyslogTCPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessag
 
 // Run implements SyslogTransport
 func (t *SyslogTCPTransport) Run() error {
-	l, err := net.Listen(tcpTransport, t.config.ListenAddress)
+	l, err := net.Listen(protocolTCP, t.config.ListenAddress)
 	l = conntrack.NewListener(l, conntrack.TrackWithName("syslog_target/"+t.config.ListenAddress))
 	if err != nil {
 		return fmt.Errorf("error setting up syslog target: %w", err)
@@ -162,7 +162,7 @@ func (t *SyslogTCPTransport) Run() error {
 	}
 
 	t.listener = l
-	level.Info(t.logger).Log("msg", "syslog listening on address", "address", t.Addr().String(), "protocol", tcpTransport, "tls", tlsEnabled)
+	level.Info(t.logger).Log("msg", "syslog listening on address", "address", t.Addr().String(), "protocol", protocolTCP, "tls", tlsEnabled)
 
 	t.openConnections.Add(1)
 	go t.acceptConnections()
@@ -293,12 +293,12 @@ func NewSyslogUDPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessag
 
 // Run implements SyslogTransport
 func (t *SyslogUDPTransport) Run() error {
-	l, err := net.ListenPacket(udpTransport, t.config.ListenAddress)
+	l, err := net.ListenPacket(protocolUDP, t.config.ListenAddress)
 	if err != nil {
 		return fmt.Errorf("error setting up syslog target: %w", err)
 	}
 	t.packetConn = l
-	level.Info(t.logger).Log("msg", "syslog listening on address", "address", t.Addr().String(), "protocol", udpTransport)
+	level.Info(t.logger).Log("msg", "syslog listening on address", "address", t.Addr().String(), "protocol", protocolUDP)
 	go t.acceptPackets()
 	return nil
 }

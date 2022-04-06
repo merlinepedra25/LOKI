@@ -231,64 +231,77 @@ o+KrhWQRriAj+GFMIpnT0r28EhOWS/d+f9ISk/it796YtDhfMb9GmV9VI7o=
 `)
 )
 
-func TestSyslogTarget_NewlineSeparatedMessages(t *testing.T) {
-	testSyslogTarget(t, false)
-}
+func TestSyslogTarget(t *testing.T) {
+	for _, tt := range []struct {
+		name          string
+		protocol      string
+		octetCounting bool
+	}{
+		{"tpc newline separated", protocolTCP, false},
+		{"tpc octetcounting", protocolTCP, true},
+		{"udp newline separated", protocolUDP, false},
+		{"udp octetcounting", protocolUDP, true},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			w := log.NewSyncWriter(os.Stderr)
+			logger := log.NewLogfmtLogger(w)
+			client := fake.New(func() {})
 
-func TestSyslogTarget_OctetCounting(t *testing.T) {
-	testSyslogTarget(t, true)
-}
+			metrics := NewMetrics(nil)
+			tgt, err := NewSyslogTarget(metrics, logger, client, relabelConfig(t), &scrapeconfig.SyslogTargetConfig{
+				ListenAddress:       "127.0.0.1:0",
+				ListenProtocol:      tt.protocol,
+				LabelStructuredData: true,
+				Labels: model.LabelSet{
+					"test": "syslog_target",
+				},
+			})
+			require.NoError(t, err)
+			require.Eventually(t, tgt.Ready, time.Second, 10*time.Millisecond)
+			defer func() {
+				require.NoError(t, tgt.Stop())
+			}()
 
-func testSyslogTarget(t *testing.T, octetCounting bool) {
-	w := log.NewSyncWriter(os.Stderr)
-	logger := log.NewLogfmtLogger(w)
-	client := fake.New(func() {})
+			addr := tgt.ListenAddress().String()
+			c, err := net.Dial(tt.protocol, addr)
+			require.NoError(t, err)
 
-	metrics := NewMetrics(nil)
-	tgt, err := NewSyslogTarget(metrics, logger, client, relabelConfig(t), &scrapeconfig.SyslogTargetConfig{
-		ListenAddress:       "127.0.0.1:0",
-		LabelStructuredData: true,
-		Labels: model.LabelSet{
-			"test": "syslog_target",
-		},
-	})
-	require.NoError(t, err)
-	defer func() {
-		require.NoError(t, tgt.Stop())
-	}()
+			messages := []string{
+				`<165>1 2018-10-11T22:14:15.003Z host5 e - id1 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2018-10-11T22:14:15.005Z host5 e - id2 [custom@32473 exkey="2"] An application event log entry...`,
+				`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
+			}
 
-	addr := tgt.ListenAddress().String()
-	c, err := net.Dial("tcp", addr)
-	require.NoError(t, err)
+			err = writeMessagesToStream(c, messages, tt.octetCounting)
+			require.NoError(t, err)
+			require.NoError(t, c.Close())
 
-	messages := []string{
-		`<165>1 2018-10-11T22:14:15.003Z host5 e - id1 [custom@32473 exkey="1"] An application event log entry...`,
-		`<165>1 2018-10-11T22:14:15.005Z host5 e - id2 [custom@32473 exkey="2"] An application event log entry...`,
-		`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
+			require.Eventuallyf(t, func() bool {
+				return len(client.Received()) == len(messages)
+			}, time.Second, time.Millisecond, "Expected to receive %d messages, got %d.", len(messages), len(client.Received()))
+
+			labels := make([]model.LabelSet, 0, len(messages))
+			for _, entry := range client.Received() {
+				labels = append(labels, entry.Labels)
+			}
+			// we only check if one of the received entries contain the wanted label set
+			// because UDP does not guarantee the order of the messages
+			require.Contains(t, labels, model.LabelSet{
+				"test": "syslog_target",
+
+				"severity": "notice",
+				"facility": "local4",
+				"hostname": "host5",
+				"app_name": "e",
+				"msg_id":   "id1",
+
+				"sd_custom_exkey": "1",
+			})
+			require.Equal(t, "An application event log entry...", client.Received()[0].Line)
+
+			require.NotZero(t, client.Received()[0].Timestamp)
+		})
 	}
-
-	err = writeMessagesToStream(c, messages, octetCounting)
-	require.NoError(t, err)
-	require.NoError(t, c.Close())
-
-	require.Eventuallyf(t, func() bool {
-		return len(client.Received()) == len(messages)
-	}, time.Second, time.Millisecond, "Expected to receive %d messages, got %d.", len(messages), len(client.Received()))
-
-	require.Equal(t, model.LabelSet{
-		"test": "syslog_target",
-
-		"severity": "notice",
-		"facility": "local4",
-		"hostname": "host5",
-		"app_name": "e",
-		"msg_id":   "id1",
-
-		"sd_custom_exkey": "1",
-	}, client.Received()[0].Labels)
-	require.Equal(t, "An application event log entry...", client.Received()[0].Line)
-
-	require.NotZero(t, client.Received()[0].Timestamp)
 }
 
 func relabelConfig(t *testing.T) []*relabel.Config {
@@ -340,48 +353,62 @@ func writeMessagesToStream(w io.Writer, messages []string, octetCounting bool) e
 }
 
 func TestSyslogTarget_RFC5424Messages(t *testing.T) {
-	w := log.NewSyncWriter(os.Stderr)
-	logger := log.NewLogfmtLogger(w)
-	client := fake.New(func() {})
+	for _, tt := range []struct {
+		name          string
+		protocol      string
+		octetCounting bool
+	}{
+		{"tpc newline separated", protocolTCP, false},
+		{"tpc octetcounting", protocolTCP, true},
+		{"udp newline separated", protocolUDP, false},
+		{"udp octetcounting", protocolUDP, true},
+	} {
+		t.Run(tt.name, func(t *testing.T) {})
+		w := log.NewSyncWriter(os.Stderr)
+		logger := log.NewLogfmtLogger(w)
+		client := fake.New(func() {})
 
-	metrics := NewMetrics(nil)
-	tgt, err := NewSyslogTarget(metrics, logger, client, []*relabel.Config{}, &scrapeconfig.SyslogTargetConfig{
-		ListenAddress:       "127.0.0.1:0",
-		LabelStructuredData: true,
-		Labels: model.LabelSet{
-			"test": "syslog_target",
-		},
-		UseRFC5424Message: true,
-	})
-	require.NoError(t, err)
-	defer func() {
-		require.NoError(t, tgt.Stop())
-	}()
+		metrics := NewMetrics(nil)
+		tgt, err := NewSyslogTarget(metrics, logger, client, []*relabel.Config{}, &scrapeconfig.SyslogTargetConfig{
+			ListenAddress:       "127.0.0.1:0",
+			ListenProtocol:      tt.protocol,
+			LabelStructuredData: true,
+			Labels: model.LabelSet{
+				"test": "syslog_target",
+			},
+			UseRFC5424Message: true,
+		})
+		require.NoError(t, err)
+		require.Eventually(t, tgt.Ready, time.Second, 10*time.Millisecond)
+		defer func() {
+			require.NoError(t, tgt.Stop())
+		}()
 
-	addr := tgt.ListenAddress().String()
-	c, err := net.Dial("tcp", addr)
-	require.NoError(t, err)
+		addr := tgt.ListenAddress().String()
+		c, err := net.Dial(tt.protocol, addr)
+		require.NoError(t, err)
 
-	messages := []string{
-		`<165>1 2018-10-11T22:14:15.003Z host5 e - id1 [custom@32473 exkey="1"] An application event log entry...`,
-		`<165>1 2018-10-11T22:14:15.005Z host5 e - id2 [custom@32473 exkey="2"] An application event log entry...`,
-		`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
-	}
+		messages := []string{
+			`<165>1 2018-10-11T22:14:15.003Z host5 e - id1 [custom@32473 exkey="1"] An application event log entry...`,
+			`<165>1 2018-10-11T22:14:15.005Z host5 e - id2 [custom@32473 exkey="2"] An application event log entry...`,
+			`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
+		}
 
-	err = writeMessagesToStream(c, messages, false)
-	require.NoError(t, err)
-	require.NoError(t, c.Close())
+		err = writeMessagesToStream(c, messages, false)
+		require.NoError(t, err)
+		require.NoError(t, c.Close())
 
-	require.Eventuallyf(t, func() bool {
-		return len(client.Received()) == len(messages)
-	}, time.Second, time.Millisecond, "Expected to receive %d messages, got %d.", len(messages), len(client.Received()))
+		require.Eventuallyf(t, func() bool {
+			return len(client.Received()) == len(messages)
+		}, time.Second, time.Millisecond, "Expected to receive %d messages, got %d.", len(messages), len(client.Received()))
 
-	for i, m := range messages {
-		require.Equal(t, model.LabelSet{
-			"test": "syslog_target",
-		}, client.Received()[i].Labels)
-		require.Equal(t, m, client.Received()[i].Line)
-		require.NotZero(t, client.Received()[i].Timestamp)
+		for i := range messages {
+			require.Equal(t, model.LabelSet{
+				"test": "syslog_target",
+			}, client.Received()[i].Labels)
+			require.Contains(t, messages, client.Received()[i].Line)
+			require.NotZero(t, client.Received()[i].Timestamp)
+		}
 	}
 }
 
