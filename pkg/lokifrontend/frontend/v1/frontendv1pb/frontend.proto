@@ -15,11 +15,13 @@ option (gogoproto.unmarshaler_all) = true;
 
 service Frontend {
   // After calling this method, client enters a loop, in which it waits for
-  // a "FrontendToClient" message and replies with single "ClientToFrontend" message.
+  // a "FrontendToClient" message and replies with single "ClientToFrontend"
+  // message.
   rpc Process(stream ClientToFrontend) returns (stream FrontendToClient) {};
 
   // The client notifies the query-frontend that it started a graceful shutdown.
-  rpc NotifyClientShutdown(NotifyClientShutdownRequest) returns (NotifyClientShutdownResponse);
+  rpc NotifyClientShutdown(NotifyClientShutdownRequest)
+      returns (NotifyClientShutdownResponse);
 }
 
 enum Type {
@@ -31,8 +33,8 @@ message FrontendToClient {
   httpgrpc.HTTPRequest httpRequest = 1;
   Type type = 2;
 
-  // Whether query statistics tracking should be enabled. The response will include
-  // statistics only when this option is enabled.
+  // Whether query statistics tracking should be enabled. The response will
+  // include statistics only when this option is enabled.
   bool statsEnabled = 3;
 }
 
@@ -42,8 +44,6 @@ message ClientToFrontend {
   stats.Stats stats = 3;
 }
 
-message NotifyClientShutdownRequest {
-  string clientID = 1;
-}
+message NotifyClientShutdownRequest { string clientID = 1; }
 
 message NotifyClientShutdownResponse {}

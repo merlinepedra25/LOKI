@@ -19,16 +19,16 @@ service Ruler {
 
 message RulesRequest {}
 
-message RulesResponse {
-  repeated GroupStateDesc groups = 1;
-}
+message RulesResponse { repeated GroupStateDesc groups = 1; }
 
 // GroupStateDesc is a proto representation of a rule group
 message GroupStateDesc {
   rules.RuleGroupDesc group = 1;
   repeated RuleStateDesc active_rules = 2;
-  google.protobuf.Timestamp evaluationTimestamp = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
-  google.protobuf.Duration evaluationDuration = 4 [(gogoproto.nullable) = false,(gogoproto.stdduration) = true];
+  google.protobuf.Timestamp evaluationTimestamp = 3
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  google.protobuf.Duration evaluationDuration = 4
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
 }
 
 // RuleStateDesc is a proto representation of a Prometheus Rule
@@ -38,8 +38,10 @@ message RuleStateDesc {
   string health = 3;
   string lastError = 4;
   repeated AlertStateDesc alerts = 5;
-  google.protobuf.Timestamp evaluationTimestamp = 6  [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
-  google.protobuf.Duration evaluationDuration = 7 [(gogoproto.nullable) = false,(gogoproto.stdduration) = true];
+  google.protobuf.Timestamp evaluationTimestamp = 6
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  google.protobuf.Duration evaluationDuration = 7
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
 }
 
 message AlertStateDesc {
@@ -54,13 +56,13 @@ message AlertStateDesc {
   ];
   double value = 4;
   google.protobuf.Timestamp active_at = 5
-      [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
   google.protobuf.Timestamp fired_at = 6
-      [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
   google.protobuf.Timestamp resolved_at = 7
-      [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
   google.protobuf.Timestamp last_sent_at = 8
-      [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
   google.protobuf.Timestamp valid_until = 9
-      [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
 }

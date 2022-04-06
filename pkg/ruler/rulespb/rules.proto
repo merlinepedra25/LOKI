@@ -19,13 +19,13 @@ message RuleGroupDesc {
   string name = 1;
   string namespace = 2;
   google.protobuf.Duration interval = 3
-      [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
   repeated RuleDesc rules = 4;
   string user = 6;
   // The options field can be used to extend Ruler functionality without
-  // having to repeatedly redefine the proto description. It can also be leveraged
-  // to create custom `ManagerOpts` based on rule configs which can then be passed
-  // to the Prometheus Manager.
+  // having to repeatedly redefine the proto description. It can also be
+  // leveraged to create custom `ManagerOpts` based on rule configs which can
+  // then be passed to the Prometheus Manager.
   repeated google.protobuf.Any options = 9;
 }
 
