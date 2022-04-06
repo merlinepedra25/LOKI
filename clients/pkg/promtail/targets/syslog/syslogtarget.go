@@ -37,7 +37,7 @@ type SyslogTarget struct {
 	config        *scrapeconfig.SyslogTargetConfig
 	relabelConfig []*relabel.Config
 
-	transport SyslogTransport
+	transport Transport
 	messages  chan message
 }
 

@@ -28,7 +28,7 @@ var (
 	protocolTCP = "tcp"
 )
 
-type SyslogTransport interface {
+type Transport interface {
 	Run() error
 	Addr() net.Addr
 	Ready() bool
@@ -133,19 +133,19 @@ func (c *idleTimeoutConn) setDeadline() {
 	_ = c.Conn.SetDeadline(time.Now().Add(c.idleTimeout))
 }
 
-type SyslogTCPTransport struct {
+type TCPTransport struct {
 	*baseTransport
 	listener net.Listener
 }
 
-func NewSyslogTCPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessage handleMessage, handleError handleMessageError, logger log.Logger) SyslogTransport {
-	return &SyslogTCPTransport{
+func NewSyslogTCPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessage handleMessage, handleError handleMessageError, logger log.Logger) Transport {
+	return &TCPTransport{
 		baseTransport: newBaseTransport(config, handleMessage, handleError, logger),
 	}
 }
 
 // Run implements SyslogTransport
-func (t *SyslogTCPTransport) Run() error {
+func (t *TCPTransport) Run() error {
 	l, err := net.Listen(protocolTCP, t.config.ListenAddress)
 	l = conntrack.NewListener(l, conntrack.TrackWithName("syslog_target/"+t.config.ListenAddress))
 	if err != nil {
@@ -202,7 +202,7 @@ func newTLSConfig(certFile string, keyFile string, caFile string) (*tls.Config, 
 	return tlsConfig, nil
 }
 
-func (t *SyslogTCPTransport) acceptConnections() {
+func (t *TCPTransport) acceptConnections() {
 	defer t.openConnections.Done()
 
 	l := log.With(t.logger, "address", t.listener.Addr().String())
@@ -237,7 +237,7 @@ func (t *SyslogTCPTransport) acceptConnections() {
 
 }
 
-func (t *SyslogTCPTransport) handleConnection(cn net.Conn) {
+func (t *TCPTransport) handleConnection(cn net.Conn) {
 	defer t.openConnections.Done()
 
 	c := &idleTimeoutConn{cn, t.idleTimeout()}
@@ -265,34 +265,34 @@ func (t *SyslogTCPTransport) handleConnection(cn net.Conn) {
 }
 
 // Close implements SyslogTransport
-func (t *SyslogTCPTransport) Close() error {
+func (t *TCPTransport) Close() error {
 	t.baseTransport.close()
 	return t.listener.Close()
 }
 
 // Wait implements SyslogTransport
-func (t *SyslogTCPTransport) Wait() {
+func (t *TCPTransport) Wait() {
 	t.openConnections.Wait()
 }
 
 // Addr implements SyslogTransport
-func (t *SyslogTCPTransport) Addr() net.Addr {
+func (t *TCPTransport) Addr() net.Addr {
 	return t.listener.Addr()
 }
 
-type SyslogUDPTransport struct {
+type UDPTransport struct {
 	*baseTransport
 	packetConn net.PacketConn
 }
 
-func NewSyslogUDPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessage handleMessage, handleError handleMessageError, logger log.Logger) SyslogTransport {
-	return &SyslogUDPTransport{
+func NewSyslogUDPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessage handleMessage, handleError handleMessageError, logger log.Logger) Transport {
+	return &UDPTransport{
 		baseTransport: newBaseTransport(config, handleMessage, handleError, logger),
 	}
 }
 
 // Run implements SyslogTransport
-func (t *SyslogUDPTransport) Run() error {
+func (t *UDPTransport) Run() error {
 	l, err := net.ListenPacket(protocolUDP, t.config.ListenAddress)
 	if err != nil {
 		return fmt.Errorf("error setting up syslog target: %w", err)
@@ -304,12 +304,12 @@ func (t *SyslogUDPTransport) Run() error {
 }
 
 // Close implements SyslogTransport
-func (t *SyslogUDPTransport) Close() error {
+func (t *UDPTransport) Close() error {
 	t.baseTransport.close()
 	return t.packetConn.Close()
 }
 
-func (t *SyslogUDPTransport) acceptPackets() {
+func (t *UDPTransport) acceptPackets() {
 	var (
 		n    int
 		addr net.Addr
@@ -335,7 +335,7 @@ func (t *SyslogUDPTransport) acceptPackets() {
 	}
 }
 
-func (t *SyslogUDPTransport) handleRcv(addr net.Addr, buf []byte) {
+func (t *UDPTransport) handleRcv(addr net.Addr, buf []byte) {
 	defer t.openConnections.Done()
 
 	lbs := t.connectionLabels(addr.String())
@@ -354,11 +354,11 @@ func (t *SyslogUDPTransport) handleRcv(addr net.Addr, buf []byte) {
 }
 
 // Wait implements SyslogTransport
-func (t *SyslogUDPTransport) Wait() {
+func (t *UDPTransport) Wait() {
 	t.openConnections.Wait()
 }
 
 // Addr implements SyslogTransport
-func (t *SyslogUDPTransport) Addr() net.Addr {
+func (t *UDPTransport) Addr() net.Addr {
 	return t.packetConn.LocalAddr()
 }
