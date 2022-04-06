@@ -57,7 +57,7 @@ RUN apt-get update && \
     apt-get install -qy \
     musl gnupg ragel \
     file zip unzip jq gettext\
-    protobuf-compiler libprotobuf-dev \
+    protobuf-compiler libprotobuf-dev clang-format \
     libsystemd-dev && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

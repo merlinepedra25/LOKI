@@ -617,6 +617,22 @@ fmt-jsonnet:
 	@find . -name 'vendor' -prune -o -name '*.libsonnet' -print -o -name '*.jsonnet' -print | \
 		xargs -n 1 -- jsonnetfmt -i
 
+fmt-proto:
+ifeq ($(BUILD_IN_CONTAINER),true)
+	# I wish we could make this a multiline variable however you can't pass more than simple arguments to them
+	@mkdir -p $(shell pwd)/.pkg
+	@mkdir -p $(shell pwd)/.cache
+	$(SUDO) docker run $(RM) $(TTY) -i \
+		-v $(shell pwd)/.cache:/go/cache$(MOUNT_FLAGS) \
+		-v $(shell pwd)/.pkg:/go/pkg$(MOUNT_FLAGS) \
+		-v $(shell pwd):/src/loki$(MOUNT_FLAGS) \
+		$(IMAGE_PREFIX)/loki-build-image:$(BUILD_IMAGE_VERSION) $@;
+else
+	find . -name 'vendor' -prune -o -name '*.proto' -print | \
+		xargs -n 1 -- clang-format -i
+endif
+
+
 lint-scripts:
     # Ignore https://github.com/koalaman/shellcheck/wiki/SC2312
 	@find . -name '*.sh' -not -path '*/vendor/*' -print0 | \
