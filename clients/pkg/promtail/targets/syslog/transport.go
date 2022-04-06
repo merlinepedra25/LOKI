@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"strings"
@@ -283,11 +284,15 @@ func (t *TCPTransport) Addr() net.Addr {
 type UDPTransport struct {
 	*baseTransport
 	packetConn net.PacketConn
+	readerPool sync.Pool
 }
 
 func NewSyslogUDPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessage handleMessage, handleError handleMessageError, logger log.Logger) Transport {
 	return &UDPTransport{
 		baseTransport: newBaseTransport(config, handleMessage, handleError, logger),
+		readerPool: sync.Pool{New: func() interface{} {
+			return bytes.NewReader([]byte{})
+		}},
 	}
 }
 
@@ -299,6 +304,7 @@ func (t *UDPTransport) Run() error {
 	}
 	t.packetConn = l
 	level.Info(t.logger).Log("msg", "syslog listening on address", "address", t.Addr().String(), "protocol", protocolUDP)
+	t.openConnections.Add(1)
 	go t.acceptPackets()
 	return nil
 }
@@ -310,6 +316,8 @@ func (t *UDPTransport) Close() error {
 }
 
 func (t *UDPTransport) acceptPackets() {
+	defer t.openConnections.Done()
+
 	var (
 		n    int
 		addr net.Addr
@@ -330,17 +338,20 @@ func (t *UDPTransport) acceptPackets() {
 		// TODO: is there a better way to pass a copy to the handleRcv() function?
 		b := make([]byte, n)
 		copy(b, buf[:n])
+		r := t.readerPool.Get().(*bytes.Reader)
+		r.Reset(b)
 		t.openConnections.Add(1)
-		go t.handleRcv(addr, b)
+		go t.handleRcv(addr, r)
 	}
 }
 
-func (t *UDPTransport) handleRcv(addr net.Addr, buf []byte) {
+func (t *UDPTransport) handleRcv(addr net.Addr, r io.Reader) {
 	defer t.openConnections.Done()
 
 	lbs := t.connectionLabels(addr.String())
 
-	err := syslogparser.ParseStream(bytes.NewReader(buf), func(result *syslog.Result) {
+	err := syslogparser.ParseStream(r, func(result *syslog.Result) {
+		t.readerPool.Put(r)
 		if err := result.Error; err != nil {
 			t.handleMessageError(err)
 			return
