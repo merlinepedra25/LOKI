@@ -1,6 +1,8 @@
 package fake
 
 import (
+	"fmt"
+	"os"
 	"sync"
 
 	"github.com/grafana/loki/clients/pkg/promtail/api"
@@ -26,6 +28,7 @@ func New(stop func()) *Client {
 		defer c.wg.Done()
 		for e := range c.entries {
 			c.mtx.Lock()
+			fmt.Fprintf(os.Stderr, "received=%v\n", e)
 			c.received = append(c.received, e)
 			c.mtx.Unlock()
 		}

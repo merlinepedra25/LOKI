@@ -38,7 +38,9 @@ type SyslogTarget struct {
 	relabelConfig []*relabel.Config
 
 	transport Transport
-	messages  chan message
+
+	messages     chan message
+	messagesDone chan struct{}
 }
 
 type message struct {
@@ -62,6 +64,7 @@ func NewSyslogTarget(
 		handler:       handler,
 		config:        config,
 		relabelConfig: relabel,
+		messagesDone:  make(chan struct{}),
 	}
 
 	switch t.transportProtocol() {
@@ -171,6 +174,7 @@ func (t *SyslogTarget) handleMessage(connLabels labels.Labels, msg syslog.Messag
 }
 
 func (t *SyslogTarget) messageSender(entries chan<- api.Entry) {
+	count := 0
 	for msg := range t.messages {
 		entries <- api.Entry{
 			Labels: msg.labels,
@@ -179,8 +183,11 @@ func (t *SyslogTarget) messageSender(entries chan<- api.Entry) {
 				Line:      msg.message,
 			},
 		}
+		count++
 		t.metrics.syslogEntries.Inc()
 	}
+	level.Warn(t.logger).Log("count", count)
+	t.messagesDone <- struct{}{}
 }
 
 // Type returns SyslogTargetType.
@@ -215,6 +222,8 @@ func (t *SyslogTarget) Stop() error {
 	err := t.transport.Close()
 	t.transport.Wait()
 	close(t.messages)
+	// wait for all pending messages to be processed and sent to handler
+	<-t.messagesDone
 	t.handler.Stop()
 	return err
 }
