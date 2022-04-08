@@ -1,7 +1,6 @@
 package syslog
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
@@ -217,7 +216,7 @@ func (t *TCPTransport) acceptConnections() {
 		c, err := t.listener.Accept()
 		if err != nil {
 			if !t.Ready() {
-				level.Info(l).Log("msg", "syslog server shutting down")
+				level.Info(l).Log("msg", "syslog server shutting down", "protocol", protocolTCP, "err", t.ctx.Err())
 				return
 			}
 
@@ -283,27 +282,29 @@ func (t *TCPTransport) Addr() net.Addr {
 
 type UDPTransport struct {
 	*baseTransport
-	packetConn net.PacketConn
-	readerPool sync.Pool
+	udpConn *net.UDPConn
 }
 
 func NewSyslogUDPTransport(config *scrapeconfig.SyslogTargetConfig, handleMessage handleMessage, handleError handleMessageError, logger log.Logger) Transport {
 	return &UDPTransport{
 		baseTransport: newBaseTransport(config, handleMessage, handleError, logger),
-		readerPool: sync.Pool{New: func() interface{} {
-			return bytes.NewReader([]byte{})
-		}},
 	}
 }
 
 // Run implements SyslogTransport
 func (t *UDPTransport) Run() error {
-	l, err := net.ListenPacket(protocolUDP, t.config.ListenAddress)
+	var err error
+	addr, err := net.ResolveUDPAddr(protocolUDP, t.config.ListenAddress)
+	if err != nil {
+		return fmt.Errorf("error resolving UDP address: %w", err)
+	}
+	t.udpConn, err = net.ListenUDP(protocolUDP, addr)
 	if err != nil {
 		return fmt.Errorf("error setting up syslog target: %w", err)
 	}
-	t.packetConn = l
+	t.udpConn.SetReadBuffer(1024 * 1024)
 	level.Info(t.logger).Log("msg", "syslog listening on address", "address", t.Addr().String(), "protocol", protocolUDP)
+
 	t.openConnections.Add(1)
 	go t.acceptPackets()
 	return nil
@@ -312,7 +313,7 @@ func (t *UDPTransport) Run() error {
 // Close implements SyslogTransport
 func (t *UDPTransport) Close() error {
 	t.baseTransport.close()
-	return t.packetConn.Close()
+	return t.udpConn.Close()
 }
 
 func (t *UDPTransport) acceptPackets() {
@@ -323,40 +324,80 @@ func (t *UDPTransport) acceptPackets() {
 		addr net.Addr
 		err  error
 	)
+	streams := make(map[string]*ChannelConn)
+
 	buf := make([]byte, t.maxMessageLength())
 	for {
 		if !t.Ready() {
-			level.Info(t.logger).Log("msg", "syslog server shutting down")
+			level.Info(t.logger).Log("msg", "syslog server shutting down", "protocol", protocolUDP, "err", t.ctx.Err())
 			return
 		}
-		n, addr, err = t.packetConn.ReadFrom(buf)
-		if err != nil {
-			level.Info(t.logger).Log("msg", "failed to read packets", "addr", addr, "n", n, "err", err)
+		n, addr, err = t.udpConn.ReadFrom(buf)
+		if n <= 0 && err != nil {
+			level.Warn(t.logger).Log("msg", "failed to read packets", "addr", addr, "err", err)
 			continue
 		}
 
-		// TODO: is there a better way to pass a copy to the handleRcv() function?
-		b := make([]byte, n)
-		copy(b, buf[:n])
-		r := t.readerPool.Get().(*bytes.Reader)
-		r.Reset(b)
-		t.openConnections.Add(1)
-		go t.handleRcv(addr, r)
+		stream, ok := streams[addr.String()]
+		if !ok {
+			stream = &ChannelConn{ch: make(chan []byte, 1024), addr: addr}
+			streams[addr.String()] = stream
+			t.openConnections.Add(1)
+			go t.handleRcv(stream)
+		}
+		stream.Write(buf[:n])
 	}
 }
 
-func (t *UDPTransport) handleRcv(addr net.Addr, r io.Reader) {
+type ChannelConn struct {
+	addr     net.Addr
+	ch       chan []byte
+	isClosed bool
+}
+
+func (cc *ChannelConn) Read(p []byte) (int, error) {
+	r := <-cc.ch
+	if len(r) == 0 {
+		return 0, io.EOF
+	}
+	if len(r) > len(p) {
+		return 0, fmt.Errorf("dst smaller than src")
+	}
+	return copy(p, r), nil
+}
+func (cc *ChannelConn) Write(p []byte) (int, error) {
+	if cc.isClosed {
+		return 0, nil
+	}
+	buf := make([]byte, len(p))
+	copy(buf, p)
+	cc.ch <- buf
+	return len(buf), nil
+}
+
+func (cc *ChannelConn) Close() error {
+	close(cc.ch)
+	cc.isClosed = true
+	return nil
+}
+
+func (t *UDPTransport) handleRcv(c *ChannelConn) {
 	defer t.openConnections.Done()
 
-	lbs := t.connectionLabels(addr.String())
+	handlerCtx, cancel := context.WithCancel(t.ctx)
+	defer cancel()
+	go func() {
+		<-handlerCtx.Done()
+		_ = c.Close()
+	}()
 
-	err := syslogparser.ParseStream(r, func(result *syslog.Result) {
-		t.readerPool.Put(r)
+	lbs := t.connectionLabels(c.addr.String())
+	err := syslogparser.ParseStream(c, func(result *syslog.Result) {
 		if err := result.Error; err != nil {
 			t.handleMessageError(err)
-			return
+		} else {
+			t.handleMessage(lbs.Copy(), result.Message)
 		}
-		t.handleMessage(lbs.Copy(), result.Message)
 	}, t.maxMessageLength())
 
 	if err != nil {
@@ -371,5 +412,5 @@ func (t *UDPTransport) Wait() {
 
 // Addr implements SyslogTransport
 func (t *UDPTransport) Addr() net.Addr {
-	return t.packetConn.LocalAddr()
+	return t.udpConn.LocalAddr()
 }

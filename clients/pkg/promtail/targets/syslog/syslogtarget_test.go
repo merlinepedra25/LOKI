@@ -231,16 +231,82 @@ o+KrhWQRriAj+GFMIpnT0r28EhOWS/d+f9ISk/it796YtDhfMb9GmV9VI7o=
 `)
 )
 
+type formatFunc func(string) string
+
+var (
+	fmtOctetCounting = func(s string) string { return fmt.Sprintf("%d %s", len(s), s) }
+	fmtNewline       = func(s string) string { return s + "\n" }
+)
+
+func Benchmark_SyslogTarget(b *testing.B) {
+	for _, testdata := range []struct {
+		name       string
+		protocol   string
+		formatFunc formatFunc
+	}{
+		{"tcp", protocolTCP, fmtOctetCounting},
+		{"udp", protocolUDP, fmtOctetCounting},
+	} {
+		b.Run(testdata.name, func(b *testing.B) {
+			w := log.NewSyncWriter(os.Stderr)
+			logger := log.NewLogfmtLogger(w)
+			client := fake.New(func() {})
+
+			metrics := NewMetrics(nil)
+			tgt, _ := NewSyslogTarget(metrics, logger, client, []*relabel.Config{}, &scrapeconfig.SyslogTargetConfig{
+				ListenAddress:       "127.0.0.1:0",
+				ListenProtocol:      testdata.protocol,
+				LabelStructuredData: true,
+				Labels: model.LabelSet{
+					"test": "syslog_target",
+				},
+			})
+			b.Cleanup(func() {
+				require.NoError(b, tgt.Stop())
+			})
+			require.Eventually(b, tgt.Ready, time.Second, 10*time.Millisecond)
+
+			addr := tgt.ListenAddress().String()
+
+			messages := []string{
+				`<165>1 2022-04-08T22:14:10.001Z host1 app - id1 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:11.002Z host2 app - id2 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:12.003Z host1 app - id3 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:13.004Z host2 app - id4 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:14.005Z host1 app - id5 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:15.002Z host2 app - id6 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:16.003Z host1 app - id7 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:17.004Z host2 app - id8 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:18.005Z host1 app - id9 [custom@32473 exkey="1"] An application event log entry...`,
+				`<165>1 2022-04-08T22:14:19.001Z host2 app - id10 [custom@32473 exkey="1"] An application event log entry...`,
+			}
+
+			b.ReportAllocs()
+			b.ResetTimer()
+
+			c, _ := net.Dial(testdata.protocol, addr)
+			for n := 0; n < b.N; n++ {
+				require.NoError(b, writeMessagesToStream(c, messages, testdata.formatFunc))
+			}
+
+			require.Eventuallyf(b, func() bool {
+				return len(client.Received()) == len(messages)*b.N
+			}, 15*time.Second, time.Second, "expected: %d got:%d", len(messages)*b.N, len(client.Received()))
+
+		})
+	}
+}
+
 func TestSyslogTarget(t *testing.T) {
 	for _, tt := range []struct {
-		name          string
-		protocol      string
-		octetCounting bool
+		name     string
+		protocol string
+		fmtFunc  formatFunc
 	}{
-		{"tpc newline separated", protocolTCP, false},
-		{"tpc octetcounting", protocolTCP, true},
-		{"udp newline separated", protocolUDP, false},
-		{"udp octetcounting", protocolUDP, true},
+		{"tpc newline separated", protocolTCP, fmtNewline},
+		{"tpc octetcounting", protocolTCP, fmtOctetCounting},
+		{"udp newline separated", protocolUDP, fmtNewline},
+		{"udp octetcounting", protocolUDP, fmtOctetCounting},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			w := log.NewSyncWriter(os.Stderr)
@@ -272,7 +338,7 @@ func TestSyslogTarget(t *testing.T) {
 				`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
 			}
 
-			err = writeMessagesToStream(c, messages, tt.octetCounting)
+			err = writeMessagesToStream(c, messages, tt.fmtFunc)
 			require.NoError(t, err)
 			require.NoError(t, c.Close())
 
@@ -329,39 +395,26 @@ func relabelConfig(t *testing.T) []*relabel.Config {
 	return relabels
 }
 
-func writeMessagesToStream(w io.Writer, messages []string, octetCounting bool) error {
-	var formatter func(string) string
-
-	if octetCounting {
-		formatter = func(s string) string {
-			return fmt.Sprintf("%d %s", len(s), s)
-		}
-	} else {
-		formatter = func(s string) string {
-			return s + "\n"
-		}
-	}
-
+func writeMessagesToStream(w io.Writer, messages []string, formatter formatFunc) error {
 	for _, msg := range messages {
 		_, err := fmt.Fprint(w, formatter(msg))
 		if err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
 func TestSyslogTarget_RFC5424Messages(t *testing.T) {
 	for _, tt := range []struct {
-		name          string
-		protocol      string
-		octetCounting bool
+		name     string
+		protocol string
+		fmtFunc  formatFunc
 	}{
-		{"tpc newline separated", protocolTCP, false},
-		{"tpc octetcounting", protocolTCP, true},
-		{"udp newline separated", protocolUDP, false},
-		{"udp octetcounting", protocolUDP, true},
+		{"tpc newline separated", protocolTCP, fmtNewline},
+		{"tpc octetcounting", protocolTCP, fmtOctetCounting},
+		{"udp newline separated", protocolUDP, fmtNewline},
+		{"udp octetcounting", protocolUDP, fmtOctetCounting},
 	} {
 		t.Run(tt.name, func(t *testing.T) {})
 		w := log.NewSyncWriter(os.Stderr)
@@ -394,7 +447,7 @@ func TestSyslogTarget_RFC5424Messages(t *testing.T) {
 			`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
 		}
 
-		err = writeMessagesToStream(c, messages, false)
+		err = writeMessagesToStream(c, messages, tt.fmtFunc)
 		require.NoError(t, err)
 		require.NoError(t, c.Close())
 
@@ -444,14 +497,14 @@ func TestSyslogTarget_TLSConfigWithoutServerKey(t *testing.T) {
 
 func TestSyslogTarget_TLSConfig(t *testing.T) {
 	t.Run("NewlineSeparatedMessages", func(t *testing.T) {
-		testSyslogTargetWithTLS(t, false)
+		testSyslogTargetWithTLS(t, fmtNewline)
 	})
 	t.Run("OctetCounting", func(t *testing.T) {
-		testSyslogTargetWithTLS(t, true)
+		testSyslogTargetWithTLS(t, fmtOctetCounting)
 	})
 }
 
-func testSyslogTargetWithTLS(t *testing.T, octetCounting bool) {
+func testSyslogTargetWithTLS(t *testing.T, fmtFunc formatFunc) {
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
 
@@ -510,7 +563,7 @@ func testSyslogTargetWithTLS(t *testing.T, octetCounting bool) {
 	}
 	messages := append(malformeddMessages, validMessages...)
 
-	err = writeMessagesToStream(c, messages, octetCounting)
+	err = writeMessagesToStream(c, messages, fmtFunc)
 	require.NoError(t, err)
 	require.NoError(t, c.Close())
 
@@ -553,14 +606,14 @@ func createTempFile(data []byte) (*os.File, error) {
 
 func TestSyslogTarget_TLSConfigVerifyClientCertificate(t *testing.T) {
 	t.Run("NewlineSeparatedMessages", func(t *testing.T) {
-		testSyslogTargetWithTLSVerifyClientCertificate(t, false)
+		testSyslogTargetWithTLSVerifyClientCertificate(t, fmtNewline)
 	})
 	t.Run("OctetCounting", func(t *testing.T) {
-		testSyslogTargetWithTLSVerifyClientCertificate(t, true)
+		testSyslogTargetWithTLSVerifyClientCertificate(t, fmtOctetCounting)
 	})
 }
 
-func testSyslogTargetWithTLSVerifyClientCertificate(t *testing.T, octetCounting bool) {
+func testSyslogTargetWithTLSVerifyClientCertificate(t *testing.T, fmtFunc formatFunc) {
 	caCertFile, err := createTempFile(caCert)
 	if err != nil {
 		t.Fatalf("Unable to create CA certificate temporary file: %s", err)
@@ -651,7 +704,7 @@ func testSyslogTargetWithTLSVerifyClientCertificate(t *testing.T, octetCounting 
 			`<165>1 2018-10-11T22:14:15.007Z host5 e - id3 [custom@32473 exkey="3"] An application event log entry...`,
 		}
 
-		err = writeMessagesToStream(c, messages, octetCounting)
+		err = writeMessagesToStream(c, messages, fmtFunc)
 		require.NoError(t, err)
 		require.NoError(t, c.Close())
 
@@ -733,7 +786,7 @@ func TestSyslogTarget_NonUTF8Message(t *testing.T) {
 	err = writeMessagesToStream(c, []string{
 		"<165>1 - - - - - - " + msg1,
 		"<123>1 - - - - - - " + msg2,
-	}, true)
+	}, fmtOctetCounting)
 	require.NoError(t, err)
 	require.NoError(t, c.Close())
 
