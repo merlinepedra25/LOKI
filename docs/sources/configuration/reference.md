@@ -108,8 +108,457 @@ Pass the `-config.expand-env` flag at the command line to enable this way of set
 # Configures where Loki stores data.
 [storage_config: <storage_config>]
 
-# Configures how Loki stores data in the specific store.
-[chunk_store_config: <chunkstore_config>]
+index_gateway:
+  # mode in which the index gateway client will be running
+  # CLI flag: -index-gateway.mode
+  [mode: <string> | default = "simple"]
+
+  ring:
+    kvstore:
+      # Backend storage to use for the ring. Supported values are: consul, etcd,
+      # inmemory, memberlist, multi.
+      # CLI flag: -index-gateway.ring.store
+      [store: <string> | default = "consul"]
+
+      # The prefix for the keys in the store. Should end with a /.
+      # CLI flag: -index-gateway.ring.prefix
+      [prefix: <string> | default = "collectors/"]
+
+      # Configures the Consul client.
+      # The CLI flags prefix for this block config is: ruler.ring
+      [consul: <consul_config>]
+
+      # Configures the etcd client.
+      # The CLI flags prefix for this block config is: ruler.ring
+      [etcd: <etcd_config>]
+
+      multi:
+        # Primary backend storage used by multi-client.
+        # CLI flag: -index-gateway.ring.multi.primary
+        [primary: <string> | default = ""]
+
+        # Secondary backend storage used by multi-client.
+        # CLI flag: -index-gateway.ring.multi.secondary
+        [secondary: <string> | default = ""]
+
+        # Mirror writes to secondary store.
+        # CLI flag: -index-gateway.ring.multi.mirror-enabled
+        [mirror_enabled: <boolean> | default = false]
+
+        # Timeout for storing value to secondary store.
+        # CLI flag: -index-gateway.ring.multi.mirror-timeout
+        [mirror_timeout: <duration> | default = 2s]
+
+    # Period at which to heartbeat to the ring. 0 = disabled.
+    # CLI flag: -index-gateway.ring.heartbeat-period
+    [heartbeat_period: <duration> | default = 15s]
+
+    # The heartbeat timeout after which compactors are considered unhealthy
+    # within the ring. 0 = never (timeout disabled).
+    # CLI flag: -index-gateway.ring.heartbeat-timeout
+    [heartbeat_timeout: <duration> | default = 1m]
+
+    # File path where tokens are stored. If empty, tokens are not stored at
+    # shutdown and restored at startup.
+    # CLI flag: -index-gateway.ring.tokens-file-path
+    [tokens_file_path: <string> | default = ""]
+
+    # True to enable zone-awareness and replicate blocks across different
+    # availability zones.
+    # CLI flag: -index-gateway.ring.zone-awareness-enabled
+    [zone_awareness_enabled: <boolean> | default = false]
+
+    # Name of network interface to read address from.
+    # CLI flag: -index-gateway.ring.instance-interface-names
+    [instance_interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
+
+    # Port to advertise in the ring (defaults to server.grpc-listen-port).
+    # CLI flag: -index-gateway.ring.instance-port
+    [instance_port: <int> | default = 0]
+
+    # IP address to advertise in the ring.
+    # CLI flag: -index-gateway.ring.instance-addr
+    [instance_addr: <string> | default = ""]
+
+    # The availability zone where this instance is running. Required if
+    # zone-awareness is enabled.
+    # CLI flag: -index-gateway.ring.instance-availability-zone
+    [instance_availability_zone: <string> | default = ""]
+
+    # how many index gateway instances are assigned to each tenant
+    # CLI flag: -replication-factor
+    [replication_factor: <int> | default = 3]
+
+chunk_store_config:
+  chunk_cache_config:
+    # Cache config for chunks. Enable in-memory cache (auto-enabled for the
+    # chunks & query results cache if no other cache is configured).
+    # CLI flag: -store.chunks-cache.cache.enable-fifocache
+    [enable_fifocache: <boolean> | default = false]
+
+    # Cache config for chunks. The default validity of entries for caches unless
+    # overridden.
+    # CLI flag: -store.chunks-cache.default-validity
+    [default_validity: <duration> | default = 1h]
+
+    background:
+      # Cache config for chunks. At what concurrency to write back to cache.
+      # CLI flag: -store.chunks-cache.background.write-back-concurrency
+      [writeback_goroutines: <int> | default = 10]
+
+      # Cache config for chunks. How many key batches to buffer for background
+      # write-back.
+      # CLI flag: -store.chunks-cache.background.write-back-buffer
+      [writeback_buffer: <int> | default = 10000]
+
+    memcached:
+      # Cache config for chunks. How long keys stay in the memcache.
+      # CLI flag: -store.chunks-cache.memcached.expiration
+      [expiration: <duration> | default = 0s]
+
+      # Cache config for chunks. How many keys to fetch in each batch.
+      # CLI flag: -store.chunks-cache.memcached.batchsize
+      [batch_size: <int> | default = 1024]
+
+      # Cache config for chunks. Maximum active requests to memcache.
+      # CLI flag: -store.chunks-cache.memcached.parallelism
+      [parallelism: <int> | default = 100]
+
+    memcached_client:
+      # Cache config for chunks. Hostname for memcached service to use. If empty
+      # and if addresses is unset, no memcached will be used.
+      # CLI flag: -store.chunks-cache.memcached.hostname
+      [host: <string> | default = ""]
+
+      # Cache config for chunks. SRV service used to discover memcache servers.
+      # CLI flag: -store.chunks-cache.memcached.service
+      [service: <string> | default = "memcached"]
+
+      # Cache config for chunks. EXPERIMENTAL: Comma separated addresses list in
+      # DNS Service Discovery format:
+      # https://cortexmetrics.io/docs/configuration/arguments/#dns-service-discovery
+      # CLI flag: -store.chunks-cache.memcached.addresses
+      [addresses: <string> | default = ""]
+
+      # Cache config for chunks. Maximum time to wait before giving up on
+      # memcached requests.
+      # CLI flag: -store.chunks-cache.memcached.timeout
+      [timeout: <duration> | default = 100ms]
+
+      # Cache config for chunks. Maximum number of idle connections in pool.
+      # CLI flag: -store.chunks-cache.memcached.max-idle-conns
+      [max_idle_conns: <int> | default = 16]
+
+      # Cache config for chunks. The maximum size of an item stored in
+      # memcached. Bigger items are not stored. If set to 0, no maximum size is
+      # enforced.
+      # CLI flag: -store.chunks-cache.memcached.max-item-size
+      [max_item_size: <int> | default = 0]
+
+      # Cache config for chunks. Period with which to poll DNS for memcache
+      # servers.
+      # CLI flag: -store.chunks-cache.memcached.update-interval
+      [update_interval: <duration> | default = 1m]
+
+      # Cache config for chunks. Use consistent hashing to distribute to
+      # memcache servers.
+      # CLI flag: -store.chunks-cache.memcached.consistent-hash
+      [consistent_hash: <boolean> | default = true]
+
+      # Cache config for chunks. Trip circuit-breaker after this number of
+      # consecutive dial failures (if zero then circuit-breaker is disabled).
+      # CLI flag: -store.chunks-cache.memcached.circuit-breaker-consecutive-failures
+      [circuit_breaker_consecutive_failures: <int> | default = 10]
+
+      # Cache config for chunks. Duration circuit-breaker remains open after
+      # tripping (if zero then 60 seconds is used).
+      # CLI flag: -store.chunks-cache.memcached.circuit-breaker-timeout
+      [circuit_breaker_timeout: <duration> | default = 10s]
+
+      # Cache config for chunks. Reset circuit-breaker counts after this long
+      # (if zero then never reset).
+      # CLI flag: -store.chunks-cache.memcached.circuit-breaker-interval
+      [circuit_breaker_interval: <duration> | default = 10s]
+
+    redis:
+      # Cache config for chunks. Redis Server or Cluster configuration endpoint
+      # to use for caching. A comma-separated list of endpoints for Redis
+      # Cluster or Redis Sentinel. If empty, no redis will be used.
+      # CLI flag: -store.chunks-cache.redis.endpoint
+      [endpoint: <string> | default = ""]
+
+      # Cache config for chunks. Redis Sentinel master name. An empty string for
+      # Redis Server or Redis Cluster.
+      # CLI flag: -store.chunks-cache.redis.master-name
+      [master_name: <string> | default = ""]
+
+      # Cache config for chunks. Maximum time to wait before giving up on redis
+      # requests.
+      # CLI flag: -store.chunks-cache.redis.timeout
+      [timeout: <duration> | default = 500ms]
+
+      # Cache config for chunks. How long keys stay in the redis.
+      # CLI flag: -store.chunks-cache.redis.expiration
+      [expiration: <duration> | default = 0s]
+
+      # Cache config for chunks. Database index.
+      # CLI flag: -store.chunks-cache.redis.db
+      [db: <int> | default = 0]
+
+      # Cache config for chunks. Maximum number of connections in the pool.
+      # CLI flag: -store.chunks-cache.redis.pool-size
+      [pool_size: <int> | default = 0]
+
+      # Cache config for chunks. Password to use when connecting to redis.
+      # CLI flag: -store.chunks-cache.redis.password
+      [password: <string> | default = ""]
+
+      # Cache config for chunks. Enable connecting to redis with TLS.
+      # CLI flag: -store.chunks-cache.redis.tls-enabled
+      [tls_enabled: <boolean> | default = false]
+
+      # Cache config for chunks. Skip validating server certificate.
+      # CLI flag: -store.chunks-cache.redis.tls-insecure-skip-verify
+      [tls_insecure_skip_verify: <boolean> | default = false]
+
+      # Cache config for chunks. Close connections after remaining idle for this
+      # duration. If the value is zero, then idle connections are not closed.
+      # CLI flag: -store.chunks-cache.redis.idle-timeout
+      [idle_timeout: <duration> | default = 0s]
+
+      # Cache config for chunks. Close connections older than this duration. If
+      # the value is zero, then the pool does not close connections based on
+      # age.
+      # CLI flag: -store.chunks-cache.redis.max-connection-age
+      [max_connection_age: <duration> | default = 0s]
+
+    fifocache:
+      # Cache config for chunks. Maximum memory size of the cache in bytes. A
+      # unit suffix (KB, MB, GB) may be applied.
+      # CLI flag: -store.chunks-cache.fifocache.max-size-bytes
+      [max_size_bytes: <string> | default = "1GB"]
+
+      # Cache config for chunks. Maximum number of entries in the cache.
+      # CLI flag: -store.chunks-cache.fifocache.max-size-items
+      [max_size_items: <int> | default = 0]
+
+      # Cache config for chunks. The time to live for items in the cache before
+      # they get purged.
+      # CLI flag: -store.chunks-cache.fifocache.ttl
+      [ttl: <duration> | default = 1h]
+
+      # Deprecated (use ttl instead): Cache config for chunks. The expiry
+      # duration for the cache.
+      # CLI flag: -store.chunks-cache.fifocache.duration
+      [validity: <duration> | default = 0s]
+
+      # Deprecated (use max-size-items or max-size-bytes instead): Cache config
+      # for chunks. The number of entries to cache.
+      # CLI flag: -store.chunks-cache.fifocache.size
+      [size: <int> | default = 0]
+
+    # The maximum number of concurrent asynchronous writeback cache can occur.
+    # CLI flag: -store.chunks-cache.max-async-cache-write-back-concurrency
+    [async_cache_write_back_concurrency: <int> | default = 16]
+
+    # The maximum number of enqueued asynchronous writeback cache allowed.
+    # CLI flag: -store.chunks-cache.max-async-cache-write-back-buffer-size
+    [async_cache_write_back_buffer_size: <int> | default = 500]
+
+  write_dedupe_cache_config:
+    # Cache config for index entry writing.Enable in-memory cache (auto-enabled
+    # for the chunks & query results cache if no other cache is configured).
+    # CLI flag: -store.index-cache-write.cache.enable-fifocache
+    [enable_fifocache: <boolean> | default = false]
+
+    # Cache config for index entry writing.The default validity of entries for
+    # caches unless overridden.
+    # CLI flag: -store.index-cache-write.default-validity
+    [default_validity: <duration> | default = 1h]
+
+    background:
+      # Cache config for index entry writing.At what concurrency to write back
+      # to cache.
+      # CLI flag: -store.index-cache-write.background.write-back-concurrency
+      [writeback_goroutines: <int> | default = 10]
+
+      # Cache config for index entry writing.How many key batches to buffer for
+      # background write-back.
+      # CLI flag: -store.index-cache-write.background.write-back-buffer
+      [writeback_buffer: <int> | default = 10000]
+
+    memcached:
+      # Cache config for index entry writing.How long keys stay in the memcache.
+      # CLI flag: -store.index-cache-write.memcached.expiration
+      [expiration: <duration> | default = 0s]
+
+      # Cache config for index entry writing.How many keys to fetch in each
+      # batch.
+      # CLI flag: -store.index-cache-write.memcached.batchsize
+      [batch_size: <int> | default = 1024]
+
+      # Cache config for index entry writing.Maximum active requests to
+      # memcache.
+      # CLI flag: -store.index-cache-write.memcached.parallelism
+      [parallelism: <int> | default = 100]
+
+    memcached_client:
+      # Cache config for index entry writing.Hostname for memcached service to
+      # use. If empty and if addresses is unset, no memcached will be used.
+      # CLI flag: -store.index-cache-write.memcached.hostname
+      [host: <string> | default = ""]
+
+      # Cache config for index entry writing.SRV service used to discover
+      # memcache servers.
+      # CLI flag: -store.index-cache-write.memcached.service
+      [service: <string> | default = "memcached"]
+
+      # Cache config for index entry writing.EXPERIMENTAL: Comma separated
+      # addresses list in DNS Service Discovery format:
+      # https://cortexmetrics.io/docs/configuration/arguments/#dns-service-discovery
+      # CLI flag: -store.index-cache-write.memcached.addresses
+      [addresses: <string> | default = ""]
+
+      # Cache config for index entry writing.Maximum time to wait before giving
+      # up on memcached requests.
+      # CLI flag: -store.index-cache-write.memcached.timeout
+      [timeout: <duration> | default = 100ms]
+
+      # Cache config for index entry writing.Maximum number of idle connections
+      # in pool.
+      # CLI flag: -store.index-cache-write.memcached.max-idle-conns
+      [max_idle_conns: <int> | default = 16]
+
+      # Cache config for index entry writing.The maximum size of an item stored
+      # in memcached. Bigger items are not stored. If set to 0, no maximum size
+      # is enforced.
+      # CLI flag: -store.index-cache-write.memcached.max-item-size
+      [max_item_size: <int> | default = 0]
+
+      # Cache config for index entry writing.Period with which to poll DNS for
+      # memcache servers.
+      # CLI flag: -store.index-cache-write.memcached.update-interval
+      [update_interval: <duration> | default = 1m]
+
+      # Cache config for index entry writing.Use consistent hashing to
+      # distribute to memcache servers.
+      # CLI flag: -store.index-cache-write.memcached.consistent-hash
+      [consistent_hash: <boolean> | default = true]
+
+      # Cache config for index entry writing.Trip circuit-breaker after this
+      # number of consecutive dial failures (if zero then circuit-breaker is
+      # disabled).
+      # CLI flag: -store.index-cache-write.memcached.circuit-breaker-consecutive-failures
+      [circuit_breaker_consecutive_failures: <int> | default = 10]
+
+      # Cache config for index entry writing.Duration circuit-breaker remains
+      # open after tripping (if zero then 60 seconds is used).
+      # CLI flag: -store.index-cache-write.memcached.circuit-breaker-timeout
+      [circuit_breaker_timeout: <duration> | default = 10s]
+
+      # Cache config for index entry writing.Reset circuit-breaker counts after
+      # this long (if zero then never reset).
+      # CLI flag: -store.index-cache-write.memcached.circuit-breaker-interval
+      [circuit_breaker_interval: <duration> | default = 10s]
+
+    redis:
+      # Cache config for index entry writing.Redis Server or Cluster
+      # configuration endpoint to use for caching. A comma-separated list of
+      # endpoints for Redis Cluster or Redis Sentinel. If empty, no redis will
+      # be used.
+      # CLI flag: -store.index-cache-write.redis.endpoint
+      [endpoint: <string> | default = ""]
+
+      # Cache config for index entry writing.Redis Sentinel master name. An
+      # empty string for Redis Server or Redis Cluster.
+      # CLI flag: -store.index-cache-write.redis.master-name
+      [master_name: <string> | default = ""]
+
+      # Cache config for index entry writing.Maximum time to wait before giving
+      # up on redis requests.
+      # CLI flag: -store.index-cache-write.redis.timeout
+      [timeout: <duration> | default = 500ms]
+
+      # Cache config for index entry writing.How long keys stay in the redis.
+      # CLI flag: -store.index-cache-write.redis.expiration
+      [expiration: <duration> | default = 0s]
+
+      # Cache config for index entry writing.Database index.
+      # CLI flag: -store.index-cache-write.redis.db
+      [db: <int> | default = 0]
+
+      # Cache config for index entry writing.Maximum number of connections in
+      # the pool.
+      # CLI flag: -store.index-cache-write.redis.pool-size
+      [pool_size: <int> | default = 0]
+
+      # Cache config for index entry writing.Password to use when connecting to
+      # redis.
+      # CLI flag: -store.index-cache-write.redis.password
+      [password: <string> | default = ""]
+
+      # Cache config for index entry writing.Enable connecting to redis with
+      # TLS.
+      # CLI flag: -store.index-cache-write.redis.tls-enabled
+      [tls_enabled: <boolean> | default = false]
+
+      # Cache config for index entry writing.Skip validating server certificate.
+      # CLI flag: -store.index-cache-write.redis.tls-insecure-skip-verify
+      [tls_insecure_skip_verify: <boolean> | default = false]
+
+      # Cache config for index entry writing.Close connections after remaining
+      # idle for this duration. If the value is zero, then idle connections are
+      # not closed.
+      # CLI flag: -store.index-cache-write.redis.idle-timeout
+      [idle_timeout: <duration> | default = 0s]
+
+      # Cache config for index entry writing.Close connections older than this
+      # duration. If the value is zero, then the pool does not close connections
+      # based on age.
+      # CLI flag: -store.index-cache-write.redis.max-connection-age
+      [max_connection_age: <duration> | default = 0s]
+
+    fifocache:
+      # Cache config for index entry writing.Maximum memory size of the cache in
+      # bytes. A unit suffix (KB, MB, GB) may be applied.
+      # CLI flag: -store.index-cache-write.fifocache.max-size-bytes
+      [max_size_bytes: <string> | default = "1GB"]
+
+      # Cache config for index entry writing.Maximum number of entries in the
+      # cache.
+      # CLI flag: -store.index-cache-write.fifocache.max-size-items
+      [max_size_items: <int> | default = 0]
+
+      # Cache config for index entry writing.The time to live for items in the
+      # cache before they get purged.
+      # CLI flag: -store.index-cache-write.fifocache.ttl
+      [ttl: <duration> | default = 1h]
+
+      # Deprecated (use ttl instead): Cache config for index entry writing.The
+      # expiry duration for the cache.
+      # CLI flag: -store.index-cache-write.fifocache.duration
+      [validity: <duration> | default = 0s]
+
+      # Deprecated (use max-size-items or max-size-bytes instead): Cache config
+      # for index entry writing.The number of entries to cache.
+      # CLI flag: -store.index-cache-write.fifocache.size
+      [size: <int> | default = 0]
+
+    # The maximum number of concurrent asynchronous writeback cache can occur.
+    # CLI flag: -store.index-cache-write.max-async-cache-write-back-concurrency
+    [async_cache_write_back_concurrency: <int> | default = 16]
+
+    # The maximum number of enqueued asynchronous writeback cache allowed.
+    # CLI flag: -store.index-cache-write.max-async-cache-write-back-buffer-size
+    [async_cache_write_back_buffer_size: <int> | default = 500]
+
+  # Cache index entries older than this period. 0 to disable.
+  # CLI flag: -store.cache-lookups-older-than
+  [cache_lookups_older_than: <duration> | default = 0s]
+
+  # This flag is deprecated. Use -querier.max-query-lookback instead.
+  # CLI flag: -store.max-look-back-period
+  [max_look_back_period: <duration> | default = 0s]
 
 # Configures the chunk index schema and where it is stored.
 [schema_config: <schema_config>]
@@ -150,7 +599,7 @@ Pass the `-config.expand-env` flag at the command line to enable this way of set
 [query_scheduler: <query_scheduler_config>]
 
 # Configures how anonymous usage data is sent to grafana.com.
-[usage_report: <analytics_config>]
+[analytics: <analytics_config>]
 ```
 
 ### common_config
@@ -411,7 +860,7 @@ ring:
 
   # Name of network interface to read address from.
   # CLI flag: -distributor.ring.instance-interface-names
-  [instance_interface_names: <list of string> | default = [eth0 en0]]
+  [instance_interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
 ```
 
 ### querier_config
@@ -459,6 +908,10 @@ engine:
 # Queriers should only query the ingesters and not try to query any store
 # CLI flag: -querier.query-ingester-only
 [query_ingester_only: <boolean> | default = false]
+
+# Enable queries across multiple tenants. (Experimental)
+# CLI flag: -querier.multi-tenant-queries-enabled
+[multi_tenant_queries_enabled: <boolean> | default = false]
 ```
 
 ### ingester_config
@@ -479,11 +932,11 @@ lifecycler:
       [prefix: <string> | default = "collectors/"]
 
       # Configures the Consul client.
-      # The CLI flags prefix for this block config is: ruler.ring
+      # The CLI flags prefix for this block config is: index-gateway.ring
       [consul: <consul_config>]
 
       # Configures the etcd client.
-      # The CLI flags prefix for this block config is: ruler.ring
+      # The CLI flags prefix for this block config is: index-gateway.ring
       [etcd: <etcd_config>]
 
       multi:
@@ -550,7 +1003,7 @@ lifecycler:
 
   # Name of network interface to read address from.
   # CLI flag: -ingester.lifecycler.interface
-  [interface_names: <list of string> | default = [eth0 en0]]
+  [interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
 
   # Duration to sleep for before exiting, to ensure metrics are scraped.
   # CLI flag: -ingester.final-sleep
@@ -579,6 +1032,18 @@ lifecycler:
   # CLI flag: -ingester.readiness-check-ring-health
   [readiness_check_ring_health: <boolean> | default = true]
 
+  # IP address to advertise in the ring.
+  # CLI flag: -ingester.lifecycler.addr
+  [address: <string> | default = ""]
+
+  # port to advertise in consul (defaults to server.grpc-listen-port).
+  # CLI flag: -ingester.lifecycler.port
+  [port: <int> | default = 0]
+
+  # ID to register in the ring.
+  # CLI flag: -ingester.lifecycler.ID
+  [id: <string> | default = "grafana1210"]
+
 # Number of times to try and transfer chunks before falling back to flushing. If
 # set to 0 or negative value, transfers are disabled.
 # CLI flag: -ingester.max-transfer-retries
@@ -591,7 +1056,7 @@ lifecycler:
 [flush_check_period: <duration> | default = 30s]
 
 # CLI flag: -ingester.flush-op-timeout
-[flush_op_timeout: <duration> | default = 10s]
+[flush_op_timeout: <duration> | default = 10m]
 
 # CLI flag: -ingester.chunks-retain-period
 [chunk_retain_period: <duration> | default = 0s]
@@ -686,6 +1151,10 @@ pool_config:
   # CLI flag: -distributor.health-check-ingesters
   [health_check_ingesters: <boolean> | default = true]
 
+  # Timeout for healthcheck rpcs.
+  # CLI flag: -ingester.client.healthcheck-timeout
+  [remote_timeout: <duration> | default = 1s]
+
 # Timeout for ingester client RPCs.
 # CLI flag: -ingester.client.timeout
 [remote_timeout: <duration> | default = 5s]
@@ -697,7 +1166,7 @@ grpc_client_config:
 
   # gRPC client max send message size (bytes).
   # CLI flag: -ingester.client.grpc-max-send-msg-size
-  [max_send_msg_size: <int> | default = 16777216]
+  [max_send_msg_size: <int> | default = 104857600]
 
   # Use compression when sending messages. Supported values are: 'gzip',
   # 'snappy' and '' (disable compression)
@@ -764,10 +1233,6 @@ grpc_client_config:
 Configures where Loki stores data.
 
 ```yaml
-# The storage engine to use: chunks or blocks.
-# CLI flag: -store.engine
-[engine: <string> | default = "chunks"]
-
 aws:
   dynamodb:
     # DynamoDB endpoint URL with escaped Key and Secret encoded. If only region
@@ -956,7 +1421,7 @@ bigtable:
 
     # gRPC client max send message size (bytes).
     # CLI flag: -bigtable.grpc-max-send-msg-size
-    [max_send_msg_size: <int> | default = 16777216]
+    [max_send_msg_size: <int> | default = 104857600]
 
     # Use compression when sending messages. Supported values are: 'gzip',
     # 'snappy' and '' (disable compression)
@@ -1160,6 +1625,14 @@ filesystem:
 # The CLI flags prefix for this block config is: ruler.storage
 [swift: <swift_storage_config>]
 
+grpc_store:
+  # Hostname or IP of the gRPC store instance.
+  # CLI flag: -grpc-store.server-address
+  [server_address: <string> | default = ""]
+
+# Configures how to hedge requests for the storage
+[hedging: <hedging_config>]
+
 # Cache validity for active index entries. Should be no higher than
 # -ingester.max-chunk-idle.
 # CLI flag: -store.index-cache-validity
@@ -1357,14 +1830,6 @@ index_queries_cache_config:
 # CLI flag: -store.max-parallel-get-chunk
 [max_parallel_get_chunk: <int> | default = 150]
 
-grpc_store:
-  # Hostname or IP of the gRPC store instance.
-  # CLI flag: -grpc-store.server-address
-  [server_address: <string> | default = ""]
-
-# Configures how to hedge requests for the storage
-[hedging: <hedging_config>]
-
 # The maximum number of chunks to fetch per batch.
 # CLI flag: -store.max-chunk-batch-size
 [max_chunk_batch_size: <int> | default = 50]
@@ -1398,458 +1863,88 @@ boltdb_shipper:
   # CLI flag: -boltdb.shipper.resync-interval
   [resync_interval: <duration> | default = 5m]
 
-  # Number of days of index to be kept downloaded for queries. Works only with
-  # tables created with 24h period.
+  # Number of days of common index to be kept downloaded for queries. For per
+  # tenant index query readiness, use limits overrides config.
   # CLI flag: -boltdb.shipper.query-ready-num-days
   [query_ready_num_days: <int> | default = 0]
 
   index_gateway_client:
-    # Hostname or IP of the Index Gateway gRPC server.
-    # CLI flag: -boltdb.shipper.index-gateway-client.server-address
-    [server_address: <string> | default = ""]
-
     grpc_client_config:
       # gRPC client max receive message size (bytes).
-      # CLI flag: -boltdb.shipper.index-gateway-client.grpc-max-recv-msg-size
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.grpc-max-recv-msg-size
       [max_recv_msg_size: <int> | default = 104857600]
 
       # gRPC client max send message size (bytes).
-      # CLI flag: -boltdb.shipper.index-gateway-client.grpc-max-send-msg-size
-      [max_send_msg_size: <int> | default = 16777216]
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.grpc-max-send-msg-size
+      [max_send_msg_size: <int> | default = 104857600]
 
       # Use compression when sending messages. Supported values are: 'gzip',
       # 'snappy' and '' (disable compression)
-      # CLI flag: -boltdb.shipper.index-gateway-client.grpc-compression
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.grpc-compression
       [grpc_compression: <string> | default = ""]
 
       # Rate limit for gRPC client; 0 means disabled.
-      # CLI flag: -boltdb.shipper.index-gateway-client.grpc-client-rate-limit
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.grpc-client-rate-limit
       [rate_limit: <float> | default = 0]
 
       # Rate limit burst for gRPC client.
-      # CLI flag: -boltdb.shipper.index-gateway-client.grpc-client-rate-limit-burst
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.grpc-client-rate-limit-burst
       [rate_limit_burst: <int> | default = 0]
 
       # Enable backoff and retry when we hit ratelimits.
-      # CLI flag: -boltdb.shipper.index-gateway-client.backoff-on-ratelimits
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.backoff-on-ratelimits
       [backoff_on_ratelimits: <boolean> | default = false]
 
       backoff_config:
         # Minimum delay when backing off.
-        # CLI flag: -boltdb.shipper.index-gateway-client.backoff-min-period
+        # CLI flag: -boltdb.shipper.index-gateway-client.grpc.backoff-min-period
         [min_period: <duration> | default = 100ms]
 
         # Maximum delay when backing off.
-        # CLI flag: -boltdb.shipper.index-gateway-client.backoff-max-period
+        # CLI flag: -boltdb.shipper.index-gateway-client.grpc.backoff-max-period
         [max_period: <duration> | default = 10s]
 
         # Number of times to backoff and retry before failing.
-        # CLI flag: -boltdb.shipper.index-gateway-client.backoff-retries
+        # CLI flag: -boltdb.shipper.index-gateway-client.grpc.backoff-retries
         [max_retries: <int> | default = 10]
 
       # Enable TLS in the GRPC client. This flag needs to be enabled when any
       # other TLS flag is set. If set to false, insecure connection to gRPC
       # server will be used.
-      # CLI flag: -boltdb.shipper.index-gateway-client.tls-enabled
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.tls-enabled
       [tls_enabled: <boolean> | default = false]
 
       # Path to the client certificate file, which will be used for
       # authenticating with the server. Also requires the key path to be
       # configured.
-      # CLI flag: -boltdb.shipper.index-gateway-client.tls-cert-path
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.tls-cert-path
       [tls_cert_path: <string> | default = ""]
 
       # Path to the key file for the client certificate. Also requires the
       # client certificate to be configured.
-      # CLI flag: -boltdb.shipper.index-gateway-client.tls-key-path
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.tls-key-path
       [tls_key_path: <string> | default = ""]
 
       # Path to the CA certificates file to validate server certificate against.
       # If not set, the host's root CA certificates are used.
-      # CLI flag: -boltdb.shipper.index-gateway-client.tls-ca-path
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.tls-ca-path
       [tls_ca_path: <string> | default = ""]
 
       # Override the expected name on the server certificate.
-      # CLI flag: -boltdb.shipper.index-gateway-client.tls-server-name
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.tls-server-name
       [tls_server_name: <string> | default = ""]
 
       # Skip validating server certificate.
-      # CLI flag: -boltdb.shipper.index-gateway-client.tls-insecure-skip-verify
+      # CLI flag: -boltdb.shipper.index-gateway-client.grpc.tls-insecure-skip-verify
       [tls_insecure_skip_verify: <boolean> | default = false]
+
+    # Hostname or IP of the Index Gateway gRPC server running in simple mode.
+    # CLI flag: -boltdb.shipper.index-gateway-client.server-address
+    [server_address: <string> | default = ""]
 
   # Build per tenant index files
   # CLI flag: -boltdb.shipper.build-per-tenant-index
   [build_per_tenant_index: <boolean> | default = false]
-```
-
-### chunkstore_config
-
-Configures how Loki stores data in the specific store.
-
-```yaml
-chunk_cache_config:
-  # Cache config for chunks. Enable in-memory cache (auto-enabled for the chunks
-  # & query results cache if no other cache is configured).
-  # CLI flag: -store.chunks-cache.cache.enable-fifocache
-  [enable_fifocache: <boolean> | default = false]
-
-  # Cache config for chunks. The default validity of entries for caches unless
-  # overridden.
-  # CLI flag: -store.chunks-cache.default-validity
-  [default_validity: <duration> | default = 1h]
-
-  background:
-    # Cache config for chunks. At what concurrency to write back to cache.
-    # CLI flag: -store.chunks-cache.background.write-back-concurrency
-    [writeback_goroutines: <int> | default = 10]
-
-    # Cache config for chunks. How many key batches to buffer for background
-    # write-back.
-    # CLI flag: -store.chunks-cache.background.write-back-buffer
-    [writeback_buffer: <int> | default = 10000]
-
-  memcached:
-    # Cache config for chunks. How long keys stay in the memcache.
-    # CLI flag: -store.chunks-cache.memcached.expiration
-    [expiration: <duration> | default = 0s]
-
-    # Cache config for chunks. How many keys to fetch in each batch.
-    # CLI flag: -store.chunks-cache.memcached.batchsize
-    [batch_size: <int> | default = 1024]
-
-    # Cache config for chunks. Maximum active requests to memcache.
-    # CLI flag: -store.chunks-cache.memcached.parallelism
-    [parallelism: <int> | default = 100]
-
-  memcached_client:
-    # Cache config for chunks. Hostname for memcached service to use. If empty
-    # and if addresses is unset, no memcached will be used.
-    # CLI flag: -store.chunks-cache.memcached.hostname
-    [host: <string> | default = ""]
-
-    # Cache config for chunks. SRV service used to discover memcache servers.
-    # CLI flag: -store.chunks-cache.memcached.service
-    [service: <string> | default = "memcached"]
-
-    # Cache config for chunks. EXPERIMENTAL: Comma separated addresses list in
-    # DNS Service Discovery format:
-    # https://cortexmetrics.io/docs/configuration/arguments/#dns-service-discovery
-    # CLI flag: -store.chunks-cache.memcached.addresses
-    [addresses: <string> | default = ""]
-
-    # Cache config for chunks. Maximum time to wait before giving up on
-    # memcached requests.
-    # CLI flag: -store.chunks-cache.memcached.timeout
-    [timeout: <duration> | default = 100ms]
-
-    # Cache config for chunks. Maximum number of idle connections in pool.
-    # CLI flag: -store.chunks-cache.memcached.max-idle-conns
-    [max_idle_conns: <int> | default = 16]
-
-    # Cache config for chunks. The maximum size of an item stored in memcached.
-    # Bigger items are not stored. If set to 0, no maximum size is enforced.
-    # CLI flag: -store.chunks-cache.memcached.max-item-size
-    [max_item_size: <int> | default = 0]
-
-    # Cache config for chunks. Period with which to poll DNS for memcache
-    # servers.
-    # CLI flag: -store.chunks-cache.memcached.update-interval
-    [update_interval: <duration> | default = 1m]
-
-    # Cache config for chunks. Use consistent hashing to distribute to memcache
-    # servers.
-    # CLI flag: -store.chunks-cache.memcached.consistent-hash
-    [consistent_hash: <boolean> | default = true]
-
-    # Cache config for chunks. Trip circuit-breaker after this number of
-    # consecutive dial failures (if zero then circuit-breaker is disabled).
-    # CLI flag: -store.chunks-cache.memcached.circuit-breaker-consecutive-failures
-    [circuit_breaker_consecutive_failures: <int> | default = 10]
-
-    # Cache config for chunks. Duration circuit-breaker remains open after
-    # tripping (if zero then 60 seconds is used).
-    # CLI flag: -store.chunks-cache.memcached.circuit-breaker-timeout
-    [circuit_breaker_timeout: <duration> | default = 10s]
-
-    # Cache config for chunks. Reset circuit-breaker counts after this long (if
-    # zero then never reset).
-    # CLI flag: -store.chunks-cache.memcached.circuit-breaker-interval
-    [circuit_breaker_interval: <duration> | default = 10s]
-
-  redis:
-    # Cache config for chunks. Redis Server or Cluster configuration endpoint to
-    # use for caching. A comma-separated list of endpoints for Redis Cluster or
-    # Redis Sentinel. If empty, no redis will be used.
-    # CLI flag: -store.chunks-cache.redis.endpoint
-    [endpoint: <string> | default = ""]
-
-    # Cache config for chunks. Redis Sentinel master name. An empty string for
-    # Redis Server or Redis Cluster.
-    # CLI flag: -store.chunks-cache.redis.master-name
-    [master_name: <string> | default = ""]
-
-    # Cache config for chunks. Maximum time to wait before giving up on redis
-    # requests.
-    # CLI flag: -store.chunks-cache.redis.timeout
-    [timeout: <duration> | default = 500ms]
-
-    # Cache config for chunks. How long keys stay in the redis.
-    # CLI flag: -store.chunks-cache.redis.expiration
-    [expiration: <duration> | default = 0s]
-
-    # Cache config for chunks. Database index.
-    # CLI flag: -store.chunks-cache.redis.db
-    [db: <int> | default = 0]
-
-    # Cache config for chunks. Maximum number of connections in the pool.
-    # CLI flag: -store.chunks-cache.redis.pool-size
-    [pool_size: <int> | default = 0]
-
-    # Cache config for chunks. Password to use when connecting to redis.
-    # CLI flag: -store.chunks-cache.redis.password
-    [password: <string> | default = ""]
-
-    # Cache config for chunks. Enable connecting to redis with TLS.
-    # CLI flag: -store.chunks-cache.redis.tls-enabled
-    [tls_enabled: <boolean> | default = false]
-
-    # Cache config for chunks. Skip validating server certificate.
-    # CLI flag: -store.chunks-cache.redis.tls-insecure-skip-verify
-    [tls_insecure_skip_verify: <boolean> | default = false]
-
-    # Cache config for chunks. Close connections after remaining idle for this
-    # duration. If the value is zero, then idle connections are not closed.
-    # CLI flag: -store.chunks-cache.redis.idle-timeout
-    [idle_timeout: <duration> | default = 0s]
-
-    # Cache config for chunks. Close connections older than this duration. If
-    # the value is zero, then the pool does not close connections based on age.
-    # CLI flag: -store.chunks-cache.redis.max-connection-age
-    [max_connection_age: <duration> | default = 0s]
-
-  fifocache:
-    # Cache config for chunks. Maximum memory size of the cache in bytes. A unit
-    # suffix (KB, MB, GB) may be applied.
-    # CLI flag: -store.chunks-cache.fifocache.max-size-bytes
-    [max_size_bytes: <string> | default = "1GB"]
-
-    # Cache config for chunks. Maximum number of entries in the cache.
-    # CLI flag: -store.chunks-cache.fifocache.max-size-items
-    [max_size_items: <int> | default = 0]
-
-    # Cache config for chunks. The time to live for items in the cache before
-    # they get purged.
-    # CLI flag: -store.chunks-cache.fifocache.ttl
-    [ttl: <duration> | default = 1h]
-
-    # Deprecated (use ttl instead): Cache config for chunks. The expiry duration
-    # for the cache.
-    # CLI flag: -store.chunks-cache.fifocache.duration
-    [validity: <duration> | default = 0s]
-
-    # Deprecated (use max-size-items or max-size-bytes instead): Cache config
-    # for chunks. The number of entries to cache.
-    # CLI flag: -store.chunks-cache.fifocache.size
-    [size: <int> | default = 0]
-
-  # The maximum number of concurrent asynchronous writeback cache can occur.
-  # CLI flag: -store.chunks-cache.max-async-cache-write-back-concurrency
-  [async_cache_write_back_concurrency: <int> | default = 16]
-
-  # The maximum number of enqueued asynchronous writeback cache allowed.
-  # CLI flag: -store.chunks-cache.max-async-cache-write-back-buffer-size
-  [async_cache_write_back_buffer_size: <int> | default = 500]
-
-write_dedupe_cache_config:
-  # Cache config for index entry writing.Enable in-memory cache (auto-enabled
-  # for the chunks & query results cache if no other cache is configured).
-  # CLI flag: -store.index-cache-write.cache.enable-fifocache
-  [enable_fifocache: <boolean> | default = false]
-
-  # Cache config for index entry writing.The default validity of entries for
-  # caches unless overridden.
-  # CLI flag: -store.index-cache-write.default-validity
-  [default_validity: <duration> | default = 1h]
-
-  background:
-    # Cache config for index entry writing.At what concurrency to write back to
-    # cache.
-    # CLI flag: -store.index-cache-write.background.write-back-concurrency
-    [writeback_goroutines: <int> | default = 10]
-
-    # Cache config for index entry writing.How many key batches to buffer for
-    # background write-back.
-    # CLI flag: -store.index-cache-write.background.write-back-buffer
-    [writeback_buffer: <int> | default = 10000]
-
-  memcached:
-    # Cache config for index entry writing.How long keys stay in the memcache.
-    # CLI flag: -store.index-cache-write.memcached.expiration
-    [expiration: <duration> | default = 0s]
-
-    # Cache config for index entry writing.How many keys to fetch in each batch.
-    # CLI flag: -store.index-cache-write.memcached.batchsize
-    [batch_size: <int> | default = 1024]
-
-    # Cache config for index entry writing.Maximum active requests to memcache.
-    # CLI flag: -store.index-cache-write.memcached.parallelism
-    [parallelism: <int> | default = 100]
-
-  memcached_client:
-    # Cache config for index entry writing.Hostname for memcached service to
-    # use. If empty and if addresses is unset, no memcached will be used.
-    # CLI flag: -store.index-cache-write.memcached.hostname
-    [host: <string> | default = ""]
-
-    # Cache config for index entry writing.SRV service used to discover memcache
-    # servers.
-    # CLI flag: -store.index-cache-write.memcached.service
-    [service: <string> | default = "memcached"]
-
-    # Cache config for index entry writing.EXPERIMENTAL: Comma separated
-    # addresses list in DNS Service Discovery format:
-    # https://cortexmetrics.io/docs/configuration/arguments/#dns-service-discovery
-    # CLI flag: -store.index-cache-write.memcached.addresses
-    [addresses: <string> | default = ""]
-
-    # Cache config for index entry writing.Maximum time to wait before giving up
-    # on memcached requests.
-    # CLI flag: -store.index-cache-write.memcached.timeout
-    [timeout: <duration> | default = 100ms]
-
-    # Cache config for index entry writing.Maximum number of idle connections in
-    # pool.
-    # CLI flag: -store.index-cache-write.memcached.max-idle-conns
-    [max_idle_conns: <int> | default = 16]
-
-    # Cache config for index entry writing.The maximum size of an item stored in
-    # memcached. Bigger items are not stored. If set to 0, no maximum size is
-    # enforced.
-    # CLI flag: -store.index-cache-write.memcached.max-item-size
-    [max_item_size: <int> | default = 0]
-
-    # Cache config for index entry writing.Period with which to poll DNS for
-    # memcache servers.
-    # CLI flag: -store.index-cache-write.memcached.update-interval
-    [update_interval: <duration> | default = 1m]
-
-    # Cache config for index entry writing.Use consistent hashing to distribute
-    # to memcache servers.
-    # CLI flag: -store.index-cache-write.memcached.consistent-hash
-    [consistent_hash: <boolean> | default = true]
-
-    # Cache config for index entry writing.Trip circuit-breaker after this
-    # number of consecutive dial failures (if zero then circuit-breaker is
-    # disabled).
-    # CLI flag: -store.index-cache-write.memcached.circuit-breaker-consecutive-failures
-    [circuit_breaker_consecutive_failures: <int> | default = 10]
-
-    # Cache config for index entry writing.Duration circuit-breaker remains open
-    # after tripping (if zero then 60 seconds is used).
-    # CLI flag: -store.index-cache-write.memcached.circuit-breaker-timeout
-    [circuit_breaker_timeout: <duration> | default = 10s]
-
-    # Cache config for index entry writing.Reset circuit-breaker counts after
-    # this long (if zero then never reset).
-    # CLI flag: -store.index-cache-write.memcached.circuit-breaker-interval
-    [circuit_breaker_interval: <duration> | default = 10s]
-
-  redis:
-    # Cache config for index entry writing.Redis Server or Cluster configuration
-    # endpoint to use for caching. A comma-separated list of endpoints for Redis
-    # Cluster or Redis Sentinel. If empty, no redis will be used.
-    # CLI flag: -store.index-cache-write.redis.endpoint
-    [endpoint: <string> | default = ""]
-
-    # Cache config for index entry writing.Redis Sentinel master name. An empty
-    # string for Redis Server or Redis Cluster.
-    # CLI flag: -store.index-cache-write.redis.master-name
-    [master_name: <string> | default = ""]
-
-    # Cache config for index entry writing.Maximum time to wait before giving up
-    # on redis requests.
-    # CLI flag: -store.index-cache-write.redis.timeout
-    [timeout: <duration> | default = 500ms]
-
-    # Cache config for index entry writing.How long keys stay in the redis.
-    # CLI flag: -store.index-cache-write.redis.expiration
-    [expiration: <duration> | default = 0s]
-
-    # Cache config for index entry writing.Database index.
-    # CLI flag: -store.index-cache-write.redis.db
-    [db: <int> | default = 0]
-
-    # Cache config for index entry writing.Maximum number of connections in the
-    # pool.
-    # CLI flag: -store.index-cache-write.redis.pool-size
-    [pool_size: <int> | default = 0]
-
-    # Cache config for index entry writing.Password to use when connecting to
-    # redis.
-    # CLI flag: -store.index-cache-write.redis.password
-    [password: <string> | default = ""]
-
-    # Cache config for index entry writing.Enable connecting to redis with TLS.
-    # CLI flag: -store.index-cache-write.redis.tls-enabled
-    [tls_enabled: <boolean> | default = false]
-
-    # Cache config for index entry writing.Skip validating server certificate.
-    # CLI flag: -store.index-cache-write.redis.tls-insecure-skip-verify
-    [tls_insecure_skip_verify: <boolean> | default = false]
-
-    # Cache config for index entry writing.Close connections after remaining
-    # idle for this duration. If the value is zero, then idle connections are
-    # not closed.
-    # CLI flag: -store.index-cache-write.redis.idle-timeout
-    [idle_timeout: <duration> | default = 0s]
-
-    # Cache config for index entry writing.Close connections older than this
-    # duration. If the value is zero, then the pool does not close connections
-    # based on age.
-    # CLI flag: -store.index-cache-write.redis.max-connection-age
-    [max_connection_age: <duration> | default = 0s]
-
-  fifocache:
-    # Cache config for index entry writing.Maximum memory size of the cache in
-    # bytes. A unit suffix (KB, MB, GB) may be applied.
-    # CLI flag: -store.index-cache-write.fifocache.max-size-bytes
-    [max_size_bytes: <string> | default = "1GB"]
-
-    # Cache config for index entry writing.Maximum number of entries in the
-    # cache.
-    # CLI flag: -store.index-cache-write.fifocache.max-size-items
-    [max_size_items: <int> | default = 0]
-
-    # Cache config for index entry writing.The time to live for items in the
-    # cache before they get purged.
-    # CLI flag: -store.index-cache-write.fifocache.ttl
-    [ttl: <duration> | default = 1h]
-
-    # Deprecated (use ttl instead): Cache config for index entry writing.The
-    # expiry duration for the cache.
-    # CLI flag: -store.index-cache-write.fifocache.duration
-    [validity: <duration> | default = 0s]
-
-    # Deprecated (use max-size-items or max-size-bytes instead): Cache config
-    # for index entry writing.The number of entries to cache.
-    # CLI flag: -store.index-cache-write.fifocache.size
-    [size: <int> | default = 0]
-
-  # The maximum number of concurrent asynchronous writeback cache can occur.
-  # CLI flag: -store.index-cache-write.max-async-cache-write-back-concurrency
-  [async_cache_write_back_concurrency: <int> | default = 16]
-
-  # The maximum number of enqueued asynchronous writeback cache allowed.
-  # CLI flag: -store.index-cache-write.max-async-cache-write-back-buffer-size
-  [async_cache_write_back_buffer_size: <int> | default = 500]
-
-# Cache index entries older than this period. 0 to disable.
-# CLI flag: -store.cache-lookups-older-than
-[cache_lookups_older_than: <duration> | default = 0s]
-
-# This flag is deprecated. Use -querier.max-query-lookback instead.
-# CLI flag: -store.max-look-back-period
-[max_look_back_period: <duration> | default = 0s]
 ```
 
 ### schema_config
@@ -1996,6 +2091,11 @@ Configures per-tenant or global limits.
 # when using downstream URL.
 # CLI flag: -frontend.max-queriers-per-tenant
 [max_queriers_per_tenant: <int> | default = 0]
+
+# Number of days of index to be kept always downloaded for queries. Applies only
+# to per user index in boltdb-shipper index store. 0 to disable.
+# CLI flag: -store.query-ready-index-num-days
+[query_ready_index_num_days: <int> | default = 0]
 
 # Split queries by an interval and execute in parallel, 0 disables it. This also
 # determines how cache keys are chosen when result caching is enabled
@@ -2420,7 +2520,7 @@ Configures the workers that are running with in the queriers and picking up and 
 # Force worker concurrency to match the -querier.max-concurrent option.
 # Overrides querier.worker-parallelism.
 # CLI flag: -querier.worker-match-max-concurrent
-[match_max_concurrent: <boolean> | default = false]
+[match_max_concurrent: <boolean> | default = true]
 
 # Querier ID, sent to frontend service to identify requests from the same
 # querier. Defaults to hostname.
@@ -2434,7 +2534,7 @@ grpc_client_config:
 
   # gRPC client max send message size (bytes).
   # CLI flag: -querier.frontend-client.grpc-max-send-msg-size
-  [max_send_msg_size: <int> | default = 16777216]
+  [max_send_msg_size: <int> | default = 104857600]
 
   # Use compression when sending messages. Supported values are: 'gzip',
   # 'snappy' and '' (disable compression)
@@ -2548,7 +2648,7 @@ grpc_client_config:
 
   # gRPC client max send message size (bytes).
   # CLI flag: -frontend.grpc-client-config.grpc-max-send-msg-size
-  [max_send_msg_size: <int> | default = 16777216]
+  [max_send_msg_size: <int> | default = 104857600]
 
   # Use compression when sending messages. Supported values are: 'gzip',
   # 'snappy' and '' (disable compression)
@@ -2613,7 +2713,7 @@ grpc_client_config:
 # query-scheduler and querier, which uses it to send the query response back to
 # query-frontend.
 # CLI flag: -frontend.instance-interface-names
-[instance_interface_names: <list of string> | default = [eth0 en0]]
+[instance_interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
 
 # Compress HTTP responses.
 # CLI flag: -querier.compress-http-responses
@@ -2637,6 +2737,8 @@ Configures the rulers.
 # CLI flag: -ruler.external.url
 [external_url: <url> | default = ]
 
+external_labels:
+
 ruler_client:
   # gRPC client max receive message size (bytes).
   # CLI flag: -ruler.client.grpc-max-recv-msg-size
@@ -2644,7 +2746,7 @@ ruler_client:
 
   # gRPC client max send message size (bytes).
   # CLI flag: -ruler.client.grpc-max-send-msg-size
-  [max_send_msg_size: <int> | default = 16777216]
+  [max_send_msg_size: <int> | default = 104857600]
 
   # Use compression when sending messages. Supported values are: 'gzip',
   # 'snappy' and '' (disable compression)
@@ -2909,7 +3011,7 @@ ring:
 
   # Name of network interface to read address from.
   # CLI flag: -ruler.ring.instance-interface-names
-  [instance_interface_names: <list of string> | default = [eth0 en0]]
+  [instance_interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
 
   # Number of tokens for each ruler.
   # CLI flag: -ruler.ring.num-tokens
@@ -3392,6 +3494,11 @@ Configures how the compactors compact index shards for performance.
 # CLI flag: -boltdb.shipper.compactor.retention-delete-worker-count
 [retention_delete_worker_count: <int> | default = 150]
 
+# (Experimental) Deletion mode. Can be one of
+# disabled|whole-stream-deletion|filter-only|filter-and-delete
+# CLI flag: -boltdb.shipper.compactor.deletion-mode
+[deletion_mode: <string> | default = "whole-stream-deletion"]
+
 # Allow cancellation of delete request until duration after they are created.
 # Data would be deleted only after delete requests have been older than this
 # duration. Ideally this should be set to at least 24h.
@@ -3461,7 +3568,7 @@ compactor_ring:
 
   # Name of network interface to read address from.
   # CLI flag: -boltdb.shipper.compactor.ring.instance-interface-names
-  [instance_interface_names: <list of string> | default = [eth0 en0]]
+  [instance_interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
 
   # Port to advertise in the ring (defaults to server.grpc-listen-port).
   # CLI flag: -boltdb.shipper.compactor.ring.instance-port
@@ -3498,7 +3605,7 @@ grpc_client_config:
 
   # gRPC client max send message size (bytes).
   # CLI flag: -query-scheduler.grpc-client-config.grpc-max-send-msg-size
-  [max_send_msg_size: <int> | default = 16777216]
+  [max_send_msg_size: <int> | default = 104857600]
 
   # Use compression when sending messages. Supported values are: 'gzip',
   # 'snappy' and '' (disable compression)
@@ -3621,7 +3728,7 @@ scheduler_ring:
 
   # Name of network interface to read address from.
   # CLI flag: -query-scheduler.ring.instance-interface-names
-  [instance_interface_names: <list of string> | default = [eth0 en0]]
+  [instance_interface_names: <list of string> | default = [wlp0s20f3 br-c6e959b43d71 br-ecb1dcb60120 br-147be73b1030 br-1cdeb430c1c8 br-a66b337fbb78 docker0 br-081face343c5 br-828a52e6c47f br-ce2c6e4e21f1]]
 
   # Port to advertise in the ring (defaults to server.grpc-listen-port).
   # CLI flag: -query-scheduler.ring.instance-port
@@ -3642,9 +3749,9 @@ scheduler_ring:
 Configures how anonymous usage data is sent to grafana.com.
 
 ```yaml
-# Disable anonymous usage reporting.
-# CLI flag: -usage-report.disabled
-[disabled: <boolean> | default = false]
+# Enable anonymous usage reporting.
+# CLI flag: -reporting.enabled
+[reporting_enabled: <boolean> | default = true]
 ```
 
 ### consul_config
@@ -3654,6 +3761,7 @@ Configures the Consul client. The supported CLI flags `<prefix>` used to referen
 - _no prefix_
 - `boltdb.shipper.compactor.ring`
 - `distributor.ring`
+- `index-gateway.ring`
 - `query-scheduler.ring`
 - `ruler.ring`
 
@@ -3692,6 +3800,7 @@ Configures the etcd client. The supported CLI flags `<prefix>` used to reference
 - _no prefix_
 - `boltdb.shipper.compactor.ring`
 - `distributor.ring`
+- `index-gateway.ring`
 - `query-scheduler.ring`
 - `ruler.ring`
 
@@ -3767,6 +3876,10 @@ Configures the client for Azure Blob Storage as storage. The supported CLI flags
 # The Microsoft Azure account name to be used
 # CLI flag: -<prefix>.azure.account-name
 [account_name: <string> | default = ""]
+
+# Chunk delimiter for blob ID to be used
+# CLI flag: -<prefix>.azure.chunk-delimiter
+[chunk_delimiter: <string> | default = "-"]
 
 # The Microsoft Azure account key to use.
 # CLI flag: -<prefix>.azure.account-key

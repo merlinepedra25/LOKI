@@ -11,7 +11,7 @@ import (
 	"unicode"
 
 	"github.com/grafana/dskit/flagext"
-	"github.com/grafana/loki/pkg/storage/chunk"
+	chunk "github.com/grafana/loki/pkg/storage/config"
 	"github.com/grafana/loki/pkg/validation"
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"

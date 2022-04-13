@@ -22,11 +22,13 @@ import (
 	"github.com/grafana/loki/pkg/scheduler"
 	"github.com/grafana/loki/pkg/storage"
 	"github.com/grafana/loki/pkg/storage/chunk"
-	"github.com/grafana/loki/pkg/storage/chunk/aws"
-	"github.com/grafana/loki/pkg/storage/chunk/azure"
-	"github.com/grafana/loki/pkg/storage/chunk/gcp"
-	"github.com/grafana/loki/pkg/storage/chunk/hedging"
-	"github.com/grafana/loki/pkg/storage/chunk/openstack"
+	"github.com/grafana/loki/pkg/storage/chunk/client/aws"
+	"github.com/grafana/loki/pkg/storage/chunk/client/azure"
+	"github.com/grafana/loki/pkg/storage/chunk/client/gcp"
+	"github.com/grafana/loki/pkg/storage/chunk/client/hedging"
+	"github.com/grafana/loki/pkg/storage/chunk/client/openstack"
+	"github.com/grafana/loki/pkg/storage/config"
+	"github.com/grafana/loki/pkg/storage/stores/series/index"
 	"github.com/grafana/loki/pkg/storage/stores/shipper/compactor"
 	"github.com/grafana/loki/pkg/tracing"
 	"github.com/grafana/loki/pkg/usagestats"
@@ -72,12 +74,12 @@ var (
 		},
 		{
 			name:       "chunkstore_config",
-			structType: reflect.TypeOf(storage.ChunkStoreConfig{}),
+			structType: reflect.TypeOf(chunk.Config{}),
 			desc:       "Configures how Loki stores data in the specific store.",
 		},
 		{
 			name:       "schema_config",
-			structType: reflect.TypeOf(storage.SchemaConfig{}),
+			structType: reflect.TypeOf(config.SchemaConfig{}),
 			desc:       "Configures the chunk index schema and where it is stored.",
 		},
 		{
@@ -87,7 +89,7 @@ var (
 		},
 		{
 			name:       "table_manager_config",
-			structType: reflect.TypeOf(chunk.TableManagerConfig{}),
+			structType: reflect.TypeOf(index.TableManagerConfig{}),
 			desc:       "Configures how long the table manager retains data.",
 		},
 		{
