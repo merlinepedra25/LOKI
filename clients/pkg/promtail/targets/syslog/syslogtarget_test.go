@@ -841,7 +841,7 @@ func TestParseStream_WithAsyncPipe(t *testing.T) {
 	}
 
 	addr := &net.UDPAddr{IP: net.IP{127, 0, 0, 1}, Port: 1514}
-	pipe := NewAsycPipe(addr, 1024)
+	pipe := NewConnPipe(addr)
 	go func() {
 		for _, line := range lines {
 			pipe.Write([]byte(line))

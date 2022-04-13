@@ -133,33 +133,29 @@ func (c *idleTimeoutConn) setDeadline() {
 	_ = c.Conn.SetDeadline(time.Now().Add(c.idleTimeout))
 }
 
-type AsyncConnPipe struct {
+type ConnPipe struct {
 	addr net.Addr
-	ch   chan []byte
-	done chan struct{}
 	*io.PipeReader
 	*io.PipeWriter
 }
 
-func NewAsycPipe(addr net.Addr, size int) *AsyncConnPipe {
+func NewConnPipe(addr net.Addr) *ConnPipe {
 	pr, pw := io.Pipe()
-	return &AsyncConnPipe{
+	return &ConnPipe{
 		addr:       addr,
-		ch:         make(chan []byte, size),
-		done:       make(chan struct{}),
 		PipeReader: pr,
 		PipeWriter: pw,
 	}
 }
 
-func (pipe *AsyncConnPipe) Close() error {
+func (pipe *ConnPipe) Close() error {
 	var err error
 	if err = pipe.PipeWriter.Close(); err != nil {
 		return err
 	}
-	if err = pipe.PipeReader.Close(); err != nil {
-		return err
-	}
+	// if err = pipe.PipeReader.Close(); err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
@@ -354,7 +350,7 @@ func (t *UDPTransport) acceptPackets() {
 		addr net.Addr
 		err  error
 	)
-	streams := make(map[string]*AsyncConnPipe)
+	streams := make(map[string]*ConnPipe)
 	buf := make([]byte, t.maxMessageLength())
 
 	for {
@@ -375,7 +371,7 @@ func (t *UDPTransport) acceptPackets() {
 
 		stream, ok := streams[addr.String()]
 		if !ok {
-			stream = NewAsycPipe(addr, 1024)
+			stream = NewConnPipe(addr)
 			streams[addr.String()] = stream
 			t.openConnections.Add(1)
 			go t.handleRcv(stream)
@@ -384,7 +380,7 @@ func (t *UDPTransport) acceptPackets() {
 	}
 }
 
-func (t *UDPTransport) handleRcv(c *AsyncConnPipe) {
+func (t *UDPTransport) handleRcv(c *ConnPipe) {
 	defer t.openConnections.Done()
 
 	lbs := t.connectionLabels(c.addr.String())
