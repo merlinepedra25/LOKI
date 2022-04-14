@@ -12,7 +12,7 @@ steps:
       from_secret: docker_password
     repo: grafana/loki-build-image
     tags:
-    - 0.20.2
+    - 0.20.3
     username:
       from_secret: docker_username
   when:
